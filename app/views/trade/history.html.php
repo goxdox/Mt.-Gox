@@ -235,7 +235,7 @@ function onRecent(result)
 			     tooltipAxes: 'y',
 		      showMarker:true
 		  },
-			axes:{ yaxis:{tickOptions:{formatString:'$%.3f'}},
+			axes:{ yaxis:{tickOptions:{formatString:'$%.4f'}},
 				xaxis:{
 				min: minTime,
 				max: maxTime,
