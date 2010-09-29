@@ -246,7 +246,7 @@ function redirectToHttp() {
 	function logMsg($msg)
 	{
 		$fd = fopen("phplog.txt", "a");
-		$str = "[" . date("Y/m/d h:i:s", mktime()) . "] " . $msg; 
+		$str = "[" . date("Y/m/d h:i:s", time()) . "] " . $msg; 
 		fwrite($fd, $str . "\r\n");
 		fclose($fd);
 	}
