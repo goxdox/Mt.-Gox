@@ -11,5 +11,7 @@ db_connect();
 BC_process_AddFunds();
 BC_process_Merch();
 
+if( isset($result['error']) ) logMsg("cron.5min error:".$result['error'] );
+
 
 ?>
