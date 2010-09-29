@@ -70,9 +70,9 @@ function db_sess_connect()
 
 	// TODO: this is needed to get it to work in lithium's default.html.php 
 	//echo("HOST: $db_hostname, $db_username, $db_password, $db_name");
-	if(isset($db_hostname))
+	//if(isset($db_hostname))
 		$session_db = mysql_connect($db_hostname, $db_username, $db_password) or die(mysql_error());
-	else  $session_db = mysql_connect('localhost', 'land', '-island-') or die(mysql_error());
+	//else  $session_db = mysql_connect('localhost', 'land', '') or die(mysql_error());
 	mysql_select_db('sessions', $session_db);
 }
 
@@ -136,47 +136,6 @@ function sess_clean($session_lifetime)
 }
 
 
-
-function isValidGameName($str) 
-{
-	$validmask="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-.";
-	$len=strlen($str);
-   if($str && ($len<20) && (strspn($str, $validmask) == $len)) 
-   {
-       return true;
-   }else 
-   {
-       return false;
-   }
-}
-
-function isValidUserName($str) 
-{
-   $validmask="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()+=~?{}[]_-.";
-	$len=strlen($str);
-   if($str && ($len>=3) && ($len<=20) && (strspn($str, $validmask) == $len)) 
-   {
-       return true;
-   }else 
-   {
-       return false;
-   }
-}
-function isValidEmail($str) 
-{
-/*
-   $validmask="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()+=~?{}[]_-.";
-	$len=strlen($str);
-   if($str && ($len>5) && ($len<20)) // && (strspn($str, $validmask) == $len)) 
-   {
-       return true;
-   }else 
-   {
-       return false;
-   }
-  */ 
-   return true;
-}
 function redirectToHttps() 
 {
         if($protocol == "https") 
@@ -291,4 +250,25 @@ function redirectToHttp() {
 		fwrite($fd, $str . "\r\n");
 		fclose($fd);
 	}
+	
+function httpsPost($url, $strRequest)
+{
+	// Initialisation
+	$ch=curl_init();
+	// Set parameters
+	curl_setopt($ch, CURLOPT_URL, $url);
+	// Return a variable instead of posting it directly
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	// Active the POST method
+	curl_setopt($ch, CURLOPT_POST, 1) ;
+	// Request
+	curl_setopt($ch, CURLOPT_POSTFIELDS, $strRequest);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+	// execute the connexion
+	$result = curl_exec($ch);
+	// Close it
+	curl_close($ch);
+	return $result;
+} 
 ?>

@@ -26,10 +26,16 @@ function curl_post_async($url, $params)
     fclose($fp);
 }
 
+function notifyMerch($notify_url,$payer_username,$custom,$txn_id,$currency_code,$amount)
+{
+	$params=compact('custom','amount','txn_id','payer_username','currency_code');
+	curl_post_async($notify_url, $params);
+}
+
 function notifyMerch($merchID,$custom,$txn_id)
 {
 	$merchURL=getSingleDBValue("Select MerchNotifyURL from btcx.Users where UserID=$merchID");
-	if($merchUR)
+	if($merchURL)
 	{
 		$params=compact('custom','amount','txn_id');
 		curl_post_async($merchURL,$params);

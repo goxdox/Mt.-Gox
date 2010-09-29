@@ -13,7 +13,7 @@ if($merchID && $amount && $txn_id)
 {
 	db_connect();
 	
-	$sql="SELECT Amount from MerchantOrders where txn_id=$txn_id and status=1 and MerchantID=$merchID";
+	$sql="SELECT Amount from MerchantOrders where txn_id='$txn_id' and status=1 and MerchantID=$merchID";
 	$dbAmount=round(getSingleDBValue($sql),4);
 	if($dbAmount==$amount) 
 	{

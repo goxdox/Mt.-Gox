@@ -21,24 +21,24 @@ function withdrawBTC()
 		
 		
 		try{
-			$sql="SELECT USD,BTC,FundsHeld,paypalTrust from Users where userID=$uid";
+			$sql="SELECT USD,BTC,fundsHeld,paypalTrust from Users where userID=$uid";
 			if($data=mysql_query($sql))
 			{
 				if($row=mysql_fetch_array($data))
 				{
 					$usdHeld=$row['USD'];
-					$minFundsHeld=$row['FundsHeld']*(1-$row['paypalTrust']);
+					$minFundsHeld=$row['fundsHeld']*(1-$row['paypalTrust']);
 					$btcHeld=$row['BTC'];
 					if($btcHeld<$amount)
 					{
 						$result['error'] = "You don't have this much BTC.";
 					}else
 					{
-						$accountTotal=$usdHeld+$btcHeld*.06;
+						$accountTotal=$usdHeld+($btcHeld-$amount)*.06;
 						if($accountTotal < $minFundsHeld)
 						{
 							$allowedBTC= (int)(($btcHeld -(($minFundsHeld-$usdHeld)/.06))/BASIS);
-							$result['status'] = "To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedBTC";
+							$result['status'] = "To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedBTC BTC";
 						}else
 						{
 							BC_sendFunds($uid,$amount,$btca,$usdHeld,$btcHeld);
@@ -85,11 +85,11 @@ function withdrawPaypal()
 				throw new Exception("You don't have this much USD.");
 			}else
 			{
-				$accountTotal=$usdHeld+$btcHeld*.06;
+				$accountTotal=($usdHeld-$amount)+$btcHeld*.06;
 				if($accountTotal < $minFundsHeld)
 				{
 					$allowedUSD=round(($usdHeld -($minFundsHeld-$btcHeld*.06))/BASIS,2);
-					throw new Exception("To reduce fraud we hold a certain of portion of PayPal payments in reserve for 20 days. You are currently only able to withdraw $allowedUSD");
+					throw new Exception("To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedUSD");
 				}else
 				{
 					// A=F+P  , F=P*.02 or F=1 , A=P(.02+1)

@@ -67,7 +67,7 @@ function BC_process_AddFunds()
 	$sql="UPDATE AddBTC set Status=2 where Status=0 and Date<$oldest";
 	if(mysql_query($sql))
 	{
-		$sql="SELECT AddID,UserID from AddBTC where status=0";
+		$sql="SELECT AddID,UserID,RecvAddr from AddBTC where status=0";
 		$data=mysql_query($sql);
 		if($data)
 		{
@@ -75,6 +75,7 @@ function BC_process_AddFunds()
 			{	
 				$addID=$row[0];
 				$uid=$row[1];
+				$addr=$row[2];
 				
 				$bitcoind = new jsonRPCClient('http://jed:test@127.0.0.1:8332');	
 				//$bitcoind->getinfo();

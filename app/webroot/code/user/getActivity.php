@@ -4,8 +4,6 @@ include('../lib/functions.inc');
 include('../lib/session.php');
 include('../lib/common.inc');
 
-date_default_timezone_set('America/New_York');
-
 // make sure:
 // user is logged in 
 if(isset($_SESSION['UserID']))

@@ -1,5 +1,4 @@
 
-
 Merchant Services:
 	Widget 
 	startTxn.php
@@ -81,4 +80,63 @@ Support:
 Settings:
 	Email notification on trade
 	Change password
+	
+	
+
+
+
+
+-----
+User (UserID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, Username, Password, Email, USD, BTC );
+
+Trades (TradeID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, BuyerID INT UNSIGNED, SellerID INT UNSIGNED, Price Float, Date INT UNSIGNED); 
+
+Ask (OrderID, UserID INT UNSIGNED, Price Float, Status Date INT UNSIGNED);
+Bid (OrderID, UserID INT UNSIGNED, Price Float, Date INT UNSIGNED);
+ 
+AddUSD (UserID, FromEmail, Amount, Method, Date);
+AddBTC	(UserID, RecvAddr, status, Amount, Date);  // 0 not received, 1 ok, 2 old
+RemUSD (UserID, ToEmail, Amount, Method, Date);
+RemBTC (UserID, Dest, Amount, Date);
+Ticker (High, Low, Vol, HighBuy, LowSell, HighDate, LowDate);
+History (High,Low,Vol,Date);
+
+
+----
+
+Insert into Activity (userID,deltaBTC,deltaUSD,type,typeID,typeData,btc,usd,date) values (1,100,1,2,0,'',0,0,1279424523);
+
+insert into History (High,Low,Open,Close,Volume,Date) values (0,0,0,0,0,1279424586);
+insert into Ticker values (0,0,0,0,0,0);
+
+insert into AddBTC (UserID,RecvAddr,status,Amount,Date) values (1,'1Fw5tAaz5rKacwCrzF1LEEc6Zp4amLhYhq',0,1.5,1279322032);
+
+
+ALTER TABLE Users add Column TradeNotify TINYINT default 0 after Email;
+ALTER TABLE Users add Column MerchOn TINYINT default 0 after TradeNotify;
+ALTER TABLE Users add Column MerchNotifyURL varchar(255) after MerchOn;
+ALTER TABLE Users add Column FundsHeld INT default 0 after BTC;
+ALTER TABLE Activity add Column actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY before userID);
+
+
+## INT switch
+Update users set USD=USD*10,BTC=BTC*10;
+Update Asks set Amount=Amount*10;
+Update Bids set Amount=Amount*10;
+Update Trades set Amount=Amount*10;
+Update AddBTC set Amount=Amount*10;
+Update MerchantOrders set Amount=Amount*10,AmountRecv=AmountRecv*10;
+Update BTCRecord set Amount=Amount*10;
+
+alter table Users change USD USD INT default 0;
+alter table Users change BTC BTC INT default 0;
+alter table Asks change Amount Amount INT;
+alter table Bids change Amount Amount INT;
+alter table Trades change Amount Amount INT;
+alter table AddBTC change Amount Amount INT;
+alter table MerchantOrders change Amount Amount INT;
+alter table MerchantOrders change AmountRecv AmountRecv INT;
+alter table BTCRecord change Amount Amount INT;
+alter table Orders add Column amountHeld INT default 0;
+alter table Users add Column paypalTrust FLOAT default 0 after FundsHeld;
 

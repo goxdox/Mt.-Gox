@@ -10,7 +10,7 @@ function onSave()
 	var valid=$("#form1").valid();
 	if(valid)
 	{
-		$('#status').text="Registering...";
+		$('#status').text="Logging in...";
 		$('#error').text="";
 	
 		var name=$("#username").val();

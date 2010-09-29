@@ -1,6 +1,7 @@
 <?php
 include('../../../noserve/config.inc');
 include('../lib/functions.inc');
+include('../lib/common.inc');
 include('../lib/session.php');
 include('gateway.inc');
 
@@ -10,50 +11,144 @@ include('gateway.inc');
 // user has enough BTC
 //
 
-
-if(isset($_SESSION['UserID']))
+db_connect();
+if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
+	(isset($_POST['currency_code'])) &&
+	(isset($_POST['amount']) && $_POST['amount']>0) )
 {
-	$uid=(int)($_SESSION['UserID']);
-	$orderID=(int)($_POST['orderID']);
-	
-	$sql="SELECT MerchantID,Amount,Custom,txn_id from btcx.MerchantOrders where OrderID=$orderID and CustomerID=$uid and status=0";
-	if( $data=mysql_query($sql))
+	if(isset($_SESSION['UserID']))
 	{
-		if($row=mysql_fetch_array($data))
+		$uid=(int)($_SESSION['UserID']);
+		$sql="SELECT userid,username,btc,usd,fundsHeld,paypalTrust from Users where userid=$uid";
+		
+	}else 
+	{
+		if(isset($_POST['username']) && isset($_POST['password']) )
 		{
-			$amount=$row['Amount'];
-			$merchID=$row['MerchantID'];
+			$name=mysql_real_escape_string($_POST['username']);
+			$pass=mysql_real_escape_string($_POST['password']);
 			
-			if($amount>0)
+			// check these against the db
+			$md5pass=md5($pass);
+			$clean_name=strtolower($name);
+			$sql = "select userid,username,btc,usd,fundsHeld,paypalTrust from Users where CleanName='$clean_name' and password='$md5pass'";	
+		}else $result['error'] = "Need to log in.";
+	}
+	if(isset($sql))
+	{
+		mysql_query("BEGIN");
+		try
+		{
+			if(!$data=mysql_query($sql)) throw new Exception("SQL Error");
+			if(!$row=mysql_fetch_array($data)) throw new Exception("User not found");
+			
+			$userID=$row['userid'];
+			$amount=$_POST['amount']*BASIS;
+			$merchID=$_POST['merchID'];
+			$currency_code=$_POST['currency_code'];
+			$btcHeld=$row['btc'];
+			$usdHeld=$row['usd'];
+			$minFundsHeld=$row['fundsHeld']*(1-$row['paypalTrust']);
+			$time=time();
+			$customerName=$row['username'];
+			
+			$sql="SELECT username,usd,btc from Users where userID=$merchID";
+			if(!$data=mysql_query($sql)) throw new Exception("SQL Error");
+			if(!$row=mysql_fetch_array($data)) throw new Exception("Merchant not found");
+			$mUsdHeld=$row['usd'];
+			$mBtcHeld=$row['btc'];
+			$merchName=$row['username'];
+			$txn_id=generateRandomString(8);
+			
+			if($currency_code=="USD")
 			{
-				$btcHeld=getSingleDBValue("Select BTC from Users where UserID=$uid");
-				if($btcHeld>$amount)
+				if($usdHeld >= $amount )
 				{
-					$sql="UPDATE Users set BTC=BTC-$amount where UserID=$uid";
-					mysql_query($sql);
-					$sql="UPDATE Users set BTC=BTC+$amount where UserID=$merchID";
-					mysql_query($sql);
-					$sql="INSERT INTO BTCRecord (FromID,ToID,Amount,Reason,Date) values ($uid,$merchID,$amount,2,$time)";
-					mysql_query($sql);
+					$accountTotal=($usdHeld-$amount)+$btcHeld*.06;
+					if($accountTotal < $minFundsHeld)
+					{
+						$allowedUSD=round(($usdHeld -($minFundsHeld-$btcHeld*.06))/BASIS,2);
+						throw new Exception("To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedUSD");
+					}else
+					{
+						$sql="UPDATE Users set USD=USD-$amount where userid=$uid";
+						if(!mysql_query($sql)) throw new Exception("SQL Error");
+						$sql="UPDATE Users set USD=USD+$amount where UserID=$merchID";
+						if(!mysql_query($sql)) throw new Exception("SQL Error");
+						
+						$usdHeld -= $amount;
+						$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($uid,-$amount,7,'$merchName',$btcHeld,$usdHeld,$time)";
+						if(!mysql_query($sql)) throw new Exception("SQL Error");
+						$mUsdHeld += $amount;
+						$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($merchID,$amount,7,'$customerName',$mBtcHeld,$mUsdHeld,$time)";
+						if(!mysql_query($sql)) throw new Exception("SQL Error");
+						
+						$sql="INSERT INTO MerchantOrders (MerchantID,CustomerID,currency,Amount,AmountRecv,Custom,txn_id,Date) values ($merchID,$uid,1,$amount,$amount,'$custom','$txn_id',$time)";
+						if(!mysql_query($sql)) throw new Exception("SQL Error");
+						
+						mysql_query('commit');
+						
+						checkBidOrders($uid);
+						checkAskOrders($merchID);
+						$result['result']=1;
+					}
+				}else throw new Exception("Insufficient Funds.");
+				
+			}else if($currency_code=="BTC")
+			{
+				if($btcHeld>=$amount)
+				{
+					$accountTotal=$usdHeld+($btcHeld-$amount)*.06;
+					if($accountTotal < $minFundsHeld)
+					{
+						$allowedBTC= (int)(($btcHeld -(($minFundsHeld-$usdHeld)/.06))/BASIS);
+						throw new Exception("To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedBTC BTC");
+					}else
+					{
+						
+						$sql="UPDATE Users set BTC=BTC-$amount where UserID=$uid";
+						if(!mysql_query($sql)) throw new Exception("SQL Error");
+						$sql="UPDATE Users set BTC=BTC+$amount where UserID=$merchID";
+						if(!mysql_query($sql)) throw new Exception("SQL Error");
+						
+						$btcHeld -= $amount;
+						$sql="INSERT into Activity (UserID,DeltaBTC,Type,TypeData,BTC,USD,Date) values ($uid,-$amount,7,'$merchName',$btcHeld,$usdHeld,$time)";
+						if(!mysql_query($sql)) throw new Exception("SQL Error");
+						$mBtcHeld += $amount;
+						$sql="INSERT into Activity (UserID,DeltaBTC,Type,TypeData,BTC,USD,Date) values ($merchID,$amount,7,'$customerName',$mBtcHeld,$mUsdHeld,$time)";
+						if(!mysql_query($sql)) throw new Exception("SQL Error");
+						
+						$sql="INSERT INTO MerchantOrders (MerchantID,CustomerID,currency,Amount,AmountRecv,Custom,txn_id,Date) values ($merchID,$uid,2,$amount,$amount,'$custom','$txn_id',$time)";
+						if(!mysql_query($sql)) throw new Exception("SQL Error");
 					
-					checkAskOrders($uid);
-					checkAskOrders($merchID);
+						
+						mysql_query('commit');
+						
+						checkAskOrders($uid);
+						checkBidOrders($merchID);
+						
+						$result['result']=1;
+					}
 					
-					notifyMerch($merchID,$row['Custom'],$row['txn_id']);
 					 
-				}else $result['error']="Insufficient Funds.";
-			}else $result['error']="Invalid";
+				}else throw new Exception("Insufficient Funds.");
+			}else throw new Exception("Invalid Currency");
 			
-		}else $result['error']="Order Not found.";	
-	}else $result['error']='SQL Error';
-	
-	
-}else
-{
-	$result['error'] = "Not Logged in";
-}
-
+			if(isset($_POST['notify_url']))
+			{
+				$notify_url=$_POST['notify_url'];
+				notifyMerch($notify_url,$customerName,$custom,$txn_id,$currency_code,$amount);
+			}
+			
+		}catch(Exception $e)
+		{
+			mysql_query("rollback");
+			$result['error'] = $e->getMessage();
+		}	
+	} // already set the error
+}else $result['error']="Invalid";
 
 echo( json_encode($result));
+
 
 ?>
