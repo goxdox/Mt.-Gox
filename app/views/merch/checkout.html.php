@@ -33,10 +33,8 @@ function onServer(data)
 <p></p>
 <h2><?= $business ?></h2>
 <hr>
-<table class="btcx_table" width="50%" >
-	<tr><td><?= $item_name ?> </td><td><?= $dollarName ?> <?= $amount ?> <?= $btcName ?></td></tr>
-</table>
-Mt.Gox securely processes payments for <?= $business ?>. You can finish paying in a few clicks.
+
+
 <form id="form1" onsubmit="return onSave()"  >
 <input type="hidden" name="notify_url" value="<?= $notify_url ?>">
 	<input type="hidden" name="merchID" value="<?= $merchID ?>">
@@ -45,20 +43,24 @@ Mt.Gox securely processes payments for <?= $business ?>. You can finish paying i
 	<input type="hidden" name="return" value="<?= $return ?>">
 	<input type="hidden" name="amount" value="<?= $amount ?>"> 
 <fieldset>
- <legend>Login to Complete Transaction</legend>
+ <legend>Confirm Transaction</legend>
+ Mt.Gox securely processes payments for <?= $business ?>. You can finish paying in a few clicks.
+ <table class="btcx_table" width="100%" >
+	<tr><td><?= $item_name ?> </td><td><?= $dollarName ?> <?= $amount ?> <?= $btcName ?></td></tr>
+</table>
  Do you really want to send <?= $dollarName ?> <?=$amount ?> <?= $btcName ?> to <?=$business ?> ?
-<table class="btcx_table">
+
 <?php 
 if(!$gUserID){
 ?>
+<table class="btcx_table">
 <tr><td>User Name</td><td><input type="text" name="username"  class="required" minlength="2" /></td></tr>
 <tr><td>Password</td><td><input type="password" name="password" class="required" minlength="5"/></td></tr>
 <tr><td colspan=2><input type="submit" value="Confirm Payment" /></td></tr>
 </table> 
 <a href="/users/forgot" >Forgot your password?</a>
 <?php }else { ?>
-<tr><td colspan=2><input type="submit" value="Confirm Payment" /></td></tr>
-</table> 
+<input type="submit" value="Confirm Payment" />
 <?php } ?>
 <div id="status"></div>
 <div id="error"></div>

@@ -51,6 +51,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 			$minFundsHeld=$row['fundsHeld']*(1-$row['paypalTrust']);
 			$time=time();
 			$customerName=$row['username'];
+			$custom=mysql_real_escape_string($_POST['custom']);
 			
 			$sql="SELECT username,usd,btc from Users where userID=$merchID";
 			if(!$data=mysql_query($sql)) throw new Exception("SQL Error");
