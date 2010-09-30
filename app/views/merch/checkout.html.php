@@ -34,7 +34,7 @@ function onServer(data)
 <h2><?= $business ?></h2>
 <hr>
 <table class="btcx_table">
-	<tr><td><?= $item_name ></td><td><?= $amount ></td></tr>
+	<tr><td><?= $item_name ?> </td><td><?= $amount ?></td></tr>
 </table>
 Mt.Gox securely processes payments for <?= $business ?>. You can finish paying in a few clicks.
 <form id="form1" onsubmit="return onSave()"  >
