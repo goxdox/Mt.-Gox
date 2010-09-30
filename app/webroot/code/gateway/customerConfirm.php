@@ -18,7 +18,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 {
 	if(isset($_SESSION['UserID']))
 	{
-		$uid=(int)($_SESSION['UserID']);
+		$userID=(int)($_SESSION['UserID']);
 		$sql="SELECT userid,username,btc,usd,fundsHeld,paypalTrust from Users where userid=$uid";
 		
 	}else 
@@ -72,19 +72,19 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 						throw new Exception("To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedUSD");
 					}else
 					{
-						$sql="UPDATE Users set USD=USD-$amount where userid=$uid";
+						$sql="UPDATE Users set USD=USD-$amount where userid=$userID";
 						if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 						$sql="UPDATE Users set USD=USD+$amount where UserID=$merchID";
 						if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 						
 						$usdHeld -= $amount;
-						$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($uid,-$amount,7,'$merchName',$btcHeld,$usdHeld,$time)";
+						$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($userID,-$amount,7,'$merchName',$btcHeld,$usdHeld,$time)";
 						if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 						$mUsdHeld += $amount;
 						$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($merchID,$amount,7,'$customerName',$mBtcHeld,$mUsdHeld,$time)";
 						if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 						
-						$sql="INSERT INTO MerchantOrders (MerchantID,CustomerID,currency,Amount,AmountRecv,Custom,txn_id,Date) values ($merchID,$uid,1,$amount,$amount,'$custom','$txn_id',$time)";
+						$sql="INSERT INTO MerchantOrders (MerchantID,CustomerID,currency,Amount,AmountRecv,Custom,txn_id,Status,Date) values ($merchID,$userID,1,$amount,$amount,'$custom','$txn_id',1,$time)";
 						if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 						
 						mysql_query('commit');
@@ -107,19 +107,19 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 					}else
 					{
 						
-						$sql="UPDATE Users set BTC=BTC-$amount where UserID=$uid";
+						$sql="UPDATE Users set BTC=BTC-$amount where UserID=$userID";
 						if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 						$sql="UPDATE Users set BTC=BTC+$amount where UserID=$merchID";
 						if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 						
 						$btcHeld -= $amount;
-						$sql="INSERT into Activity (UserID,DeltaBTC,Type,TypeData,BTC,USD,Date) values ($uid,-$amount,7,'$merchName',$btcHeld,$usdHeld,$time)";
+						$sql="INSERT into Activity (UserID,DeltaBTC,Type,TypeData,BTC,USD,Date) values ($userID,-$amount,7,'$merchName',$btcHeld,$usdHeld,$time)";
 						if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 						$mBtcHeld += $amount;
 						$sql="INSERT into Activity (UserID,DeltaBTC,Type,TypeData,BTC,USD,Date) values ($merchID,$amount,7,'$customerName',$mBtcHeld,$mUsdHeld,$time)";
 						if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
-						
-						$sql="INSERT INTO MerchantOrders (MerchantID,CustomerID,currency,Amount,AmountRecv,Custom,txn_id,Date) values ($merchID,$uid,2,$amount,$amount,'$custom','$txn_id',$time)";
+
+						$sql="INSERT INTO MerchantOrders (MerchantID,CustomerID,currency,Amount,AmountRecv,Custom,txn_id,Status,Date) values ($merchID,$userID,2,$amount,$amount,'$custom','$txn_id',1,$time)";
 						if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 					
 						
