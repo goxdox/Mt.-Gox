@@ -29,18 +29,13 @@ public function cb_example()
 	{
 		// load the merch info 
 		global $gUserID;
-		$title="Checkout Using Mt. Gox";
+		$this->request->data['title']="Checkout Using Mt. Gox";
 	  
-		$notify_url=$this->request->data->notify_url;
-		$business=$this->request->data->business;
-		$currency_code=$this->request->data->currency_code;
-		$item_name=$this->request->data->item_name;
-		$custom=$this->request->data->custom;
-		if(isset($this->request->data->return)) $return=$this->request->data->return;
-		else $return='/users/thanks';
-	  	$amount=$this->request->data->amount;
+		$business=$this->request->data['business'];
+		$currency_code=$this->request->data['currency_code'];
+		if(!isset($this->request->data['return'])) $this->request->data['return']='/users/thanks';
 	  	
-	  	if($amount>0)
+	  	if($this->request->data['amount']>0)
 	  	{
 			db_connect();
 		  
@@ -51,19 +46,20 @@ public function cb_example()
 		  	{
 		  		if($currency_code=="USD")
 		  		{
-		  			$dollarName='$';
-		  			$btcName='';
+		  			$this->request->data['dollarName']='$';
+		  			$this->request->data['btcName']='';
 		  		}else if($currency_code=="BTC")
 		  		{
-		  			$dollarName='';
-		  			$btcName="BTC";
+		  			$this->request->data['dollarName']='';
+		  			$this->request->data['btcName']="BTC";
 		  		}else 
 		  		{
 		  			MerchController::error("Unknown Currency.");
 		  			return;
 		  		}
+		  		$this->request->data['merchID']=merchID;
 
-				return compact('dollarName','btcName','gUserID','title','merchID','amount','notify_url','business','currency_code','item_name','custom','return');
+				return $this->request->data;
 		  	}else 
 		  	{
 		  		MerchController::error("Sorry Merchant Not Found.");
