@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+
 class MerchController extends \lithium\action\Controller 
 {
   public function index() 
@@ -41,7 +42,7 @@ public function cb_example()
 		  
 			$clean_name=strtolower($business);
 			$sql="SELECT userid from Users where CleanName='$clean_name'";
-			$merchID=getDBSingleValue($sql);
+			$merchID=getSingleDBValue($sql);
 			if($merchID)
 		  	{
 		  		if($currency_code=="USD")
