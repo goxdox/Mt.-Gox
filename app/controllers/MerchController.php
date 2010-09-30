@@ -58,7 +58,7 @@ public function cb_example()
 		  			MerchController::error("Unknown Currency.");
 		  			return;
 		  		}
-		  		$this->request->data['merchID']=merchID;
+		  		$this->request->data['merchID']=$merchID;
 
 				return $this->request->data;
 		  	}else 
