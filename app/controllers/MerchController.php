@@ -30,6 +30,7 @@ public function cb_example()
 	{
 		// load the merch info 
 		global $gUserID;
+		$this->request->data['gUserID']=$gUserID;
 		$this->request->data['title']="Checkout Using Mt. Gox";
 	  
 		$business=$this->request->data['business'];
