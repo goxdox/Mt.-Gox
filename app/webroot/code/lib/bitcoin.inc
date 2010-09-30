@@ -96,7 +96,7 @@ function BC_process_AddFunds()
 						$usd=$row[0];
 						$btc=$row[1];
 						
-						$sql="INSERT INTO Activity (UserID,DeltaBTC,Type,TypeID,TypeData,BTC,USD,Date) values ($uid,$amount,3,$addID,'$addr',$btc,$usd,$time)"; 
+						$sql="INSERT INTO Activity (UserID,DeltaBTC,Type,TypeID,TypeData,BTC,USD,Date) values ($uid,$total,3,$addID,'$addr',$btc,$usd,$time)"; 
 						if(!mysql_query($sql)) throw new Exception("SQL Error: $sql");
 						
 						mysql_query('commit');
