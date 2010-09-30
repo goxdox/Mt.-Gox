@@ -31,14 +31,14 @@ public function cb_example()
 		global $gUserID;
 		$title="Checkout Using Mt. Gox";
 	  
-		$notify_url=$this->request->notify_url;
-		$business=$this->request->business;
-		$currency_code=$this->request->currency_code;
-		$item_name=$this->request->item_name;
-		$custom=$this->request->custom;
-		if(isset($this->request->return)) $return=$this->request->return;
+		$notify_url=$this->request->data->notify_url;
+		$business=$this->request->data->business;
+		$currency_code=$this->request->data->currency_code;
+		$item_name=$this->request->data->item_name;
+		$custom=$this->request->data->custom;
+		if(isset($this->request->data->return)) $return=$this->request->data->return;
 		else $return='/users/thanks';
-	  	$amount=$this->request->amount;
+	  	$amount=$this->request->data->amount;
 	  	
 	  	if($amount>0)
 	  	{
