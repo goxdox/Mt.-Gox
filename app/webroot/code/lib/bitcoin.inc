@@ -80,6 +80,7 @@ function BC_process_AddFunds()
 				$bitcoind = new jsonRPCClient('http://jed:test@127.0.0.1:8332');	
 				//$bitcoind->getinfo();
 				$total=BASIS*$bitcoind->getreceivedbylabel("$addID",5);
+				$time=time();
 				
 				if($total>0)
 				{
