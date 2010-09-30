@@ -21,7 +21,7 @@ function onSave()
 
 function onServer(data)
 {
-	if(data.result==1) window.location=<?= $return ?>;
+	if(data.result==1) window.location="<?= $return ?>";
 	else
 	{
 		$('#error').text(data.error);
@@ -33,8 +33,8 @@ function onServer(data)
 <p></p>
 <h2><?= $business ?></h2>
 <hr>
-<table class="btcx_table">
-	<tr><td><?= $item_name ?> </td><td><?= $amount ?></td></tr>
+<table class="btcx_table" width="100%" >
+	<tr><td><?= $item_name ?> </td><td><?= $dollarName ?> <?= $amount ?> <?= $btcName ?></td></tr>
 </table>
 Mt.Gox securely processes payments for <?= $business ?>. You can finish paying in a few clicks.
 <form id="form1" onsubmit="return onSave()"  >
@@ -46,7 +46,7 @@ Mt.Gox securely processes payments for <?= $business ?>. You can finish paying i
 	<input type="hidden" name="amount" value="<?= $amount ?>"> 
 <fieldset>
  <legend>Login to Complete Transaction</legend>
- Do you really want to send <?= $dollarName ?> <?=$amount ?> <?= $btcName ?> to <?=$merchName ?> ?
+ Do you really want to send <?= $dollarName ?> <?=$amount ?> <?= $btcName ?> to <?=$business ?> ?
 <table class="btcx_table">
 <?php 
 if(!$gUserID){
