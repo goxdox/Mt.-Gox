@@ -32,6 +32,7 @@ function notifyMerch($notify_url,$payer_username,$custom,$txn_id,$currency_code,
 	curl_post_async($notify_url, $params);
 }
 
+/*
 function notifyMerch($merchID,$custom,$txn_id)
 {
 	$merchURL=getSingleDBValue("Select MerchNotifyURL from btcx.Users where UserID=$merchID");
@@ -41,5 +42,6 @@ function notifyMerch($merchID,$custom,$txn_id)
 		curl_post_async($merchURL,$params);
 	}
 }
+*/
 
 ?>

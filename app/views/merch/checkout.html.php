@@ -33,7 +33,7 @@ function onServer(data)
 <p></p>
 <h2><?= $business ?></h2>
 <hr>
-<table class="btcx_table" width="100%" >
+<table class="btcx_table" width="50%" >
 	<tr><td><?= $item_name ?> </td><td><?= $dollarName ?> <?= $amount ?> <?= $btcName ?></td></tr>
 </table>
 Mt.Gox securely processes payments for <?= $business ?>. You can finish paying in a few clicks.
