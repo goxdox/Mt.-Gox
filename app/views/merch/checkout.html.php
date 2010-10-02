@@ -54,6 +54,7 @@ function onServer(data)
 if(!$gUserID){
 ?>
 <table class="btcx_table">
+<thead><tr><th colspan=2>Login to your Mt. Gox account to pay</th></tr></thead>
 <tr><td>User Name</td><td><input type="text" name="username"  class="required" minlength="2" /></td></tr>
 <tr><td>Password</td><td><input type="password" name="password" class="required" minlength="5"/></td></tr>
 <tr><td colspan=2><input type="submit" value="Confirm Payment" /></td></tr>

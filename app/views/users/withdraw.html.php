@@ -96,7 +96,6 @@ function onServer(result)
 
 <h2>Withdraw Funds from your Account</h2>
 Paypal charges a withdraw fee of 2% or $1 whichever is less. So it is better for you to withdraw larger amounts at a time.  
-We charge $1 processing to send you a check.
 <p></p>
 
 <form id="withForm" action="" >

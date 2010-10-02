@@ -10,7 +10,7 @@ include('webroot/code/lib/bitcoin.inc');
 $result=array();
 
 
-$filename="/var/www/www.btcx.com/app/webroot/data/allHistory.json";
+$filename="/var/www/www.mtgox.com/gox/app/webroot/data/allHistory.json";
 $contents=file_get_contents($filename);
 if($contents)
 {
