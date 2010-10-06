@@ -144,6 +144,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 		}catch(Exception $e)
 		{
 			mysql_query("rollback");
+			if($e->getMessage()=="SQL Error") logMsg("SQL Error: $sql");
 			$result['error'] = $e->getMessage();
 		}	
 	} // already set the error
