@@ -19,7 +19,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 	if(isset($_SESSION['UserID']))
 	{
 		$userID=(int)($_SESSION['UserID']);
-		$sql="SELECT userid,username,btc,usd,fundsHeld,paypalTrust from Users where userid=$uid";
+		$sql="SELECT userid,username,btc,usd,fundsHeld,paypalTrust from Users where userid=$userID";
 		
 	}else 
 	{
