@@ -99,7 +99,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 					
 					$merchBTC -= $amount;
 					$userBTC += $amount;
-					$sql="INSERT into Activity (UserID,DeltaBTC,Type,TypeData,BTC,USD,Date) values ($userID,$amount,7,'$itemName',$btcHeld,$usdHeld,$time)";
+					$sql="INSERT into Activity (UserID,DeltaBTC,Type,TypeData,BTC,USD,Date) values ($userID,$amount,7,'$itemName',$userBTC,$userUSD,$time)";
 					if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 					
 					$sql="INSERT into Activity (UserID,DeltaBTC,Type,TypeData,BTC,USD,Date) values ($merchID,-$amount,7,'$userName',$merchBTC,$merchUSD,$time)";
