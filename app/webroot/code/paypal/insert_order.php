@@ -7,7 +7,7 @@
 	$amountHeld=($gross-$fee)*1000;
 	
 	$time=time();
-	$query = "INSERT INTO Orders (".
+	$sql = "INSERT INTO Orders (".
 			 "txn_id, ".
 			 "userID, ".
 			 "date, ".
@@ -23,7 +23,7 @@
 			 "zip, ".
 			 "country) ";
 
-	$query .= " VALUES (".
+	$sql .= " VALUES (".
 			  "'$txn_id', ".
 			  "$userID,".
 			  "$time, ".
@@ -40,8 +40,8 @@
 			  "'$country') ";
 
 	//echo $query;
-	$result = mysql_query($query);
-	if(!$result) { logMsg("ipn.php: $query failed"); exit(); }
+	$result = mysql_query($sql);
+	if(!$result) { logMsg("ipn.php: $sql failed"); exit(); }
 	$sql="SELECT LAST_INSERT_ID()";
 	$orderID=getSingleDBValue($sql);
 	
@@ -56,14 +56,14 @@
 		if(!($row=mysql_fetch_array($data)))  throw new Exception("User not found");
 		$usd=$row[0];
 		$btc=$row[1];
-		$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeID,BTC,USD,Date) values ($uid,$netAmount,6,$orderID,$btc,$usd,$time)";
+		$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeID,BTC,USD,Date) values ($userID,$netAmount,6,$orderID,$btc,$usd,$time)";
 		if(!mysql_query($sql)) throw new Exception($sql);
 		
 		mysql_query('COMMIT');
 	}catch(Exception $e)
 	{
 		mysql_query("rollback");
-		logMsg("ipn.php: $query failed"); 
+		logMsg("ipn.php: $sql failed"); 
 		exit(); 
 	}
 	
