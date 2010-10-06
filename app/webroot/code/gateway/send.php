@@ -120,7 +120,11 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 		
 		echo($e->getMessage());
 	}
-}else echo("invalid");
+}else 
+{
+	logMsg(print_r($_POST));
+	echo("invalid");
+}
 
 
 ?>
