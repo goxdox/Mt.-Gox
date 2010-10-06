@@ -24,6 +24,8 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 	$token=mysql_real_escape_string($_POST['token']);
 	$currency=$_POST['currency'];
 	$itemName=mysql_real_escape_string($_POST['item']);
+	$amount=$_POST['amount'];
+	
 	
 	$sql="SELECT btc,usd,fundsHeld,paypalTrust from Users where userid=$merchID and merchToken='$token' and payAPIOn=1";
 	
@@ -43,6 +45,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 		$sql="SELECT userID,usd,btc from Users where cleanname='$cleanName'";
 		if(!$data=mysql_query($sql)) throw new Exception("SQL Error");
 		if(!$row=mysql_fetch_array($data)) throw new Exception("none");
+		$userID=$row['userID'];
 		$userBTC=$row['btc'];
 		$userUSD=$row['usd'];
 		
@@ -79,7 +82,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 				}
 			}else throw new Exception("broke");
 			
-		}else if($currency_code=="BTC")
+		}else if($currency=="BTC")
 		{
 			if($btcHeld>=$amount)
 			{
