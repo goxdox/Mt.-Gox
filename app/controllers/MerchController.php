@@ -16,6 +16,21 @@ class MerchController extends \lithium\action\Controller
   	return compact('title');
   }
   
+ public function paymentAPI() 
+  {		
+  	$title="About Payment API";
+  	return compact('title');
+  }
+  
+  
+ public function example_payAPI() 
+  {		
+  	$vars['title'] = 'Payment API Example';
+		
+		$this->set($vars);
+  	$this->render('examples/payAPI');	
+  }
+  
 public function cb_example() 
   {		
   }

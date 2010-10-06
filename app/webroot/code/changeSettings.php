@@ -23,18 +23,22 @@ if(isset($_SESSION['UserID']))
 		$merch=1;
 	else $merch=0;
 	
+	if(isset($_POST['payAPI']) && $_POST['payAPI']=='on')
+		$payAPI=1;
+	else $payAPI=0;
+	
 	
 	    
 	//$result['debug']=print_r($_POST);
 		
 	db_connect();
 	
-	$sql="UPDATE Users set Email='$email', TradeNotify=$notify, MerchOn=$merch, MerchNotifyURL='$noteurl' where UserID=$uid";
+	$sql="UPDATE Users set Email='$email', TradeNotify=$notify, MerchOn=$merch, PayAPIOn=$payAPI, MerchNotifyURL='$noteurl' where UserID=$uid";
 	if( mysql_query($sql))
 	{
 		$_SESSION['Merch']=$merch;
-		$result=array( 'status' => "Settings Changed" );
-	}else $result=array( 'error' => "SQL Failed." );
+		$result['status'] = "Settings Changed";
+	}else $result['error']="SQL Failed.";
 	
 }else
 { // not found in db

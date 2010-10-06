@@ -6,6 +6,7 @@
 <script type="text/javascript" src="/js/plugins/jqplot.canvasAxisTickRenderer.min.js"></script>
 <script type="text/javascript" src="/js/plugins/jqplot.highlighter.js"></script>
 <script type="text/javascript" src="/js/plugins/jqplot.cursor.min.js"></script>
+<!--[if IE]><script language="javascript" type="text/javascript" src="../src/excanvas.js"></script><![endif]--> 
 <link rel="stylesheet" type="text/css" href="/css/jquery.jqplot.min.css" />
 <script type="text/javascript" language="javascript" src="/js/jquery.dataTables.min.js"></script> 
 <link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.css" />

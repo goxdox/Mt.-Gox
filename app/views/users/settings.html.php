@@ -11,6 +11,11 @@ if($merch)
 	$merch='<input type="checkbox" name="merch" id="merch" onClick="onMerch()" checked="true" />';
 }else $merch='<input type="checkbox" name="merch" onClick="onMerch()" id="merch" />';
 
+if($payAPIOn)
+{
+	$payAPI='<input type="checkbox" name="payAPI" id="payAPI" onClick="onPayAPI()" checked />';
+}else $payAPI='<input type="checkbox" name="payAPI" id="payAPI" onClick="onPayAPI()" />';
+
 ?>
 <script type="text/javascript" language="javascript" src="/js/jquery.validate.js"></script>
 <script type="text/javascript" language="javascript">
@@ -22,6 +27,7 @@ $(document).ready(function(){
 	//$("#merch").bind('click',onMerch());
 
 	onMerch();
+	onPayAPI();
 	
   });
 
@@ -68,13 +74,29 @@ function onPass()
 	}else return(false);
 }
 
+function onToken()
+{
+	$.post("/code/gateway/changeToken.php", { }, onServer , "json" );
+	return(false);
+}
+
+function onPayAPI()
+{
+	if($('#payAPI').attr('checked'))
+	{
+		$('#tokenForm').show();
+	}else $('#tokenForm').hide();
+}
 
 function onServer(data)
 {
-	$('#error').text(data.error);
+	if(data.status) $('#error').text(data.error);
+	else $('#error').text('');
 	
 	if(data.status) $('#status').text(data.status);
 	else $('#status').text('');
+
+	if(data.token) $('#token').text(data.token);
 }
 </script>
 
@@ -88,11 +110,26 @@ function onServer(data)
 <tr><td>Email</td><td><input type="text" name="email" id="email" class="email" value="<?=$email ?>" /></td></tr>
 <tr><td>Email Trade Notifications</td><td><?php echo($notify); ?></td></tr>
 <tr><td>Display Merchant Services<br><a href="/merch/about">About Merchant Services</a></td><td><?php echo($merch); ?></td></tr>
-<tr id="noteRow" ><td>Payment Notification URL</td><td><input type="text" name="noteurl" id="noteurl" value="<?=$noteurl ?>" /></td></tr>
+<tr class="merch" id="noteRow" ><td>Payment Notification URL</td><td><input type="text" name="noteurl" id="noteurl" value="<?=$noteurl ?>" /></td></tr>
+<tr class="merch" ><td>Enable <a href="/merch/paymentAPI">Payment API</a></td><td><?php echo($payAPI); ?></td></tr>
 <tr><td colspan=2><input type="submit" value="Change" /></td></tr>
 </table>
 </fieldset>
-</form>     
+</form> 
+
+<form id="tokenForm" onsubmit="return onToken()" class="merch" >
+<fieldset>
+<legend>Merchant Token</legend>
+Keep this token private. If Payment API is enabled above this token can be used to automatically send payment to people.<br>
+You can generate a new token anytime you feel your old token has been compromised.
+<table class="btcx_table">
+<tr><td>Merchant ID</td><td><?= $gUserID ?></td></tr>
+<tr><td>Current Token</td><td id="token"><?= $token ?></td></tr>
+<tr><td colspan=2><input type="submit" value="Generate New Token" /></td></tr>
+</table>
+</fieldset>
+</form> 
+    
 
 <form id="passForm" action="" >
 <fieldset>

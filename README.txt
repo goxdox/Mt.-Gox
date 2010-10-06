@@ -138,5 +138,8 @@ alter table MerchantOrders change Amount Amount INT;
 alter table MerchantOrders change AmountRecv AmountRecv INT;
 alter table BTCRecord change Amount Amount INT;
 alter table Orders add Column amountHeld INT default 0;
-alter table Users add Column paypalTrust FLOAT default 0 after FundsHeld;
+
+##
+alter table Users add Column payAPIOn TINYINT default 0 after MerchOn;
+alter table Users add Column merchToken VARCHAR(20) after MerchNotifyURL;
 

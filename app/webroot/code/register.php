@@ -17,7 +17,8 @@ if(!getSingleDBValue($sql))
 {
 	$md5pass=md5($password);
 	$time=time();
-	$sql="INSERT INTO Users (Username,CleanName,Password,Email,Date) values ('$username','$clean','$md5pass','$email',$time)";
+	$newToken=generateRandomString(20);
+	$sql="INSERT INTO Users (Username,CleanName,Password,Email,merchToken,Date) values ('$username','$clean','$md5pass','$email','$newToken',$time)";
 	if( mysql_query($sql) )
 	{
 		$result=array( 'status' => "Registered!" );

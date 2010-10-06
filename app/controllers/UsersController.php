@@ -63,7 +63,7 @@ public function settings()
 		
 		$error='';
 		db_connect();
-		$sql="SELECT Email,TradeNotify,MerchNotifyURL from btcx.Users where UserID=$gUserID";
+		$sql="SELECT Email,TradeNotify,payAPIOn,MerchNotifyURL,merchToken from btcx.Users where UserID=$gUserID";
 		if( $data=mysql_query($sql))
 		{
 			$row=mysql_fetch_array($data);
@@ -71,13 +71,15 @@ public function settings()
 			{
 				$email=$row[0];
 				$notify=$row[1];
-				$noteurl=$row[2];
+				$payAPIOn=$row[2];
+				$noteurl=$row[3];
+				$token=$row[4];
 			}else $error="User Not found: $gUserID";	
 		}else $error='SQL Error';
 		
 		$title='Change Settings';
 		$merch=$gMerchOn;
-		return compact('title','email','notify','noteurl','merch','error');
+		return compact('gUserID','title','email','notify','noteurl','token','payAPIOn','merch','error');
 	}
 	
 	public function trades() 

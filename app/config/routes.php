@@ -35,6 +35,8 @@ if (!Environment::is('production')) {
 	Router::connect('/test', array('controller' => '\lithium\test\Controller'));
 }
 
+Router::connect('/merch/examples/payAPI', array('controller' => 'merch', 'action' => 'example_payAPI') );
+
 /**
  * Finally, connect the default routes.
  */
