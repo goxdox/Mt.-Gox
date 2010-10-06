@@ -90,7 +90,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 						mysql_query('commit');
 						
 						checkBidOrders($uid);
-						checkAskOrders($merchID);
+						checkBidOrders($merchID);
 						$result['result']=1;
 					}
 				}else throw new Exception("Insufficient Funds.");
@@ -126,7 +126,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 						mysql_query('commit');
 						
 						checkAskOrders($uid);
-						checkBidOrders($merchID);
+						checkAskOrders($merchID);
 						
 						$result['result']=1;
 					}

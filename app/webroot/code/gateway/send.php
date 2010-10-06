@@ -84,9 +84,9 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 			
 		}else if($currency=="BTC")
 		{
-			if($btcHeld>=$amount)
+			if($merchBTC>=$amount)
 			{
-				$accountTotal=$usdHeld+($btcHeld-$amount)*.06;
+				$accountTotal=$merchUSD+($merchBTC-$amount)*.06;
 				if($accountTotal < $minFundsHeld)
 				{
 					throw new Exception("held");
