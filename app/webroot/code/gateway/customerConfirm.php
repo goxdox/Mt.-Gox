@@ -138,6 +138,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 			if(isset($_POST['notify_url']))
 			{
 				$notify_url=$_POST['notify_url'];
+				
 				notifyMerch($notify_url,$customerName,$custom,$txn_id,$currency_code,$amount);
 			}
 			
