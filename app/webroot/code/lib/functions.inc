@@ -243,13 +243,14 @@ function redirectToHttp() {
 		return $query;
 	}
 	
-	function logMsg($msg)
-	{
-		$fd = fopen("phplog.txt", "a");
-		$str = "[" . date("Y/m/d h:i:s", time()) . "] " . $msg; 
-		fwrite($fd, $str . "\r\n");
-		fclose($fd);
-	}
+function logMsg($msg)
+{
+	global $gLogDir;
+	$fd = fopen("$gLogDir/phplog.txt", "a");
+	$str = "[" . date("Y/m/d h:i:s", time()) . "] " . $msg; 
+	fwrite($fd, $str . "\r\n");
+	fclose($fd);
+}
 	
 function httpsPost($url, $strRequest)
 {

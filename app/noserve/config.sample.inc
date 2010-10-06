@@ -3,4 +3,6 @@
 	$db_username="land";
 	$db_password="";
 	$db_name="btcx";
+	
+	$gLogDir="";
 ?>
