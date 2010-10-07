@@ -24,7 +24,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 	$token=mysql_real_escape_string($_POST['token']);
 	$currency=$_POST['currency'];
 	$itemName=mysql_real_escape_string($_POST['item']);
-	$amount=$_POST['amount'];
+	$amount=$_POST['amount']*BASIS;
 	
 	
 	$sql="SELECT btc,usd,fundsHeld,paypalTrust from Users where userid=$merchID and merchToken='$token' and payAPIOn=1";

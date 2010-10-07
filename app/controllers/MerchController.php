@@ -45,6 +45,8 @@ public function cb_example()
 	{
 		// load the merch info 
 		global $gUserID;
+		$this->_render['layout'] = 'clean';
+		
 		$this->request->data['gUserID']=$gUserID;
 		$this->request->data['title']="Checkout Using Mt. Gox";
 	  
@@ -76,6 +78,7 @@ public function cb_example()
 		  		}
 		  		$this->request->data['merchID']=$merchID;
 
+		  		 
 				return $this->request->data;
 		  	}else 
 		  	{
