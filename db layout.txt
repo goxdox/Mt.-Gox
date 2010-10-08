@@ -14,7 +14,8 @@ create table Users (UserID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, Username VAR
 	CleanName VARCHAR(30), Password varchar(40), Email VARCHAR(60), TradeNotify TINYINT default 0, 
 	MerchOn TINYINT default 0, payAPIOn TINYINT default 0, MerchNotifyURL VARCHAR(255), merchToken VARCHAR(20),
 	USD INT default 0, BTC INT default 0, 
-	FundsHeld INT default 0, paypalTrust FLOAT default 0, Date INT UNSIGNED ) ENGINE = INNODB;
+	FundsHeld INT default 0, paypalTrust FLOAT default 0, 
+	lastLogIP varchar(15), signUpIP varchar(15), Date INT UNSIGNED ) ENGINE = INNODB;
 
 create table Trades (TradeID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, BuyerID INT UNSIGNED, 
 	SellerID INT UNSIGNED, Amount INT, Price Float, Date INT UNSIGNED) ENGINE = INNODB;
@@ -51,11 +52,6 @@ CREATE TABLE Activity (actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT
 
 CREATE TABLE ErrorLog (ErrorType varchar(10), Msg TEXT, Date INT UNSIGNED);
 
-
-#Reason: 0- ? 1-Trade, 2- Payment Process, 3-Add Funds, 4-Withdraw Funds
-#CREATE TABLE BTCRecord (FromID INT UNSIGNED, ToID INT UNSIGNED, Amount INT, Reason TINYINT, Date INT UNSIGNED);
-#CREATE TABLE USDRecord (FromID INT UNSIGNED, ToID INT UNSIGNED, Amount INT, Reason TINYINT, Date INT UNSIGNED);
-#create table History (High FLOAT,Low FLOAT,Open Float, Close FLOAT, Volume INT,Date INT UNSIGNED);
 
 
 ###################################### End Set up #################################################################

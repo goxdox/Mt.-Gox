@@ -143,3 +143,6 @@ alter table Orders add Column amountHeld INT default 0;
 alter table Users add Column payAPIOn TINYINT default 0 after MerchOn;
 alter table Users add Column merchToken VARCHAR(20) after MerchNotifyURL;
 
+alter table Users add Column lastLogIP varchar(15) after paypalTrust;
+alter table Users add Column signUpIP varchar(15) after paypalTrust;
+
