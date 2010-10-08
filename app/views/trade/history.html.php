@@ -73,8 +73,7 @@ function onDepth(result)
 				      xaxis:{
 			tickOptions:{formatString:'$%.4f'},
 	        label:'Price',
-	        min: .02,
-	        max: .1
+	        autoscale: true,
 				       
 				        
 				      },

@@ -26,7 +26,7 @@ function onClaim()
 	$('#status').text="Withdrawing...";
 	$('#error').text="";
 	
-	$.post("/code/admin/claim.php", $('#form1').serialize() , onServer , "json" );
+	$.post("/code/admin/claim.php", $('#claimForm').serialize() , onServer , "json" );
 
 	return(false);
 }
@@ -90,7 +90,7 @@ function onMasspay()
 </fieldset>
 </form>
 
-<form id="form2" onsubmit="return onClaim()"  >
+<form id="claimForm" onsubmit="return onClaim()"  >
 <fieldset>
  <legend>Claim User's funds</legend>
 <table class="btcx_table">

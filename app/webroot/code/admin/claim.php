@@ -63,12 +63,12 @@ if(isset($_SESSION['UserID']))
 				$result['error'] = $e->getMessage();
 			}
 			
-		}
+		}else $result['error'] = "No User?";
 		
-	}
+	}else $result['error'] = "Not admin.";
 }else
 { // not found in db
-	$result=array( 'error' => "Not logged in." );
+	$result['error'] = "Not logged in.";
 }
 
 echo( json_encode($result));
