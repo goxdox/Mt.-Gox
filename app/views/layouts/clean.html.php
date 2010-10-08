@@ -52,15 +52,11 @@ if($gUserID)
 		<div class="top_row_left">--- 24/7 <a href="http://www.bitcoin.org/" target="_blank">Bitcoin</a> Exchange</div>
 		<div class="top_row_right"><a href="/users/login">Login</a></div>
 		<div class="top_row_right">not logged in</div>
-		
 	</div>
 	
     
 <?php } ?>
-	<div class="undermenu">
-	Mt. Gox charges no fee and is free to use. 
-	</div>
-
+<div id="ticker">Mt. Gox charges no fee and is free to use. </div>
 <div id="page">
 		
         <?php echo $this->content(); ?>
@@ -72,6 +68,5 @@ if($gUserID)
         <p>Copyright (c) 2010 mtgox.com. All rights reserved.</p>
       </div>
     </div>
-    <script>btcx_setup();</script>
   </body>
 </html>

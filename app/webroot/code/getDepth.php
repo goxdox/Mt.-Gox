@@ -13,7 +13,12 @@ $result['bids']=array();
 
 db_connect();
 
-$sql="SELECT Amount,Price From Asks where status=1 and price<.10 and price>.02 order by Price";
+$sql="SELECT LastPrice From Ticker";
+$price=getSingleDBValue($sql);
+$minPrice=$price*.75;
+$maxPrice=$price*1.7;
+
+$sql="SELECT Amount,Price From Asks where status=1 and price<$maxPrice and price>$minPrice order by Price";
 $data=mysql_query($sql);
 if($data)
 {
@@ -35,7 +40,7 @@ if($data)
 	}
 }else $result=array( 'error' => "SQL Failed." );
 
-$sql="SELECT Amount,Price From Bids where status=1 and price<.10 and price>.02 order by Price";
+$sql="SELECT Amount,Price From Bids where status=1 and price<$maxPrice and price>$minPrice order by Price";
 $data=mysql_query($sql);
 if($data)
 {

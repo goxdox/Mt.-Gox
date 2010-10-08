@@ -21,6 +21,16 @@ function onServer(data)
 	//$('#debug').text(data.debug);
 }
 
+function onClaim()
+{
+	$('#status').text="Withdrawing...";
+	$('#error').text="";
+	
+	$.post("/code/admin/claim.php", $('#form1').serialize() , onServer , "json" );
+
+	return(false);
+}
+
 function onWith()
 {
 	$('#status').text="Withdrawing...";
@@ -76,6 +86,16 @@ function onMasspay()
 <tr><td>UserID</td><td><input type="text" name="userid" id="userid"  /></td></tr>
 <tr><td>Amount</td><td><input type="text" name="amount" id="amount" /></td></tr>
 <tr><td colspan=2><input type="submit" value="Do it!" /></td></tr>
+</table> 
+</fieldset>
+</form>
+
+<form id="form2" onsubmit="return onClaim()"  >
+<fieldset>
+ <legend>Claim User's funds</legend>
+<table class="btcx_table">
+<tr><td>UserID</td><td><input type="text" name="userid" id="userid"  /></td></tr>
+<tr><td colspan=2><input type="submit" value="Take all funds" /></td></tr>
 </table> 
 </fieldset>
 </form>
