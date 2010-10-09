@@ -33,7 +33,7 @@ if(isset($_SESSION['UserID']))
 		mysql_query($sql);
 		
 		$result=array( 'btcAddr' => $addr );
-	}else $result=array( 'error' => "SQL Failed." );
+	}else $result['error']="SQL Error.";
 	}catch(Exception $e)
 	{
 		$result=array( 'error' => "Exception!" );
