@@ -77,6 +77,7 @@ if($gUserID)
 	<div class="undermenu">
 	Mt. Gox charges no fee and is free to use. Donate a few BTC to help keep it that way:
 	<span style="font-size: 10px;">1EuMa4dhfCK8ikgQ4emB7geSBgWK2cEdBG</span>
+	<br>Get involved: <a href="http://fivegrinder.com">FiveGrinder.com</a>
 	<p>We are very interested in any suggestions, bug reports, or general feedback!<br>
 	<script>document.write('<A href="mailto:' + 'info' + '@' + 'mt' + 'gox.com' + '">' + 'info' + '@' + 'mt' + 'gox.com' + '</a>')</script> send us mail!
 	</p>

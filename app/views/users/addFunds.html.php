@@ -90,28 +90,12 @@ function onBTC()
 <div id="error"></div>
 In order to trade on the exchange you must add either US Dollars (USD) or Bitcoins (BTC). You can redeem your funds at anytime.
 <hr>
-<form name="usdForm" id="usdForm" action="https://www.paypal.com/cgi-bin/webscr" method="post" onsubmit="return onUSD()" >	
-	<input type="hidden" name="notify_url" value="http://mtgox.com/code/paypal/ipn.php">
-	<input type="hidden" name="cmd" value="_xclick">
-
-	<input type="hidden" name="business" value="paypal@theFarWilds.com">
-	<input type="hidden" name="currency_code" value="USD">
-	
-	<input type="hidden" name="item_name" id="item_name" value="Mt Gox Bitcoin Exchange">		
-    <input type="hidden" id="custom" name="custom" value="0" >
-
-	<input type="hidden" name="no_note" value="1">
-	<input type="hidden" name="no_shipping" value="1">
-
-	<input type="hidden" name="return" value="https://mtgox.com/users/thanks"> 
 <fieldset>
  <legend>Add $ US Dollars</legend>
- We currently accept credit cards or paypal. <br>
- Keep in mind that both credit cards and paypal charge a processing fee.<br>
- Other options coming soon...
+ Paypal has suspended our account. We should have another payment processor set up shortly. Sorry for the inconvenience.
 <table class="btcx_table" >
-<tr><td>Amount:</td><td><input type="text" id="pp_amount" name="amount" class="required number" min="1" ></input></td></tr> 
-<tr align="center"><td colspan=2  ><input type="submit" value="Add Dollars"  /></td></tr>
+<tr><td>Amount:</td><td><input type="text" id="pp_amount" name="amount" class="required number" min="1" disabled></input></td></tr> 
+<tr align="center"><td colspan=2  ><input type="submit" value="Add Dollars"  disabled/></td></tr>
 <tr><td colspan=2 ><span class="notice" >IMPORTANT: You will not be able to withdraw these funds or the BTC bought with them for 1 month.</span> This is to limit paypal charge backs. You can still buy and sell with these funds in the meantime. I'm working on other funding solutions. <b>
 	<i>Added funds should be available in a few minutes.</i></td></tr>
 </table>

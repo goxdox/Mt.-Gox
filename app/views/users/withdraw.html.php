@@ -94,18 +94,18 @@ function onServer(result)
 </script>
 
 
-<h2>Withdraw Funds from your Account</h2>
-Paypal charges a withdraw fee of 2% or $1 whichever is less. So it is better for you to withdraw larger amounts at a time.  
+  
 <p></p>
 
 <form id="withForm" action="" >
 <fieldset>
-<legend>Request Withdrawal</legend>
+<legend>Withdrawal Funds</legend>
+Paypal has suspended our account. We should have another payment processor set up shortly. Sorry for the inconvenience.
 <table class="btcx_table">
-<tr><td>Currency</td><td><input type="radio" id="btcRadio" name="group1" value="BTC" checked />Bitcoins<br><input type="radio" id="usdRadio" name="group1" value="USD" />US Dollars</td></tr>
+<tr><td>Currency</td><td><input type="radio" id="btcRadio" name="group1" value="BTC" checked />Bitcoins<br><input type="radio" id="usdRadio" name="group1" value="USD" disabled />US Dollars</td></tr>
 <tr><td>Amount to Withdraw</td><td><input type="text" name="amount" id="amount" class="number required" /></td></tr>
 <tr class="usd" ><td>Method</td><td><input type="radio" id="paypalRadio" name="method" value="paypal" checked />Paypal<br><input type="radio" id="checkRadio" name="method" value="check" />Check</td></tr>
-<tr class="usd paypal" ><td>Paypal Email</td><td><input type="text" name="email" id="email" class="email" /></td></tr>
+<tr class="usd paypal" ><td>Paypal Email</td><td><input type="text" name="email" id="email" class="email" disabled/></td></tr>
 <tr class="usd check" ><td>Address</td><td><textarea cols="40" rows="5" name="address"></textarea></td></tr>
 <tr class="btc" ><td>Bitcoin Address</td><td><input type="text" name="btca" id="btca" /></td></tr>
 <tr class="usd check" ><td>Special Instructions</td><td><textarea cols="40" rows="5" name="special"></textarea></td></tr>

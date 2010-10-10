@@ -49,7 +49,7 @@ function onServer(data)
 	 <table class="btcx_table" width="100%" >
 		<tr><td><?= $item_name ?> </td><td><?= $dollarName ?> <?= $amount ?> <?= $btcName ?></td></tr>
 	</table>
-	 Do you really want to send <?= $dollarName ?> <?=$amount ?> <?= $btcName ?> to <?=$business ?> ?
+	 <h3>Do you really want to send <?= $dollarName ?> <?=$amount ?> <?= $btcName ?> to <?=$business ?> ?</h3>
 	
 	<?php 
 	if(!$gUserID){

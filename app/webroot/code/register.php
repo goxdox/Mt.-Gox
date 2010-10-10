@@ -23,7 +23,7 @@ if(!getSingleDBValue($sql))
 	$sql="INSERT INTO Users (Username,CleanName,Password,Email,merchToken,signUpIP,Date) values ('$username','$clean','$md5pass','$email','$newToken','$ip',$time)";
 	if( mysql_query($sql) )
 	{
-		$result=array( 'status' => "Registered!" );
+		$result=array( 'status' => "Registered!  <a href='/login'>Login now</a>" );
 	}else $result=array( 'error' => "SQL Error." );
 }else 
 {

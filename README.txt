@@ -1,4 +1,29 @@
 
+Users should be identified by email
+	- we need a new verified email field
+		- they can verify their email by accepting a payment from someone
+			- or by pushing a button somewhere?
+			- or they have to when they make an account
+				We send an email with a token. They have to click the link.
+				
+When they get an email payment they can associate that email with an existing account
+
+An account can have multiple confirmed emails
+	- it should have one primary email
+	
+An account needs a common name for displaying in the account history.
+
+Do they need to be able to view the details of a transaction?
+
+Makes a new account on claiming the SendEmail since they could just choose to attach the email to an existing account.
+
+Drop an email from the account?
+
+
+
+
+
+
 Merchant Services:
 	Widget 
 	startTxn.php

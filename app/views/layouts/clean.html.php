@@ -56,7 +56,7 @@ if($gUserID)
 	
     
 <?php } ?>
-<div id="ticker">Mt. Gox charges no fee and is free to use. </div>
+<div id="ticker">Mt. Gox charges no fee and is free to use. <a href="/">learn more</a></div>
 <div id="page">
 		
         <?php echo $this->content(); ?>
