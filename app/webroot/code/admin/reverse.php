@@ -15,7 +15,7 @@ if(isset($_SESSION['UserID']))
 		{
 			db_connect();
 			
-			$sql="SELECT * from Trades where tradeid=$tradeID";
+			$sql="SELECT amount,price,buyerID,sellerID from Trades where tradeid=$tradeID";
 			if(!$data=mysql_query($sql))  throw new Exception("SQL Error: $sql");
 			if(!$row=mysql_fetch_array($data)) throw new Exception("Invalid TradeID $tradeID");
 			
