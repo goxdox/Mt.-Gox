@@ -15,19 +15,19 @@ if(isset($_SESSION['UserID']))
 		{
 			db_connect();
 			
-			$sql="SELECT amount,price,buyerID,sellerID from Trades where tradeid=$tradeID";
-			if(!$data=mysql_query($sql))  throw new Exception("SQL Error: $sql");
-			if(!$row=mysql_fetch_array($data)) throw new Exception("Invalid TradeID $tradeID");
-			
-			$btc=$row['amount'];
-			$price=$row['price'];
-			$buyerID=$row['buyerID'];
-			$sellerID=$row['sellerID'];
-			
-			$usd=$btc*$price;
-				
 			mysql_query("begin");
 			try{
+				
+				$sql="SELECT amount,price,buyerID,sellerID from Trades where tradeid=$tradeID";
+				if(!$data=mysql_query($sql))  throw new Exception("SQL Error: $sql");
+				if(!$row=mysql_fetch_array($data)) throw new Exception("Invalid TradeID $tradeID");
+				
+				$btc=$row['amount'];
+				$price=$row['price'];
+				$buyerID=$row['buyerID'];
+				$sellerID=$row['sellerID'];
+				
+				$usd=$btc*$price;
 			
 				$sql="DELETE From Trades where tradeid=$tradeID";
 				if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
@@ -36,9 +36,9 @@ if(isset($_SESSION['UserID']))
 				if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 				
 			
-				$sql="UPDATE Users set USD += $usd, BTC -= $btc where userid=$buyerID";
+				$sql="UPDATE Users set USD=USD+$usd, BTC=BTC-$btc where userid=$buyerID";
 				if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
-				$sql="UPDATE Users set USD -= $usd, BTC += $btc where userid=$sellerID";
+				$sql="UPDATE Users set USD=USD-$usd, BTC=BTC+$btc where userid=$sellerID";
 				if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 				
 				
