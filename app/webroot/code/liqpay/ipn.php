@@ -56,8 +56,8 @@ $insig = $_POST['signature'];
 $resp = base64_decode($_POST['operation_xml']);
 logMsg($resp);
 
-
-$userID = parseTag($resp, 'order_id');
+$orderIDArray=explode(parseTag($resp, 'order_id'),'.');
+$userID = $orderIDArray[0];
 $status = parseTag($resp, 'status');
 //$payrez['response_description'] = parseTag($resp, 'response_description');
 $txn_id = parseTag($resp, 'transaction_id');
