@@ -24,7 +24,11 @@ if(!getSingleDBValue($sql))
 	if( mysql_query($sql) )
 	{
 		$result=array( 'status' => "Registered!  <a href='/login'>Login now</a>" );
-	}else $result=array( 'error' => "SQL Error." );
+	}else 
+	{
+		logMsg($sql);
+		$result=array( 'error' => "SQL Error." );
+	}
 }else 
 {
 	$result=array( 'error' => "Sorry that User Name is already taken." );

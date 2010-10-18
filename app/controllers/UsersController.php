@@ -10,11 +10,12 @@ class UsersController extends \lithium\action\Controller
 	
 	public function register() 
   	{
-  		ensureSSL();
+  			if(!DEBUG) ensureSSL();
 	}
 
   public function login() 
   {
+  	if(!DEBUG)
 	  ensureSSL();
     //$data=print_r($this->request,true);
     //Logger::alert("login: $data");
@@ -88,6 +89,7 @@ public function settings()
 	
 	public function addFunds() 
 	{
+		logMsg("hello");
 	}
 	
 	public function withdraw() 

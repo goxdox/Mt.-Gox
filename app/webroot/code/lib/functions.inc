@@ -251,6 +251,24 @@ function logMsg($msg)
 	fwrite($fd, $str . "\r\n");
 	fclose($fd);
 }
+
+function httpPost($url, $strRequest)
+{
+	//open connection
+	$ch = curl_init();
+	
+	//set the url, number of POST vars, POST data
+	curl_setopt($ch,CURLOPT_URL,$url);
+	curl_setopt($ch,CURLOPT_POST,1);
+	curl_setopt($ch,CURLOPT_POSTFIELDS,$strRequest);
+	
+	//execute post
+	$result = curl_exec($ch);
+	
+	//close connection
+	curl_close($ch);
+	return($result);
+}
 	
 function httpsPost($url, $strRequest)
 {

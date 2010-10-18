@@ -53,9 +53,8 @@ function onUSD()
 			$("#custom").val(userID);
 
 			$('#status').text('Loading...');
-			//$("#usdForm").submit();
-			//alert($("#usdForm").serialize());
-			return(true);
+			
+			$.post("/code/liqpay/checkout.php", $("#usdForm").serialize(), onServer , "json" );
 		}
 	}else
 	{
@@ -90,14 +89,18 @@ function onBTC()
 <div id="error"></div>
 In order to trade on the exchange you must add either US Dollars (USD) or Bitcoins (BTC). You can redeem your funds at anytime.
 <hr>
+<form id="usdForm" onsubmit="return onUSD()" >
 <fieldset>
  <legend>Add $ US Dollars</legend>
- Paypal has suspended our account. We should have another payment processor set up shortly. Sorry for the inconvenience.
+ Mt Gox now uses <a href="http://liqpay.com" target="_blank">LiqPay.com</a> for adding and withdrawing USD. LiqPay is easy to use and you can fund your account with a credit card.
 <table class="btcx_table" >
-<tr><td>Amount:</td><td><input type="text" id="pp_amount" name="amount" class="required number" min="1" disabled></input></td></tr> 
-<tr align="center"><td colspan=2  ><input type="submit" value="Add Dollars"  disabled/></td></tr>
-<tr><td colspan=2 ><span class="notice" >IMPORTANT: You will not be able to withdraw these funds or the BTC bought with them for 1 month.</span> This is to limit paypal charge backs. You can still buy and sell with these funds in the meantime. I'm working on other funding solutions. <b>
-	<i>Added funds should be available in a few minutes.</i></td></tr>
+<tr><td>Amount</td><td><input type="text"  name="amount" class="required number" min="1" /></td></tr> 
+<tr><td>Mobile Number</td><td><input type="text"  name="phone" class="required"  /></td></tr>
+<tr align="center"><td>Method</td><td>
+	<input type="radio" name="method" value="card" checked /> Credit Card<br> 
+	<input type="radio" name="method" value="liqpay" /> Liqpay Balance</td></tr>
+<tr align="center"><td colspan=2  ><input type="submit" value="Add Dollars"  /></td></tr>
+<tr><td colspan=2 ><i>Added funds should be available in a few minutes.</i></td></tr>
 </table>
 </fieldset>
 </form>
