@@ -36,12 +36,13 @@ create table Ticker (HighBuy FLOAT, LowSell Float, LastPrice Float, High Float, 
 create table AddBTC	(AddID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, UserID INT UNSIGNED, 
 	RecvAddr varchar(40), Status TINYINT DEFAULT 0, Amount INT, Date INT UNSIGNED) ENGINE = INNODB;
 	
- (txn_id, userID, date, email, first_name, last_name, gross, fee, amountHeld, street, city, state, zip, country)  VALUES 
- ('72T312359J1716150', 369,1286397122, 'rkm2425@hotmail.com', 'Ryan', 'McGirr', 250.00, 7.55, 242450, '', '', '', '', '')
-CREATE TABLE Orders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, txn_id VARCHAR(35), 
+ CREATE TABLE Orders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, txn_id VARCHAR(35), 
 	UserID INT UNSIGNED, Date INT, Email VARCHAR(35), first_name VARCHAR(35), 
 	last_name VARCHAR(35), gross FLOAT, fee FLOAT,street VARCHAR(35), city VARCHAR(35), 
 	state VARCHAR(35), zip VARCHAR(35), country VARCHAR(35), amountHeld INT default 0) ENGINE = INNODB;
+	
+ CREATE TABLE LiqpayOrders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, txn_id VARCHAR(35), 
+	UserID INT UNSIGNED, Amount FLOAT, Date INT) ENGINE = INNODB;
 	
 #currency 1- USD, 2-BTC
 #status 0-incomplete, 1- ok, 2- timed out, 3- incorrect amount

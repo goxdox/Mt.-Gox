@@ -89,7 +89,9 @@ public function settings()
 	
 	public function addFunds() 
 	{
-		logMsg("hello");
+		$title='Fund your Account';
+		
+  		return compact('title');
 	}
 	
 	public function withdraw() 
