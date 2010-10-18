@@ -56,17 +56,19 @@ $insig = $_POST['signature'];
 $resp = base64_decode($_POST['operation_xml']);
 logMsg($resp);
 
-$orderIDArray=explode(parseTag($resp, 'order_id'),'.');
+$orderIDArray=explode('.',parseTag($resp, 'order_id') );
+logMsg("1"); 
 $userID = $orderIDArray[0];
 $status = parseTag($resp, 'status');
+logMsg("2"); 
 //$payrez['response_description'] = parseTag($resp, 'response_description');
 $txn_id = parseTag($resp, 'transaction_id');
 //$payrez['pay_details'] = parseTag($resp, 'pay_details');
 //$payrez['pay_way'] = parseTag($resp, 'pay_way');
 $amount = parseTag($resp, 'amount');
-
+logMsg("3"); 
 $gensig = base64_encode(sha1($LIQPAY_SIG.$resp.$LIQPAY_SIG,1));
-
+logMsg("4"); 
 if ($insig == $gensig)
 {
 	if($status == 'failure' )
@@ -88,6 +90,7 @@ if ($insig == $gensig)
 	logMsg("Invalid liqpay sig: $userID"); 
 }
 
+logMsg("done"); 
 ?>
 
 
