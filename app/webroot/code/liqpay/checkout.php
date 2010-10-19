@@ -39,7 +39,7 @@ if(isset($_SESSION['UserID']))
 		<pay_way>$method</pay_way> 
 		</request>";
 	
-	logMsg($xml);
+	//logMsg($xml);
 	
 	$xml_encoded= $result['xml'] = base64_encode($xml); 
 	$lqsignature=$result['sig'] = base64_encode(sha1($LIQPAY_SIG.$xml.$LIQPAY_SIG,1));
