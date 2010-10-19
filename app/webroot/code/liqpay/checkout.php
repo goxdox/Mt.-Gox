@@ -49,7 +49,7 @@ if(isset($_SESSION['UserID']))
 	$result['error'] ="Not logged in.";
 }
 
-echo("<form action='$url' method='POST'>
+echo("<form action='https://www.liqpay.com/?do=clickNbuy' method='POST'>
       <input type='hidden' name='operation_xml' value='$xml_encoded' />
       <input type='hidden' name='signature' value='$lqsignature' />
 	<input type='submit' value='Pay'/>
