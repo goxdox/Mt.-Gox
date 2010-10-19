@@ -36,7 +36,7 @@ function onServer(data)
 		$('#liqXml').val(data.xml);
 		$('#liqSig').val(data.sig);
 		//alert(data.xml)
-		//$('#liqForm').submit();
+		$('#liqForm').submit();
 			
 	}
 	if(data.btcAddr)
@@ -117,7 +117,6 @@ In order to trade on the exchange you must add either US Dollars (USD) or Bitcoi
 <form id="liqForm" action='https://www.liqpay.com/?do=clickNbuy' method='POST'>
       <input type='hidden' id="liqXml" name='operation_xml'  />
       <input type='hidden' id="liqSig" name='signature'  />
-      <input type="submit" value="Really pay"  />
 </form>
 </fieldset>
 
