@@ -37,8 +37,7 @@ function onServer(data)
 		$('#liqSig').value=data.sig;
 		
 		//$('#liqForm').submit();
-		window.location("https://www.liqpay.com/?do=clickNbuy&operation_xml="+data.xml+"&signature="+data.sig
-		
+			
 	}
 	if(data.btcAddr)
 	{
