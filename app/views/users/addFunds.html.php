@@ -35,7 +35,10 @@ function onServer(data)
 	{
 		$('#liqXml').value=data.xml;
 		$('#liqSig').value=data.sig;
-		$('#liqForm').submit();
+		
+		//$('#liqForm').submit();
+		window.location("https://www.liqpay.com/?do=clickNbuy&operation_xml="+data.xml+"&signature="+data.sig
+		
 	}
 	if(data.btcAddr)
 	{
@@ -61,7 +64,8 @@ function onUSD()
 
 			$('#status').text('Calling Liqpay...');
 			
-			$.post("/code/liqpay/checkout.php", $("#usdForm").serialize(), onServer , "json" );
+			//$.post("/code/liqpay/checkout.php", $("#usdForm").serialize(), onServer , "json" );
+			return(true);
 		}
 	}else
 	{
@@ -96,7 +100,7 @@ function onBTC()
 <div id="error"></div>
 In order to trade on the exchange you must add either US Dollars (USD) or Bitcoins (BTC). You can redeem your funds at anytime.
 <hr>
-<form id="usdForm" onsubmit="return onUSD()" >
+<form id="usdForm" action="/code/liqpay/checkout.php" onsubmit="return onUSD()" >
 <fieldset>
  <legend>Add $ US Dollars</legend>
  Mt Gox now uses <a href="http://liqpay.com" target="_blank">LiqPay.com</a> for adding and withdrawing USD. LiqPay is easy to use and you can fund your account with a credit card.

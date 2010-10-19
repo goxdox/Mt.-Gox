@@ -41,14 +41,19 @@ if(isset($_SESSION['UserID']))
 	
 	logMsg($xml);
 	
-	$result['xml'] = base64_encode($xml); 
-	$result['sig'] = base64_encode(sha1($LIQPAY_SIG.$xml.$LIQPAY_SIG,1));
+	$xml_encoded= $result['xml'] = base64_encode($xml); 
+	$lqsignature=$result['sig'] = base64_encode(sha1($LIQPAY_SIG.$xml.$LIQPAY_SIG,1));
 	
 }else
 { // not found in db
 	$result['error'] ="Not logged in.";
 }
 
-echo( json_encode($result));
+echo("<form action='$url' method='POST'>
+      <input type='hidden' name='operation_xml' value='$xml_encoded' />
+      <input type='hidden' name='signature' value='$lqsignature' />
+	<input type='submit' value='Pay'/>
+	</form>");
+//echo( json_encode($result));
 
 ?>
