@@ -52,7 +52,7 @@ function parseTag($rs, $tag)
    return substr($rs, $start, ($end-$start)); 
 }
  
- 
+ db_connect();
 
 $insig = $_POST['signature'];
 $resp = base64_decode($_POST['operation_xml']);
