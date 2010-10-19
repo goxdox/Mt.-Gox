@@ -33,9 +33,9 @@ function onServer(data)
 	$('#status').text(data.status);
 	if(data.xml)
 	{
-		$('#liqXml').value=data.xml;
-		$('#liqSig').value=data.sig;
-		
+		$('#liqXml').val(data.xml);
+		$('#liqSig').val(data.sig);
+		//alert(data.xml)
 		//$('#liqForm').submit();
 			
 	}
@@ -99,12 +99,13 @@ function onBTC()
 <div id="error"></div>
 In order to trade on the exchange you must add either US Dollars (USD) or Bitcoins (BTC). You can redeem your funds at anytime.
 <hr>
-<form id="usdForm" action="/liqpay/checkout" onsubmit="return onUSD()" method='POST'>
+
 <fieldset>
  <legend>Add $ US Dollars</legend>
  Mt Gox now uses <a href="http://liqpay.com" target="_blank">LiqPay.com</a> for adding and withdrawing USD. LiqPay is easy to use and you can fund your account with a credit card.
+ <form id="usdForm" action="/liqpay/checkout" onsubmit="return onUSD()" method='POST'>
 <table class="btcx_table" >
-<tr><td>Amount</td><td><input type="text"  name="amount" class="required number" min="1" /></td></tr> 
+<tr><td>Amount</td><td><input type="text"  name="amount" class="required number" min="2" /></td></tr> 
 <tr><td>Mobile Number</td><td><input type="text"  name="phone" class="required"  /></td></tr>
 <tr align="center"><td>Method</td><td>
 	<input type="radio" name="method" value="card" checked /> Credit Card<br> 
@@ -112,13 +113,15 @@ In order to trade on the exchange you must add either US Dollars (USD) or Bitcoi
 <tr align="center"><td colspan=2  ><input type="submit" value="Add Dollars"  /></td></tr>
 <tr><td colspan=2 ><i>Added funds should be available in a few minutes.</i></td></tr>
 </table>
-</fieldset>
 </form>
 <form id="liqForm" action='https://www.liqpay.com/?do=clickNbuy' method='POST'>
       <input type='hidden' id="liqXml" name='operation_xml'  />
       <input type='hidden' id="liqSig" name='signature'  />
       <input type="submit" value="Really pay"  />
 </form>
+</fieldset>
+
+
 
 <hr>
 	
