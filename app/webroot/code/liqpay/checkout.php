@@ -19,8 +19,9 @@ if(isset($_SESSION['UserID']))
 	$amount=(float)$_POST['amount'];
 	$phone=$_POST['phone'];
 	
-	$phone= ereg_replace( '[^0-9]+', '', $phone );
-	$phone="+$phone";
+	$phone= preg_replace("/[^a-zA-Z0-9s]/", '', $phone);
+	
+	$randStr=generateRandomString(9);
 	
 	$method=$_POST['method'];
 
@@ -30,7 +31,7 @@ if(isset($_SESSION['UserID']))
 		<result_url>http://mtgox.com/thanks</result_url>
 		<server_url>http://mtgox.com/code/liqpay/ipn.php</server_url>
 		<merchant_id>$LIQPAY_MERCHANT_ID</merchant_id>
-		<order_id>$userID</order_id>
+		<order_id>$userID.$randStr</order_id>
 		<amount>$amount</amount>
 		<currency>USD</currency>
 		<description>Funding Mt Gox</description>
@@ -40,18 +41,9 @@ if(isset($_SESSION['UserID']))
 	
 	logMsg($xml);
 	
-	$xml_encoded = base64_encode($xml); 
-	$lqsignature = base64_encode(sha1($LIQPAY_SIG.$xml.$LIQPAY_SIG,1));
+	$result['xml'] = base64_encode($xml); 
+	$result['sig'] = base64_encode(sha1($LIQPAY_SIG.$xml.$LIQPAY_SIG,1));
 	
-
-	$url="https://www.liqpay.com/?do=clickNbuy";
-	$strRequest="operation_xml=$xml_encoded&signature=$lqsignature";
-	$ret=httpPost($url,$strRequest);
-	
-	logMsg($ret);
-	
-	$result['status'] ="You should recieve a SMS to $phone from liqpay shortly.";
-
 }else
 { // not found in db
 	$result['error'] ="Not logged in.";

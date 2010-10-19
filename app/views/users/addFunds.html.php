@@ -31,6 +31,12 @@ function onServer(data)
 {
 	$('#error').text(data.error);
 	$('#status').text(data.status);
+	if(data.xml)
+	{
+		$('#liqXml').value=data.xml;
+		$('#liqSig').value=data.sig;
+		$('#liqForm').submit();
+	}
 	if(data.btcAddr)
 	{
 		var dialog = $('#dialog')
@@ -44,6 +50,7 @@ function onServer(data)
 	}
 }
 
+
 function onUSD()
 {
 	if(userID)
@@ -52,7 +59,7 @@ function onUSD()
 		{
 			$("#custom").val(userID);
 
-			$('#status').text('Loading...');
+			$('#status').text('Calling Liqpay...');
 			
 			$.post("/code/liqpay/checkout.php", $("#usdForm").serialize(), onServer , "json" );
 		}
@@ -103,6 +110,10 @@ In order to trade on the exchange you must add either US Dollars (USD) or Bitcoi
 <tr><td colspan=2 ><i>Added funds should be available in a few minutes.</i></td></tr>
 </table>
 </fieldset>
+</form>
+<form id="liqForm" action='https://www.liqpay.com/?do=clickNbuy' method='POST'>
+      <input type='hidden' id="liqXml" name='operation_xml'  />
+      <input type='hidden' id="liqSig" name='signature'  />
 </form>
 
 <hr>

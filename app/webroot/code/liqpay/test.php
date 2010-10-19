@@ -13,6 +13,22 @@ $url="https://www.liqpay.com/?do=clickNbuy";
 $method='card';
 $phone='+20123145121';
 
+
+<request>
+                <version>1.2</version>
+        <action>send_money</action>
+                <result_url>http://mtgox.com/thanks</result_url>
+                <server_url>http://mtgox.com/code/liqpay/ipn.php</server_url>
+                <merchant_id>i9268561596</merchant_id>
+                <order_id>515</order_id>
+                <amount>1</amount>
+                <currency>USD</currency>
+                <description>Funding Mt Gox</description>
+                <default_phone>4917650011855</default_phone>
+                <pay_way>liqpay</pay_way>
+<action>send_money</ action>
+                </request>
+                
 	$xml="<request>      
 		<version>1.2</version>
         <action>send_money</action>

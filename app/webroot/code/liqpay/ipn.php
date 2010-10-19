@@ -28,14 +28,14 @@ function insertOrder($txn_id,$userID,$amount)
 		if(!($row=mysql_fetch_array($data)))  throw new Exception("User not found");
 		$usd=$row[0];
 		$btc=$row[1];
-		$sql="INSERT into Activity (UserID,deltaCurrency,currency,Type,TypeID,BTC,USD,Date) values ($uid,$netAmount,1,6,$orderID,$btc,$usd,$time)";
+		$sql="INSERT into Activity (UserID,deltaCurrency,currency,Type,TypeID,BTC,USD,Date) values ($userID,$netAmount,1,6,$orderID,$btc,$usd,$time)";
 		if(!mysql_query($sql)) throw new Exception($sql);
 		
 		mysql_query('COMMIT');
 	}catch(Exception $e)
 	{
 		mysql_query("rollback");
-		logMsg("ipn.php: $query failed"); 
+		logMsg("ipn.php: $sql failed"); 
 		exit(); 
 	}
 }
@@ -57,18 +57,18 @@ $resp = base64_decode($_POST['operation_xml']);
 logMsg($resp);
 
 $orderIDArray=explode('.',parseTag($resp, 'order_id') );
-logMsg("1"); 
+
 $userID = $orderIDArray[0];
 $status = parseTag($resp, 'status');
-logMsg("2"); 
+
 //$payrez['response_description'] = parseTag($resp, 'response_description');
 $txn_id = parseTag($resp, 'transaction_id');
 //$payrez['pay_details'] = parseTag($resp, 'pay_details');
 //$payrez['pay_way'] = parseTag($resp, 'pay_way');
 $amount = parseTag($resp, 'amount');
-logMsg("3"); 
+
 $gensig = base64_encode(sha1($LIQPAY_SIG.$resp.$LIQPAY_SIG,1));
-logMsg("4"); 
+
 if ($insig == $gensig)
 {
 	if($status == 'failure' )
@@ -80,7 +80,7 @@ if ($insig == $gensig)
 		if(getSingleDBValue($sql))
 		{
 			logMsg("liqpay duplicate: $userID");
-		}else insertOrder();
+		}else insertOrder($txn_id,$userID,$amount);
 	}else if($status=='wait_secure')
 	{
 		logMsg("liqpay wait_secure: $userID");
