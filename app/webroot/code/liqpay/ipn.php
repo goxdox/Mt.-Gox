@@ -1,6 +1,7 @@
 <?php
 include('../../../noserve/config.inc');
 include("../lib/functions.inc");
+include("../lib/common.inc");
 
 logMsg("start ipn.php");
 
@@ -29,7 +30,7 @@ function insertOrder($txn_id,$userID,$amount)
 		if(!($row=mysql_fetch_array($data)))  throw new Exception("User not found");
 		$usd=$row[0];
 		$btc=$row[1];
-		$sql="INSERT into Activity (UserID,deltaCurrency,currency,Type,TypeID,BTC,USD,Date) values ($userID,$netAmount,1,6,$orderID,$btc,$usd,$time)";
+		$sql="INSERT into Activity (UserID,deltaUSD,type,TypeID,BTC,USD,Date) values ($userID,$netAmount,6,$orderID,$btc,$usd,$time)";
 		if(!mysql_query($sql)) throw new Exception($sql);
 		logMsg("4.3");
 		mysql_query('COMMIT');
