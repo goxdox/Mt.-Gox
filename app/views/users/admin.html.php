@@ -46,7 +46,7 @@ function onWith()
 	$('#status').text="Withdrawing...";
 	$('#error').text="";
 	
-	$.post("/code/admin/with.php", $('#form1').serialize() , onServer , "json" );
+	$.post("/code/admin/changeUSD.php", $('#form1').serialize() , onServer , "json" );
 
 	return(false);
 }
@@ -91,7 +91,8 @@ function onMasspay()
 
 <form id="form1" onsubmit="return onWith()"  >
 <fieldset>
- <legend>USD Withdrawal</legend>
+ <legend>USD Add Balance</legend>
+ Add or subtract balance here. It will make an entry in activity and checkorders
 <table class="btcx_table">
 <tr><td>UserID</td><td><input type="text" name="userid" id="userid"  /></td></tr>
 <tr><td>Amount</td><td><input type="text" name="amount" id="amount" /></td></tr>

@@ -14,6 +14,7 @@ if(isset($_SESSION['UserID']))
 		$userID=(int)$_POST['userid'];
 		if($userID)
 		{
+			$time=time();
 			db_connect();
 			mysql_query("begin");
 			try{
@@ -33,7 +34,7 @@ if(isset($_SESSION['UserID']))
 				$goxUSD=$row['USD'];
 				
 				
-				$time=time();
+				
 				$sql="UPDATE Users set USD=0,BTC=0 where userid=$userID";
 				if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 				$sql="UPDATE Users set USD=USD+$userUSD,BTC=BTC+$userBTC where UserID=$GOX_BOT_ID";

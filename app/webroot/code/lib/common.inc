@@ -340,6 +340,9 @@ function getFunds($uid)
 		{
 			$btc=round($row['BTC']/BASIS,2);
 			$usd=round($row['USD']/BASIS,2);
+			if($usd<0)$usd=0;
+			if($btc<0)$btc=0;
+			
 			$result['usds']= $usd;
 			$result['btcs']= $btc;
 			$_SESSION['usd'] = $usd;

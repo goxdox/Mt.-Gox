@@ -21,13 +21,16 @@ if(isset($_POST['name']) && isset($_POST['pass']) )
 		if($row)
 		{	
 			$userID=$row[0];
-			$btc=$row[1];
-			$usd=$row[2];
+			$btc=round( $row[1]/BASIS,2);
+			$usd=round( $row[2]/BASIS,2);
+			if($usd<0)$usd=0;
+			if($btc<0)$btc=0;
+			
 			$merchon=$row[3];
 			$_SESSION['UserID'] = $userID;
 			$_SESSION['UserName'] = $name;
-			$_SESSION['btc'] = round($btc,2);
-			$_SESSION['usd'] = round($usd,2);
+			$_SESSION['btc'] = $btc;
+			$_SESSION['usd'] = $usd;
 			$_SESSION['Merch']= $merchon;
 			
 			$serverName=$_SERVER["SERVER_NAME"];

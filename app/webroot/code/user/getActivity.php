@@ -107,6 +107,8 @@ function getTypeStr($type)
 		case 5: return('Withdraw Paypal');
 		case 6: return('Add Paypal');
 		case 7: return('Payment Process');
+		case 8: return('Account Claimed');
+		case 9: return('Manual');
 	}
 	return('????');
 }

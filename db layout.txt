@@ -53,7 +53,7 @@ CREATE TABLE MerchantOrders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, Me
 CREATE TABLE PasswordResets (ResetID varchar(10), UserID INT UNSIGNED, Username Varchar(30), Date INT UNSIGNED);
 
 #Reason: 0- ? 1-Trade Sell, 2-Trade Buy, 3-Add BTC by sending, 4-Withdraw BTC, 5- Withdraw Paypal, 
-#  6- Add by Paypal, 7- Payment Process, 8-Fraud Claim
+#  6- Add by Paypal, 7- Payment Process, 8-Fraud Claim, 9- Manual
 CREATE TABLE Activity (actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
 	deltaBTC INT default 0, deltaUSD INT default 0, 
 	type TINYINT, typeID INT UNSIGNED default 0, typeData VARCHAR(40), 
