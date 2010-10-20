@@ -12,7 +12,7 @@ if(isset($_SESSION['UserID']))
 	{
 		$amount=BASIS*(float)$_POST['amount'];
 		$userID=(int)$_POST['userid'];
-		if($uid && $amount)
+		if($userID && $amount)
 		{
 			$time=time();
 			db_connect();
@@ -26,7 +26,7 @@ if(isset($_SESSION['UserID']))
 				$userBTC=$row['BTC'];
 				$userUSD=$row['USD']+$amount;
 				
-				$sql="UPDATE Users set USD=USD+$amount where UserID=$uid";
+				$sql="UPDATE Users set USD=USD+$amount where UserID=$userID";
 				if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 				
 				
@@ -47,10 +47,10 @@ if(isset($_SESSION['UserID']))
 			
 		}
 		
-	}
+	}else $resul['error'] = "Not admin.";
 }else
 { // not found in db
-	$result=array( 'error' => "Not logged in." );
+	$result=array['error'] = "Not logged in." ;
 }
 
 echo( json_encode($result));
