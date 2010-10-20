@@ -47,7 +47,7 @@ if(isset($_SESSION['UserID']))
 			
 		}
 		
-	}else $resul['error'] = "Not admin.";
+	}else $result['error'] = "Not admin.";
 }else
 { // not found in db
 	$result=array['error'] = "Not logged in." ;
