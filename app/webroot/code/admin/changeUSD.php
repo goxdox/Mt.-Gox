@@ -50,7 +50,7 @@ if(isset($_SESSION['UserID']))
 	}else $result['error'] = "Not admin.";
 }else
 { // not found in db
-	$result=array['error'] = "Not logged in." ;
+	$result['error'] = "Not logged in." ;
 }
 
 echo( json_encode($result));
