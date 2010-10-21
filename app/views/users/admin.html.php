@@ -51,6 +51,16 @@ function onWith()
 	return(false);
 }
 
+function onAddBTC()
+{
+	$('#status').text="Changeing...";
+	$('#error').text="";
+	
+	$.post("/code/admin/changeBTC.php", $('#addBTC').serialize() , onServer , "json" );
+
+	return(false);
+}
+
 function onMasspay()
 {
 	$('#status').text="Withdrawing...";
@@ -92,6 +102,18 @@ function onMasspay()
 <form id="form1" onsubmit="return onWith()"  >
 <fieldset>
  <legend>USD Add Balance</legend>
+ Add or subtract balance here. It will make an entry in activity and checkorders
+<table class="btcx_table">
+<tr><td>UserID</td><td><input type="text" name="userid" id="userid"  /></td></tr>
+<tr><td>Amount</td><td><input type="text" name="amount" id="amount" /></td></tr>
+<tr><td colspan=2><input type="submit" value="Do it!" /></td></tr>
+</table> 
+</fieldset>
+</form>
+
+<form id="addBTC" onsubmit="return onAddBTC()"  >
+<fieldset>
+ <legend>BTC Add Balance</legend>
  Add or subtract balance here. It will make an entry in activity and checkorders
 <table class="btcx_table">
 <tr><td>UserID</td><td><input type="text" name="userid" id="userid"  /></td></tr>
