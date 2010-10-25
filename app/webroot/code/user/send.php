@@ -199,7 +199,7 @@ if(isset($_SESSION['UserID']))
 				checkAskOrders($userID);
 				checkAskOrders($merchID);
 				
-				$result['status']="Sent $amount BTC to $email.";
+				$result['status']="Sent $pAmount BTC to $email.";
 			}
 				
 			if($userID) notifyUser($notify,$email,$note,$merchName,$currency,$pAmount);
