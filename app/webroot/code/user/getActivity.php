@@ -109,6 +109,7 @@ function getTypeStr($type)
 		case 7: return('Payment Process');
 		case 8: return('Account Claimed');
 		case 9: return('Manual');
+		case 10: return('Fund Transfer');
 	}
 	return('????');
 }

@@ -133,6 +133,13 @@ public function forgot()
 	public function admin() 
 	{
 	}
+	
+	public function sendMoney()
+	{
+		$title='Send Money';
+		
+  		return compact('title');	
+	}
 }
 
 ?>

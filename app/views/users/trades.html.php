@@ -13,7 +13,7 @@ if(!userID)
 }else
 {
 	$('#status').text('Loading...');
-	$.post("/code/user/getHistory.php", {  }, onServer , "json" );
+	//$.post("/code/user/getHistory.php", {  }, onServer , "json" );
 	gHistoryTable=$('#history').dataTable({
 		"bLengthChange": false,
 		"iDisplayLength": 30,

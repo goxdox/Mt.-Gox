@@ -98,8 +98,6 @@ function tradeNotifyUser($uid,$type,$amount,$price)
 			}
 		}	
 	}
-		
-	
 }
 
 function addOrder($table,$uid,$amount,$price,$status,$time)
@@ -227,104 +225,109 @@ function getOrders($uid)
 // see if any of the newly changed offers can now transact
 function checkAskOrders($uid)
 {
-	global $result;
-	
-	getFunds($uid);
-	$btc=(int)($result['btcs']*BASIS);
-	
-	$sql="SELECT OrderID,Amount,Price,Status,Date from Asks where UserID=$uid order by Price";
-	$data=mysql_query($sql);
-	if($data)
+	if($uid)
 	{
-		while($row=mysql_fetch_array($data))
+		global $result;
+		
+		getFunds($uid);
+		$btc=(int)($result['btcs']*BASIS);
+		
+		$sql="SELECT OrderID,Amount,Price,Status,Date from Asks where UserID=$uid order by Price";
+		$data=mysql_query($sql);
+		if($data)
 		{
-			$orderID=$row[0];
-			$amount=$row[1];
-			$price=$row[2];
-			$status=$row[3];
-			$date=$row[4];
-			
-			if($btc>0)
+			while($row=mysql_fetch_array($data))
 			{
-				if($amount>$btc)
+				$orderID=$row[0];
+				$amount=$row[1];
+				$price=$row[2];
+				$status=$row[3];
+				$date=$row[4];
+				
+				if($btc>0)
 				{
-					$sql="Update Asks set Status=1,Amount=$btc where OrderID=$orderID";
-					mysql_query($sql);
-					
-					$amountLeft=$amount-$btc;
-					addOrder('Asks',$uid,$amountLeft,$price,2,$date);
-					
-					$btc=0;
-				}else
-				{
-					$btc -= $amount;
-					if($status==2)
+					if($amount>$btc)
 					{
-						$sql="Update Asks set Status=1 where OrderID=$orderID";
+						$sql="Update Asks set Status=1,Amount=$btc where OrderID=$orderID";
 						mysql_query($sql);
+						
+						$amountLeft=$amount-$btc;
+						addOrder('Asks',$uid,$amountLeft,$price,2,$date);
+						
+						$btc=0;
+					}else
+					{
+						$btc -= $amount;
+						if($status==2)
+						{
+							$sql="Update Asks set Status=1 where OrderID=$orderID";
+							mysql_query($sql);
+						}
 					}
+				}else 
+				{
+					$sql="Update Asks set Status=2 where OrderID=$orderID";
+					mysql_query($sql);
 				}
-			}else 
-			{
-				$sql="Update Asks set Status=2 where OrderID=$orderID";
-				mysql_query($sql);
 			}
-		}
-	}else $result['error']="SQL Failed.";
-	
+		}else $result['error']="SQL Failed.";
+	}
 }
 
 function checkBidOrders($uid)
 {
-	global $result;
-	
-	getFunds($uid);
-	$usd=(int)($result['usds']*BASIS);
-	
-	
-	$sql="SELECT OrderID,Amount,Price,Status,Date from Bids where UserID=$uid order by Price desc";
-	$data=mysql_query($sql);
-	if($data)
+	if($uid)
 	{
-		while($row=mysql_fetch_array($data))
+		global $result;
+		
+		getFunds($uid);
+		$usd=(int)($result['usds']*BASIS);
+		
+		
+		$sql="SELECT OrderID,Amount,Price,Status,Date from Bids where UserID=$uid order by Price desc";
+		$data=mysql_query($sql);
+		if($data)
 		{
-			$orderID=$row[0];
-			$amount=$row[1];
-			$price=$row[2];
-			$status=$row[3];
-			$date=$row[4];
-			
-			if($usd>0)
+			while($row=mysql_fetch_array($data))
 			{
-				if($amount*$price>$usd)
+				$orderID=$row[0];
+				$amount=$row[1];
+				$price=$row[2];
+				$status=$row[3];
+				$date=$row[4];
+				
+				if($usd>0)
 				{
-					$btc=$usd/$price;
-					$sql="Update Bids set Status=1,Amount=$btc where OrderID=$orderID";
-					mysql_query($sql);
-					
-					$amountLeft=$amount-$btc;
-					if($amountLeft>0)
+					if($amount*$price>$usd)
 					{
-						addOrder('Bids',$uid,$amountLeft,$price,2,$date);
-					}
-					
-					$usd=0;
-				}else
-				{
-					$usd -= $amount*$price;
-					if($status==2)
-					{
-						$sql="Update Bids set Status=1 where OrderID=$orderID";
+						$btc=$usd/$price;
+						$sql="Update Bids set Status=1,Amount=$btc where OrderID=$orderID";
 						mysql_query($sql);
+						
+						$amountLeft=$amount-$btc;
+						if($amountLeft>0)
+						{
+							addOrder('Bids',$uid,$amountLeft,$price,2,$date);
+						}
+						
+						$usd=0;
+					}else
+					{
+						$usd -= $amount*$price;
+						if($status==2)
+						{
+							$sql="Update Bids set Status=1 where OrderID=$orderID";
+							mysql_query($sql);
+						}
 					}
+				}else 
+				{
+					$sql="Update Bids set Status=2 where OrderID=$orderID";
+					mysql_query($sql);
 				}
-			}else 
-			{
-				$sql="Update Bids set Status=2 where OrderID=$orderID";
-				mysql_query($sql);
 			}
-		}
-	}else $result['error']="SQL Failed.";	
+		}else $result['error']="SQL Failed.";	
+	}
 }
 
 function getFunds($uid)

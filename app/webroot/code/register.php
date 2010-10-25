@@ -23,15 +23,15 @@ if(!getSingleDBValue($sql))
 	$sql="INSERT INTO Users (Username,CleanName,Password,Email,merchToken,signUpIP,Date) values ('$username','$clean','$md5pass','$email','$newToken','$ip',$time)";
 	if( mysql_query($sql) )
 	{
-		$result=array( 'status' => "Registered!  <a href='/login'>Login now</a>" );
+		$result['status'] = "Registered!  <a href='/login'>Log in now</a>";
 	}else 
 	{
 		logMsg($sql);
-		$result=array( 'error' => "SQL Error." );
+		$result['error'] = "SQL Error.";
 	}
 }else 
 {
-	$result=array( 'error' => "Sorry that User Name is already taken." );
+	$result['error'] = "Sorry that User Name is already taken.";
 }
 
 echo( json_encode($result));

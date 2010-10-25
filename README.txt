@@ -164,6 +164,8 @@ alter table MerchantOrders change AmountRecv AmountRecv INT;
 alter table BTCRecord change Amount Amount INT;
 alter table Orders add Column amountHeld INT default 0;
 
+
+
 ##
 alter table Users add Column payAPIOn TINYINT default 0 after MerchOn;
 alter table Users add Column merchToken VARCHAR(20) after MerchNotifyURL;
@@ -171,3 +173,10 @@ alter table Users add Column merchToken VARCHAR(20) after MerchNotifyURL;
 alter table Users add Column lastLogIP varchar(15) after paypalTrust;
 alter table Users add Column signUpIP varchar(15) after paypalTrust;
 
+##########
+alter table Users add Column SendNotify TINYINT default 1 after TradeNotify;
+create table EmailMap (EmailID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, UserID INT UNSIGNED, Email VARCHAR(60), 
+	Status TINYINT, Date INT UNSIGNED ) ENGINE = INNODB;
+create table SendMoney (SendID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, FromID INT UNSIGNED, 
+	Currency TINYINT, Amount INT, ToEmail VARCHAR(60), Token VARCHAR(10), Note VARCHAR(255), 
+	Status TINYINT, Date INT UNSIGNED) ENGINE = INNODB;

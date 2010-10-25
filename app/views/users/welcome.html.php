@@ -50,7 +50,7 @@ Bitcoins are a new decentralized internet commodity. <a href="http://www.bitcoin
 <li>Fully automated.</li>
 <li>Easy to Use.</li>
 <li>Fast and Efficient.</li>
-<li>Pretty Charts :)</li>
+<li>Send USD or BTC for free to anyone with an email address.</li>
 </ul>
 </fieldset>
 

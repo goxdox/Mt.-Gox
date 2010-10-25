@@ -108,7 +108,7 @@ if( (isset($_POST['merchID']) && $_POST['merchID']>0) &&
 					
 					mysql_query('commit');
 					
-					checkAskOrders($uid);
+					checkAskOrders($userID);
 					checkAskOrders($merchID);
 					
 					echo("ok");
