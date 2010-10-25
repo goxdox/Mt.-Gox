@@ -1,8 +1,9 @@
 <script type="text/javascript" language="javascript" src="/js/jquery.validate.js"></script>
 <script type="text/javascript" language="javascript">
+
 $(document).ready(function(){
 
-	$("#withForm").validate();
+	$("#sendForm").validate();
 	
 	if(userID)
 	{

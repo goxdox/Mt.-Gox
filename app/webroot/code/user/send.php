@@ -56,7 +56,7 @@ function notifyUser($notify,$email,$note,$merchName,$currency,$pAmount)
 		{
 			$msg= "$merchName just sent you $pAmount BTC!\r\n";
 		}
-		
+		$msg .= "----- Note from Sender -----\r\n";
 		$msg .= "$note\r\n";
 		$msg .= "----------\r\n";
 		$msg .= "You can opt not to receive email notifications when someone sends you money in your mtgox account settings.";
@@ -80,7 +80,7 @@ function notifyNew($email,$note,$merchName,$currency,$pAmount,$token)
 		$msg= "More info about bitcoins: http://www.bitcoin.org\r\n";
 	}
 	$msg .= "You can claim your funds by clicking this link: https://mtgox.com/claim?token=$token&email=$email\r\n";
-	$msg .= "----------\r\n";
+	$msg .= "----- Note from Sender -----\r\n";
 	$msg .= "$note\r\n";
 	$msg .= "----------\r\n";
 	
