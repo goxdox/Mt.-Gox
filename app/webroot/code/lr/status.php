@@ -45,7 +45,7 @@ $str =
   
 
 //Calculating hash
-$hash = strtoupper(hash(MHASH_SHA256, $str));
+$hash = strtoupper(hash("sha256", $str));
 
 //Let's check that all parameters exist and match and that the hash 
 //string we computed matches the hash string that was sent by LR system.
