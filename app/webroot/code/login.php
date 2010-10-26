@@ -2,7 +2,8 @@
 include('../../noserve/config.inc');
 include("lib/functions.inc");
 include('lib/session.php');
-	
+include('lib/common.inc');
+
 if(isset($_POST['name']) && isset($_POST['pass']) )
 {
 	$name=mysql_real_escape_string($_POST['name']);

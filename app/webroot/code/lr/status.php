@@ -3,6 +3,8 @@ include('../../../noserve/config.inc');
 include("../lib/functions.inc");
 include("../lib/common.inc");
 
+include("functions.php");
+
 
 logMsg("lr payment");
 
@@ -41,8 +43,9 @@ $str =
   $_REQUEST["lr_currency"].":".
   $LR_SECURITY_WORD;
   
+
 //Calculating hash
-$hash = strtoupper(bin2hex(mhash(MHASH_SHA256, $str)));
+$hash = strtoupper(hash(MHASH_SHA256, $str));
 
 //Let's check that all parameters exist and match and that the hash 
 //string we computed matches the hash string that was sent by LR system.
@@ -61,13 +64,15 @@ if(isset($_REQUEST["lr_paidto"]) &&
 	
 	logMsg("valid lr $userID $amount");
 	
+	db_connect();
+	
 	if(validate($txn_id)) 
 	{
 		$time=time();
 		$sql = "INSERT INTO LROrders (transactionID, userID, lrAccount, amount, fee, date) values ($txn_id, $userID, $buyerLR, $amount, $fee, $time)";
 	
 		$result = mysql_query($sql);
-		if(!$result) { logMsg("ipn.php: $query failed"); exit(); }
+		if(!$result) { logMsg("status: $query failed"); exit(); }
 		$sql="SELECT LAST_INSERT_ID()";
 		$orderID=getSingleDBValue($sql);
 		logMsg("4.1");
