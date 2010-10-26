@@ -18,7 +18,7 @@ function createAuthToken($secWord)
 	
 	//echo "<p>AuthString: ".$authString."</p>";  
 	
-	$sha256 = bin2hex(mhash(MHASH_SHA256, $authString));
+	$sha256 = hash("sha256", $authString);
 	
 	return strtoupper($sha256);
 }	
