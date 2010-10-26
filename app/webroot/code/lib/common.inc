@@ -248,10 +248,21 @@ function checkAskOrders($uid)
 				{
 					if($amount>$btc)
 					{
-						$sql="Update Asks set Status=1,Amount=$btc where OrderID=$orderID";
-						mysql_query($sql);
+						if($status==1)
+						{	
+							$sql="Update Asks set Status=1,Amount=$btc where OrderID=$orderID";
+							mysql_query($sql);
+						}else 
+						{
+							$sql="DELETE from Asks where OrderID=$orderID";
+							mysql_query($sql);
+							
+							findBuyer($uid,$btc,$price,$time,false);
+						}
+						
 						
 						$amountLeft=$amount-$btc;
+						
 						addOrder('Asks',$uid,$amountLeft,$price,2,$date);
 						
 						$btc=0;
@@ -260,8 +271,10 @@ function checkAskOrders($uid)
 						$btc -= $amount;
 						if($status==2)
 						{
-							$sql="Update Asks set Status=1 where OrderID=$orderID";
+							$sql="DELETE from Asks where OrderID=$orderID";
 							mysql_query($sql);
+							
+							findBuyer($uid,$amount,$price,$time,false);
 						}
 					}
 				}else 
@@ -282,6 +295,7 @@ function checkBidOrders($uid)
 		
 		getFunds($uid);
 		$usd=(int)($result['usds']*BASIS);
+		$time=time();
 		
 		
 		$sql="SELECT OrderID,Amount,Price,Status,Date from Bids where UserID=$uid order by Price desc";
@@ -301,8 +315,18 @@ function checkBidOrders($uid)
 					if($amount*$price>$usd)
 					{
 						$btc=$usd/$price;
-						$sql="Update Bids set Status=1,Amount=$btc where OrderID=$orderID";
-						mysql_query($sql);
+						
+						if($status==1)
+						{	
+							$sql="Update Bids set Status=1,Amount=$btc where OrderID=$orderID";
+							mysql_query($sql);
+						}else 
+						{
+							$sql="DELETE from Bids where OrderID=$orderID";
+							mysql_query($sql);
+							
+							findSeller($uid,$btc,$price,$time,false);
+						}
 						
 						$amountLeft=$amount-$btc;
 						if($amountLeft>0)
@@ -316,8 +340,10 @@ function checkBidOrders($uid)
 						$usd -= $amount*$price;
 						if($status==2)
 						{
-							$sql="Update Bids set Status=1 where OrderID=$orderID";
+							$sql="DELETE from Bids where OrderID=$orderID";
 							mysql_query($sql);
+							
+							findSeller($uid,$amount,$price,$time,false);
 						}
 					}
 				}else 
@@ -351,7 +377,7 @@ function getFunds($uid)
 			$_SESSION['usd'] = $usd;
 			$_SESSION['btc'] = $btc;
 			
-		}else $result=array( 'error' => "User not found." );
+		}else $result['error'] = "User not found.";
 		
 	}else $result['error']="SQL Failed.";
 }

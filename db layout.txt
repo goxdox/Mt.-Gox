@@ -41,13 +41,17 @@ create table Ticker (HighBuy FLOAT, LowSell Float, LastPrice Float, High Float, 
 create table AddBTC	(AddID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, UserID INT UNSIGNED, 
 	RecvAddr varchar(40), Status TINYINT DEFAULT 0, Amount INT, Date INT UNSIGNED) ENGINE = INNODB;
 	
- CREATE TABLE Orders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, txn_id VARCHAR(35), 
+CREATE TABLE Orders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, txn_id VARCHAR(35), 
 	UserID INT UNSIGNED, Date INT, Email VARCHAR(35), first_name VARCHAR(35), 
 	last_name VARCHAR(35), gross FLOAT, fee FLOAT,street VARCHAR(35), city VARCHAR(35), 
 	state VARCHAR(35), zip VARCHAR(35), country VARCHAR(35), amountHeld INT default 0) ENGINE = INNODB;
 	
- CREATE TABLE LiqpayOrders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, txn_id VARCHAR(35), 
+CREATE TABLE LiqpayOrders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, txn_id VARCHAR(35), 
 	UserID INT UNSIGNED, Amount FLOAT, Date INT) ENGINE = INNODB;
+
+ CREATE TABLE LROrders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, txn_id VARCHAR(35), 
+	UserID INT UNSIGNED, Email VARCHAR(35), first_name VARCHAR(35), 
+	last_name VARCHAR(35), gross FLOAT, fee FLOAT,street VARCHAR(35), Date INT) ENGINE = INNODB;
 	
 #currency 1- USD, 2-BTC
 #status 0-incomplete, 1- ok, 2- timed out, 3- incorrect amount
@@ -58,7 +62,7 @@ CREATE TABLE MerchantOrders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, Me
 CREATE TABLE PasswordResets (ResetID varchar(10), UserID INT UNSIGNED, Username Varchar(30), Date INT UNSIGNED);
 
 #Reason: 0- ? 1-Trade Sell, 2-Trade Buy, 3-Add BTC by sending, 4-Withdraw BTC, 5- Withdraw Paypal, 
-#  6- Add by Paypal, 7- Payment Process, 8-Fraud Claim, 9- Manual, 10- Sending money to other users
+#  6- Add by Paypal, 7- Payment Process, 8-Fraud Claim, 9- Manual, 10- Sending money to other users, 11- Add by LR
 CREATE TABLE Activity (actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
 	deltaBTC INT default 0, deltaUSD INT default 0, 
 	type TINYINT, typeID INT UNSIGNED default 0, typeData VARCHAR(40), 

@@ -20,13 +20,6 @@ $(document).ready(function(){
 		  setUSDRadio();
 		});
 
-	$('#paypalRadio').change(function() {
-		  setPaypalRadio();
-		});
-
-	$('#checkRadio').change(function() {
-		  setCheckRadio();
-		});
 
 	setBTCRadio();
 	
@@ -44,18 +37,6 @@ function setUSDRadio()
 	$(".usd").show();
 }
 
-function setCheckRadio()
-{
-	$(".paypal").hide();
-	$(".check").show();
-}
-
-function setPaypalRadio()
-{
-	$(".check").hide();
-	$(".paypal").show();
-}
-
 
 
 function onWith()
@@ -64,8 +45,6 @@ function onWith()
 	{
 		if($("#withForm").valid())
 		{
-			var amount=$('#sellAmount').val();
-			var price=$('#sellPrice').val();
 			$('#status').text('Withdrawing...');
 			$('#error').text('');
 			
@@ -100,15 +79,15 @@ function onServer(result)
 <form id="withForm" action="" >
 <fieldset>
 <legend>Withdrawal Funds</legend>
-Paypal has suspended our account. We should have another payment processor set up shortly. Sorry for the inconvenience.
+Mt Gox uses <a href="http://libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>" target="_blank">LibertyReserve.com</a> for adding and withdrawing USD. Liberty Reserve is easy to use. 
+We suggest you use <a href="http://exchangezone.com" target="_blank">ExchangeZone.com</a> to buy and sell your Liberty Reserve dollars.
+ You will be charged 1% to withdraw by Liberty Reserve.<p>
+ Currently all USD withdraw requests are being handled manually. 
 <table class="btcx_table">
 <tr><td>Currency</td><td><input type="radio" id="btcRadio" name="group1" value="BTC" checked />Bitcoins<br><input type="radio" id="usdRadio" name="group1" value="USD" disabled />US Dollars</td></tr>
 <tr><td>Amount to Withdraw</td><td><input type="text" name="amount" id="amount" class="number required" /></td></tr>
-<tr class="usd" ><td>Method</td><td><input type="radio" id="paypalRadio" name="method" value="paypal" checked />Paypal<br><input type="radio" id="checkRadio" name="method" value="check" />Check</td></tr>
-<tr class="usd paypal" ><td>Paypal Email</td><td><input type="text" name="email" id="email" class="email" disabled/></td></tr>
-<tr class="usd check" ><td>Address</td><td><textarea cols="40" rows="5" name="address"></textarea></td></tr>
+<tr class="usd" ><td>Liberty Reserve Account</td><td><input type="text" name="account"  /></td></tr>
 <tr class="btc" ><td>Bitcoin Address</td><td><input type="text" name="btca" id="btca" /></td></tr>
-<tr class="usd check" ><td>Special Instructions</td><td><textarea cols="40" rows="5" name="special"></textarea></td></tr>
 <tr><td colspan=3><input type="button" value="Send Request" onClick="onWith()"/></td></tr>
 </table>
 <div id="error"></div>

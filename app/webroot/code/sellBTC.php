@@ -3,6 +3,7 @@ include('../../noserve/config.inc');
 include('lib/functions.inc');
 include('lib/session.php');
 include('lib/common.inc');
+include('lib/trade.php');
 
 // make sure:
 // user is logged in 
@@ -15,64 +16,7 @@ include('lib/common.inc');
 	// yes: sell all we can 
 // BTC left? Sell more
 
-function findBuyer($uid,$amount,$sellPrice,$time)
-{
-	global $result;
-	global $lastPrice;
-	
-	$buyPrice=$sellPrice*SPREAD;
-	
-	// TODO: this needs to also sort by time in cases of ties
-	$sql="SELECT * from Bids where Status=1 and round(Price,6)>=$buyPrice order by Price desc";
-	$data=mysql_query($sql);
-	if($data)
-	{
-		$tradeCount=0;
-		
-		while($row=mysql_fetch_array($data))
-		{
-			$bidAmount=$row['Amount'];
-			$buyerID=$row['UserID'];
-			$bidID=$row['OrderID'];
-			$bidPrice=$row['Price'];
-			
-			if($buyerID == $uid )
-			{
-				$result['status']="<br>Trying to buy from yourself?";
-				return($amount);
-			}
-			
-			$lastPrice=$bidPrice/HALF_SPREAD;
-			
-			
-			if($bidAmount>$amount)
-			{ // this bid covers the sell
-				$sql="UPDATE Bids set Amount=Amount-$amount where OrderID=$bidID";
-				mysql_query($sql);
-				$tradeAmount=$amount;
-			}else
-			{ // this sale covers the bid
-				$sql="DELETE FROM Bids where OrderID=$bidID";
-				mysql_query($sql);
-				$tradeAmount=$bidAmount;
-			}
-			
-			recordTrade($buyerID,$uid,$tradeAmount,$lastPrice,$time);
-			$pTradeAmount=round($tradeAmount/BASIS,2);
-			tradeNotifyUser($buyerID,"Bought",$pTradeAmount,$lastPrice*HALF_SPREAD);
-						
-			$result['trades'][$tradeCount]="Sold $pTradeAmount BTC for $lastPrice.";
-			$tradeCount++;
-			
-			$amount=$amount-$bidAmount;
-			checkAskOrders($buyerID);
-			if($amount<=0) return(0);
-		}
 
-	}else $result['error']="SQL Error.";
-	
-	return($amount);	
-}
 
 db_connect();
 
@@ -115,10 +59,9 @@ if($uid)
 			$result['status'] .="<br>You don't have that much BTC. What remains is stored in your open orders.";	
 		}
 		
-		$amount=findBuyer($uid,$amount,$price,$time);
+		$amount=findBuyer($uid,$amount,$price,$time,true);
 		if($amount>0)
 		{
-			addOrder('Asks',$uid,$amount,$price,0,$time);
 			$result['status'] .="<br>Your entire order can't be filled at that price. What remains is stored in your open orders.";
 		}
 		

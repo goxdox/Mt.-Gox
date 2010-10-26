@@ -127,9 +127,9 @@ if(isset($_SESSION['UserID']))
 		withdrawBTC();		
 	}else
 	{ // paypal
-		$method=$_POST['method'];
-		if($method=='paypal') withdrawPaypal();
-		else
+		//$method=$_POST['method'];
+		//if($method=='paypal') withdrawPaypal();
+		//else
 		{
 			$ip=$_SERVER['REMOTE_ADDR'];
 			//$username=$_SESSION['Username'];
@@ -157,7 +157,7 @@ if(isset($_SESSION['UserID']))
 
 }else
 { // not found in db
-	$result=array( 'error' => "Not logged in." );
+	$result['error'] = "Not logged in.";
 }
 
 

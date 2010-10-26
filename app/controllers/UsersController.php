@@ -89,13 +89,21 @@ public function settings()
 	
 	public function addFunds() 
 	{
+		global $LR_ACCOUNT_NUMBER;
+		global $LR_STORE_NAME;
+		global $gUserID;
+
 		$title='Fund your Account';
 		
-  		return compact('title');
+  		return compact('title','gUserID','LR_ACCOUNT_NUMBER','LR_STORE_NAME');
 	}
 	
 	public function withdraw() 
 	{
+		global $LR_ACCOUNT_NUMBER;
+		$title='Withdraw Funds';
+		
+  		return compact('title','LR_ACCOUNT_NUMBER');
 	}
 	
 public function forgot() 
