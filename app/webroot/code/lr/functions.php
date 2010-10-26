@@ -38,7 +38,7 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 	$xml .= "<ReceiptId>$txn_id</ReceiptId>";
 	$xml .='</History></HistoryRequest>';
 	
-	$url = "https://api.libertyreserve.com/xml/history.aspx?req=".urlencode($this->toXml());
+	$url = "https://api.libertyreserve.com/xml/history.aspx?req=".urlencode($xml);
 	
 	$handler=curl_init($url);
 	
@@ -47,9 +47,7 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 	$content=ob_get_contents();
 	ob_end_clean();
 	curl_close($handler);
-	
-	
-	$response = array();		
+			
 	
 	$doc = new DOMDocument();	
 	if(!$doc->loadXML($content)) {
