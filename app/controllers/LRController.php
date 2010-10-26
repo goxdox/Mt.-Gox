@@ -3,7 +3,7 @@
 namespace app\controllers;
 include("code/lib/common.inc");
 
-class LRController extends \lithium\action\Controller 
+class LrController extends \lithium\action\Controller 
 {
 	
 	function error($str)
