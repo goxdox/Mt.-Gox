@@ -1,7 +1,4 @@
 <?
-require_once("include/config.php");
-require_once("include/content.php"); 
-
 include('../../../noserve/config.inc');
 include("../lib/functions.inc");
 include("../lib/common.inc");
