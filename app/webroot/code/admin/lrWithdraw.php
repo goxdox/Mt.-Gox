@@ -12,6 +12,7 @@ function withdrawLR($userID)
 	
 	if(isset($_POST['account']) && isset($_POST['amount']))
 	{
+		$account=$_POST['account'];
 		$amount=BASIS*(float)$_POST['amount'];
 		$email=mysql_real_escape_string($_POST['account']);
 		

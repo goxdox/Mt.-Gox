@@ -92,7 +92,7 @@ function LRWithdraw($account,$amount)
 	$xml .= '</Auth>';
 	$xml .= "<Transfer><TransferType>transfer</TransferType>";
 	$xml .= "<Payer>$LR_ACCOUNT_NUMBER</Payer>";
-	$xml .=		"<Payee>$account</Payee>";
+	$xml .=	"<Payee>$account</Payee>";
 	$xml .=	'<CurrencyId>LRUSD</CurrencyId>';
 	$xml .=		"<Amount>$amount</Amount>";
 	$xml .=	'<Memo>MtGox.com withdrawal</Memo>';
