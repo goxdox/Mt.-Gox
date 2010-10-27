@@ -75,6 +75,13 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 	return false;
 }
 
+<TransferRequest id='12881784272832'><Auth>
+<ApiName>MtGox.com</ApiName>
+<Token>889ECD0DD1C95F3C129A14FA83CACDA44863358D809BDBB964E9A7008A15956A</Token>
+</Auth>
+<Transfer>
+<TransferType>transfer</TransferType></Transfer></TransferRequest><Anonymous>false</Anonymous><TransferRequest id='12881784272832'><Auth><ApiName>MtGox.com</ApiName><Token>889ECD0DD1C95F3C129A14FA83CACDA44863358D809BDBB964E9A7008A15956A</Token></Auth><Transfer><TransferType>transfer</TransferType></Transfer></TransferRequest><Memo>MtGox.com withdrawal</Memo><TransferRequest id='12881784272832'><Auth><ApiName>MtGox.com</ApiName><Token>889ECD0DD1C95F3C129A14FA83CACDA44863358D809BDBB964E9A7008A15956A</Token></Auth><Transfer><TransferType>transfer</TransferType></Transfer></TransferRequest><Anonymous>false</Anonymous><TransferRequest id='12881784272832'><Auth><ApiName>MtGox.com</ApiName><Token>889ECD0DD1C95F3C129A14FA83CACDA44863358D809BDBB964E9A7008A15956A</Token></Auth><Transfer><TransferType>transfer</TransferType></Transfer></TransferRequest><Amount>10.32</Amount><TransferRequest id='12881784272832'><Auth><ApiName>MtGox.com</ApiName><Token>889ECD0DD1C95F3C129A14FA83CACDA44863358D809BDBB964E9A7008A15956A</Token></Auth><Transfer><TransferType>transfer</TransferType></Transfer></TransferRequest><Anonymous>false</Anonymous><TransferRequest id='12881784272832'><Auth><ApiName>MtGox.com</ApiName><Token>889ECD0DD1C95F3C129A14FA83CACDA44863358D809BDBB964E9A7008A15956A</Token></Auth><Transfer><TransferType>transfer</TransferType></Transfer></TransferRequest><Memo>MtGox.com withdrawal</Memo><TransferRequest id='12881784272832'><Auth><ApiName>MtGox.com</ApiName><Token>889ECD0DD1C95F3C129A14FA83CACDA44863358D809BDBB964E9A7008A15956A</Token></Auth><Transfer><TransferType>transfer</TransferType></Transfer></TransferRequest><Anonymous>false</Anonymous><TransferRequest id='12881784272832'><Auth><ApiName>MtGox.com</ApiName><Token>889ECD0DD1C95F3C129A14FA83CACDA44863358D809BDBB964E9A7008A15956A</Token></Auth><Transfer><TransferType>transfer</TransferType></Transfer></TransferRequest><CurrencyId>LRUSD</CurrencyId><TransferRequest id='12881784272832'><Auth><ApiName>MtGox.com</ApiName><Token>889ECD0DD1C95F3C129A14FA83CACDA44863358D809BDBB964E9A7008A15956A</Token></Auth><Transfer><TransferType>transfer</TransferType></Transfer></TransferRequest><Anonymous>false</Anonymous><TransferRequest id='12881784272832'><Auth><ApiName>MtGox.com</ApiName><Token>889ECD0DD1C95F3C129A14FA83CACDA44863358D809BDBB964E9A7008A15956A</Token></Auth><Transfer><TransferType>transfer</TransferType></Transfer></TransferRequest>
+
 // throws GoxError
 function LRWithdraw($account,$amount)
 {
@@ -91,12 +98,12 @@ function LRWithdraw($account,$amount)
 	$xml .= "<Token>$token</Token>";
 	$xml .= '</Auth>';
 	$xml .= "<Transfer><TransferType>transfer</TransferType>";
-	$xml .= "<Payer>$LR_ACCOUNT_NUMBER</Payer>".
-	$xml .=		"<Payee>$account</Payee>".
-	$xml .=		"<CurrencyId>LRUSD</CurrencyId>".
-	$xml .=		"<Amount>$amount</Amount>".
-	$xml .=		"<Memo>MtGox.com withdrawal</Memo>".
-	$xml .=		"<Anonymous>false</Anonymous>".
+	$xml .= "<Payer>$LR_ACCOUNT_NUMBER</Payer>";
+	$xml .=		"<Payee>$account</Payee>";
+	$xml .=		"<CurrencyId>LRUSD</CurrencyId>";
+	$xml .=		"<Amount>$amount</Amount>";
+	$xml .=		"<Memo>MtGox.com withdrawal</Memo>";
+	$xml .=		"<Anonymous>false</Anonymous>";
 	$xml .=	"</Transfer></TransferRequest>";
 	
 	
@@ -113,7 +120,7 @@ function LRWithdraw($account,$amount)
 	ob_end_clean();
 	curl_close($handler);
 	
-	logMsg("Reply: /r/n $content");
+	logMsg("Reply: \r\n $content");
 			
 	return(true);
 }
