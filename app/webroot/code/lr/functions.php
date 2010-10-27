@@ -75,11 +75,11 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 		$nodes = $rootElem->getElementsByTagName("Pager");
 		if($nodes->length)
 		{
-			$nodes = item(0)->getElementsByTagName("TotalCount");
+			$nodes = $nodes->item(0)->getElementsByTagName("TotalCount");
 			if($nodes->length)	
 			{
-				$total = item(0);
-				if($total->tagName=="1") return(true);
+				$total = $nodes->item(0);
+				if($total->nodeValue=="1") return(true);
 			}
 		}
 	}
