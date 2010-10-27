@@ -49,6 +49,8 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 	$content=ob_get_contents();
 	ob_end_clean();
 	curl_close($handler);
+	
+	logMsg("Reply \r\n $content");
 			
 	
 	$doc = new DOMDocument();	
