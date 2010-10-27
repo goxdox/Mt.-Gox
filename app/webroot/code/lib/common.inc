@@ -4,6 +4,22 @@ define('HALF_SPREAD',1);
 define('ROUNDING',4);
 define('BASIS',1000);
 
+class GoxException extends Exception
+{
+	public $mSql=0;
+	
+	public function __construct($msg,$sql)
+	{
+		parent::__construct($msg);
+		$mSql=$sql;
+	}
+	
+  	public function log()
+    {
+    	logMsg($this->getFile().'('.$this->getLine().') '.$this->$mSql);
+    }
+}
+
 function recordTrade($buyerID,$sellerID,$amount,$price,$time)
 {	
 	if($amount>0)
@@ -121,7 +137,7 @@ function addOrder($table,$uid,$amount,$price,$status,$time)
 		{
 			$sql="INSERT INTO $table (UserID,Amount,Price,Status,Date) values ($uid,$amount,$price,$status,$time)";
 		}
-		mysql_query($sql);
+		if(!mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
 	}
 }
 
@@ -416,7 +432,8 @@ function findSeller($buyerID,$amount,$buyPrice,$time,$showResults)
 	return($amount);	
 }
 
-
+// returns amount left unbought
+// throws GoxException
 function findBuyer($uid,$amount,$sellPrice,$time)
 {
 	global $result;
@@ -426,53 +443,52 @@ function findBuyer($uid,$amount,$sellPrice,$time)
 	
 	// TODO: this needs to also sort by time in cases of ties
 	$sql="SELECT * from Bids where Status=1 and round(Price,6)>=$buyPrice order by Price desc";
-	$data=mysql_query($sql);
-	if($data)
-	{
-		$tradeCount=0;
-		
-		while($row=mysql_fetch_array($data))
-		{
-			$bidAmount=$row['Amount'];
-			$buyerID=$row['UserID'];
-			$bidID=$row['OrderID'];
-			$bidPrice=$row['Price'];
-			
-			if($buyerID == $uid )
-			{
-				$result['status']="<br>Trying to buy from yourself?";
-				return($amount);
-			}
-			
-			$lastPrice=$bidPrice/HALF_SPREAD;
-			
-			
-			if($bidAmount>$amount)
-			{ // this bid covers the sell
-				$sql="UPDATE Bids set Amount=Amount-$amount where OrderID=$bidID";
-				mysql_query($sql);
-				$tradeAmount=$amount;
-			}else
-			{ // this sale covers the bid
-				$sql="DELETE FROM Bids where OrderID=$bidID";
-				mysql_query($sql);
-				$tradeAmount=$bidAmount;
-			}
-			
-			recordTrade($buyerID,$uid,$tradeAmount,$lastPrice,$time);
-			$pTradeAmount=round($tradeAmount/BASIS,2);
-			tradeNotifyUser($buyerID,"Bought",$pTradeAmount,$lastPrice*HALF_SPREAD);
-						
-			$result['trades'][$tradeCount]="Sold $pTradeAmount BTC for $lastPrice.";
-			$tradeCount++;
-			
-			$amount=$amount-$bidAmount;
-			checkAskOrders($buyerID);
-			if($amount<=0) return(0);
-			else addOrder('Asks',$uid,$amount,$sellPrice,0,$time);
-		}
+	if(!$data=mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
 
-	}else $result['error']="SQL Error.";
+	$tradeCount=0;
+	
+	while($row=mysql_fetch_array($data))
+	{
+		$bidAmount=$row['Amount'];
+		$buyerID=$row['UserID'];
+		$bidID=$row['OrderID'];
+		$bidPrice=$row['Price'];
+		
+		if($buyerID == $uid )
+		{
+			$result['status']="<br>Trying to buy from yourself?";
+			return($amount);
+		}
+		
+		$lastPrice=$bidPrice/HALF_SPREAD;
+		
+		
+		if($bidAmount>$amount)
+		{ // this bid covers the sell
+			$sql="UPDATE Bids set Amount=Amount-$amount where OrderID=$bidID";
+			if(!mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
+			$tradeAmount=$amount;
+		}else
+		{ // this sale covers the bid
+			$sql="DELETE FROM Bids where OrderID=$bidID";
+			if(!mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
+			$tradeAmount=$bidAmount;
+		}
+		
+		recordTrade($buyerID,$uid,$tradeAmount,$lastPrice,$time);
+		$pTradeAmount=round($tradeAmount/BASIS,2);
+		tradeNotifyUser($buyerID,"Bought",$pTradeAmount,$lastPrice*HALF_SPREAD);
+					
+		$result['trades'][$tradeCount]="Sold $pTradeAmount BTC for $lastPrice.";
+		$tradeCount++;
+		
+		$amount=$amount-$bidAmount;
+		checkAskOrders($buyerID);
+		if($amount<=0) return(0);
+		
+	}
+	
+	addOrder('Asks',$uid,$amount,$sellPrice,0,$time);
 	
 	return($amount);	
 }

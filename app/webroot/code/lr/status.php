@@ -97,7 +97,7 @@ if(isset($_REQUEST["lr_paidto"]) &&
 		}catch(Exception $e)
 		{
 			mysql_query("rollback");
-			logMsg("ipn.php: $sql failed");  
+			logMsg("status failed: $sql");  
 		}
 	}else 
 	{
