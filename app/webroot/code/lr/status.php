@@ -21,6 +21,9 @@ function validate($txn_id)
 		return(false);
 	}else
 	{
+		global $LR_SECURITY_WORD;
+		global $LR_ACCOUNT_NUMBER;
+		global $LR_STORE_NAME;
 		//$request = new LRAPIRequest($LR_STORE_NAME, $LR_SECURITY_WORD);
 		return(validateTransaction($txn_id, $LR_ACCOUNT_NUMBER, $LR_STORE_NAME, $LR_SECURITY_WORD));
 	}
@@ -66,7 +69,7 @@ if(isset($_REQUEST["lr_paidto"]) &&
 	
 	db_connect();
 	
-	if(validate($txn_id,$LR_ACCOUNT_NUMBER,$LR_STORE_NAME,$LR_SECURITY_WORD)) 
+	if(validate($txn_id)) 
 	{
 		$time=time();
 		$sql = "INSERT INTO LROrders (transactionID, userID, lrAccount, amount, fee, date) values ($txn_id, $userID, $buyerLR, $amount, $fee, $time)";
