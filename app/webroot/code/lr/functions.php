@@ -59,19 +59,30 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 		return false;
 	}
 	
-	$rootElem = $doc->getElementsByTagName("HistoryResponse")->item(0);
-	$responseId = $rootElem->getAttribute("id");
-	
-	if ($responseId != $id) {
-		logMsg("IDs don't match: $content");
-		return false;
-	}		
-	
-	$counter = 0;
-	
-	$total = $rootElem->getElementsByTagName("Pager")->item(0)->getElementsByTagName("TotalCount")->item(0);
-	
-	if($total->tagName=="1") return(true);
+	$nodes = $doc->getElementsByTagName("HistoryResponse");
+	if($nodes->length)
+	{
+		$rootElem = $nodes->item(0);
+		$responseId = $rootElem->getAttribute("id");
+		
+		if ($responseId != $id) {
+			logMsg("IDs don't match: $content");
+			return false;
+		}		
+		
+		$counter = 0;
+		
+		$nodes = $rootElem->getElementsByTagName("Pager");
+		if($nodes->length)
+		{
+			$nodes = item(0)->getElementsByTagName("TotalCount");
+			if($nodes->length)	
+			{
+				$total = item(0);
+				if($total->tagName=="1") return(true);
+			}
+		}
+	}
 	
 	logMsg("not found: $content $total");
 	return false;
