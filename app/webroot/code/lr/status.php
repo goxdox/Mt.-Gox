@@ -66,7 +66,7 @@ if(isset($_REQUEST["lr_paidto"]) &&
 	
 	db_connect();
 	
-	if(validate($txn_id)) 
+	if(validate($txn_id,$LR_ACCOUNT_NUMBER,$LR_STORE_NAME,$LR_SECURITY_WORD)) 
 	{
 		$time=time();
 		$sql = "INSERT INTO LROrders (transactionID, userID, lrAccount, amount, fee, date) values ($txn_id, $userID, $buyerLR, $amount, $fee, $time)";

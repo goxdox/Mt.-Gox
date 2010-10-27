@@ -38,6 +38,8 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 	$xml .= "<ReceiptId>$txn_id</ReceiptId>";
 	$xml .='</History></HistoryRequest>';
 	
+	logMsg($xml);
+	
 	$url = "https://api.libertyreserve.com/xml/history.aspx?req=".urlencode($xml);
 	
 	$handler=curl_init($url);
@@ -58,7 +60,7 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 	$rootElem = $doc->getElementsByTagName("HistoryResponse")->item(0);
 	$responseId = $rootElem->getAttribute("id");
 	
-	if ($responseId != $req->id) {
+	if ($responseId != $id) {
 		logMsg("IDs don't match: $content");
 		return false;
 	}		
