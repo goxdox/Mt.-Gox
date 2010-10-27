@@ -73,8 +73,55 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 	
 	logMsg("not found: $content $total");
 	return false;
-		
 }
+
+// throws GoxError
+function LRWithdraw($account,$amount)
+{
+	global $LR_SECURITY_WORD;
+	global $LR_ACCOUNT_NUMBER;
+	global $LR_STORE_NAME;
+
+	$id=generateId();
+	$token=createAuthToken($LR_SECURITY_WORD);
+	
+	$xml = "<TransferRequest id='$id'>";
+	$xml .= "<Auth>";
+	$xml .= "<ApiName>$LR_STORE_NAME</ApiName>";
+	$xml .= "<Token>$token</Token>";
+	$xml .= '</Auth>';
+	$xml .= "<Transfer><TransferType>transfer</TransferType>";
+	$xml .= "<Payer>$LR_ACCOUNT_NUMBER</Payer>".
+	$xml .=		"<Payee>$account</Payee>".
+	$xml .=		"<CurrencyId>LRUSD</CurrencyId>".
+	$xml .=		"<Amount>$amount</Amount>".
+	$xml .=		"<Memo>MtGox.com withdrawal</Memo>".
+	$xml .=		"<Anonymous>false</Anonymous>".
+	$xml .=	"</Transfer></TransferRequest>";
+	
+	
+	
+	logMsg($xml);
+	
+	$url = "https://api.libertyreserve.com/xml/transfer.aspx?req=".urlencode($xml);
+	
+	$handler=curl_init($url);
+	
+	ob_start();
+	curl_exec($handler);
+	$content=ob_get_contents();
+	ob_end_clean();
+	curl_close($handler);
+	
+	logMsg("Reply: /r/n $content");
+			
+	return(true);
+}
+
+
+//////
+
+
 	
 
 class ApiError 

@@ -51,6 +51,16 @@ function onWith()
 	return(false);
 }
 
+function onLRWith()
+{
+	$('#status').text="Withdrawing...";
+	$('#error').text="";
+	
+	$.post("/code/admin/lrWithdraw.php", $('#lrForm').serialize() , onServer , "json" );
+
+	return(false);
+}
+
 function onAddBTC()
 {
 	$('#status').text="Changeing...";
@@ -86,18 +96,19 @@ function onMasspay()
 </table>
 </fieldset>
 
-<form id="mpForm" onsubmit="return onMasspay()"  >
-<input type="hidden" name="cmd" value="masspay" />
+<form id="lrForm" onsubmit="return onLRWith()"  >
 <fieldset>
- <legend>Paypal MassPay</legend>
- This doesn't hit the DB at all.
+ <legend>LR Withdraw</legend>
+ This will enter in DB as if the user requested this.
 <table class="btcx_table">
-<tr><td>Email</td><td><input type="text" name="email" id="email"  /></td></tr>
-<tr><td>Amount</td><td><input type="text" name="amount" id="amount" /></td></tr>
+<tr><td>UserID</td><td><input type="text" name="userid"   /></td></tr>
+<tr><td>Amount</td><td><input type="text" name="amount" /></td></tr>
+<tr><td>LR Account</td><td><input type="text" name="account" /></td></tr>
 <tr><td colspan=2><input type="submit" value="Do it!" /></td></tr>
 </table> 
 </fieldset>
 </form>
+
 
 <form id="form1" onsubmit="return onWith()"  >
 <fieldset>
@@ -139,6 +150,19 @@ function onMasspay()
 <table class="btcx_table">
 <tr><td>UserID</td><td><input type="text" name="userid" id="userid"  /></td></tr>
 <tr><td colspan=2><input type="submit" value="Take all funds" /></td></tr>
+</table> 
+</fieldset>
+</form>
+
+<form id="mpForm" onsubmit="return onMasspay()"  >
+<input type="hidden" name="cmd" value="masspay" />
+<fieldset>
+ <legend>Paypal MassPay</legend>
+ This doesn't hit the DB at all.
+<table class="btcx_table">
+<tr><td>Email</td><td><input type="text" name="email" id="email"  /></td></tr>
+<tr><td>Amount</td><td><input type="text" name="amount" id="amount" /></td></tr>
+<tr><td colspan=2><input type="submit" value="Do it!" /></td></tr>
 </table> 
 </fieldset>
 </form>

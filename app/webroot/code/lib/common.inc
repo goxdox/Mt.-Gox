@@ -8,6 +8,11 @@ class GoxException extends Exception
 {
 	public $mSql=0;
 	
+	public function __construct($msg)
+	{
+		parent::__construct($msg);
+	}
+	
 	public function __construct($msg,$sql)
 	{
 		parent::__construct($msg);
@@ -16,7 +21,7 @@ class GoxException extends Exception
 	
   	public function log()
     {
-    	logMsg($this->getFile().'('.$this->getLine().') '.$this->$mSql);
+    	if($this->$mSql) logMsg($this->getFile().'('.$this->getLine().') '.$this->$mSql);
     }
 }
 
