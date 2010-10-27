@@ -13,7 +13,7 @@ class GoxException extends Exception
 		parent::__construct($msg);
 	}
 	
-	public function __construct($msg,$sql)
+	public function __construct1($msg,$sql)
 	{
 		parent::__construct($msg);
 		$mSql=$sql;
