@@ -38,6 +38,7 @@ function withdrawBTC()
 						if($accountTotal < $minFundsHeld)
 						{
 							$allowedBTC= (int)(($btcHeld -(($minFundsHeld-$usdHeld)/.06))/BASIS);
+							if($allowedBTC<0) $allowedBTC=0;
 							$result['status'] = "To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedBTC BTC";
 						}else
 						{

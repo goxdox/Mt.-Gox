@@ -50,7 +50,7 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 	ob_end_clean();
 	curl_close($handler);
 	
-	logMsg("Reply \r\n $content");
+	logMsg("Reply");
 			
 	
 	$doc = new DOMDocument();	
@@ -79,7 +79,11 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 			if($nodes->length)	
 			{
 				$total = $nodes->item(0);
-				if($total->nodeValue=="1") return(true);
+				if($total->nodeValue=="1") 
+				{
+					logMsg("valid reply");
+					return(true);
+				}
 			}
 		}
 	}

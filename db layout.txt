@@ -4,7 +4,7 @@
 drop database sessions;
 CREATE DATABASE sessions;
 use sessions;
-CREATE Table Sessions (UniqueID varchar(32) PRIMARY KEY,  LastAccess INT, SessionData TEXT, AppName varchar(10));
+CREATE Table Sessions (UniqueID varchar(32) PRIMARY KEY,  LastAccess INT , SessionData TEXT, AppName varchar(10));
 
 
 drop database btcx;

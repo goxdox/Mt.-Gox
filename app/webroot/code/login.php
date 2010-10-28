@@ -8,7 +8,12 @@ if(isset($_POST['name']) && isset($_POST['pass']) )
 {
 	$name=mysql_real_escape_string($_POST['name']);
 	$pass=mysql_real_escape_string($_POST['pass']);
-	
+/*	
+	if(isset($_POST['remember']))
+	{
+		$rem=1;
+	}else $rem=0;
+*/	
 	db_connect();
 
 	// check these against the db

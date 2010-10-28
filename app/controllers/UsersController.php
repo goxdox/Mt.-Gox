@@ -8,6 +8,15 @@ use app\models\User;
 class UsersController extends \lithium\action\Controller 
 {
 	
+function error($str)
+	{		
+		$vars['error'] = $str;
+		$vars['title'] = 'Error';
+		
+		$this->set($vars);
+		$this->render('../error');		
+	}
+	
 	public function register() 
   	{
   			if(!DEBUG) ensureSSL();
@@ -140,6 +149,8 @@ public function forgot()
 	
 	public function admin() 
 	{
+		global $gUserID;
+		if(!$gUserID)  UsersController::error("Invalid");
 	}
 	
 	public function sendMoney()

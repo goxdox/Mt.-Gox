@@ -10,6 +10,24 @@ include('paypal/masspay.php');
 // valid amount
 // valid address
 
+function printStats()
+{
+	$sql="SELECT sum(USD)/1000,sum(BTC)/1000,count(*) from Users";
+	$data=mysql_query($sql);
+	$row=mysql_fetch_array($data);
+	$usd=$row[0];
+	$btc=$row[1];
+	$ave=$usd/$btc;
+	$num=$row[2];
+	$sql="SELECT LastPrice,Volume from Ticker";
+	$data=mysql_query($sql);
+	$row=mysql_fetch_array($data);
+	
+	$pace=$row[1]*365*.018*$row[0];
+	
+	return("USD($usd) BTC($btc) $ave Num Users($num) Pace: $pace");
+}
+
 
 if($_SESSION['UserID']==1)
 {
@@ -39,11 +57,15 @@ if($_SESSION['UserID']==1)
 			
 			$result['status']=paypalWithdraw($email,$amount);
 			break;		
+			
+		case 'stats':
+			$result['status']=printStats();
+		break;
 	}
 	
 }else
 { // not found in db
-	$result=array( 'error' => "Not logged in." );
+	$result['error'] ="Not logged in.";
 }
 
 echo( json_encode($result));

@@ -42,6 +42,7 @@ function onServer(data)
 <table class="btcx_table">
 <tr><td>User Name</td><td><input type="text" name="username" id="username"  class="required" minlength="2" /></td></tr>
 <tr><td>Password</td><td><input type="password" name="password" id="password" class="required" minlength="5"/></td></tr>
+<!-- <tr><td colspan=2><input type="checkbox" name="remember" />Stay logged in for 2 weeks.</td></tr> -->
 <tr><td colspan=2><input type="submit" value="Login" /></td></tr>
 </table> 
 <a href="/users/forgot" >Forgot your password?</a>
