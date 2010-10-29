@@ -82,11 +82,11 @@ function onServer(result)
 Mt Gox uses <a href="http://libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>" target="_blank">LibertyReserve.com</a> for adding and withdrawing USD. Liberty Reserve is easy to use. 
 We suggest you use <a href="http://exchangezone.com" target="_blank">ExchangeZone.com</a> to buy and sell your Liberty Reserve dollars.
  You will be charged 1% to withdraw by Liberty Reserve.<p>
- Currently all USD withdraw requests are being handled manually. 
+ We are currently buying a large amount of Liberty Reserve to be able to support automatic withdrawals again. Withdrawing USD is suspended until we can fill our LR account. We should be fully back in action Nov 3rd. Sorry for the delay. 
 <table class="btcx_table">
 <tr><td>Currency</td><td><input type="radio" id="btcRadio" name="group1" value="BTC" checked />Bitcoins<br><input type="radio" id="usdRadio" name="group1" value="USD" />US Dollars</td></tr>
 <tr><td>Amount to Withdraw</td><td><input type="text" name="amount" id="amount" class="number required" /></td></tr>
-<tr class="usd" ><td>Liberty Reserve Account</td><td><input type="text" name="account"  /></td></tr>
+<tr class="usd" ><td>Liberty Reserve Account</td><td><input type="text" name="account"  disabled/></td></tr>
 <tr class="btc" ><td>Bitcoin Address</td><td><input type="text" name="btca" id="btca" /></td></tr>
 <tr><td colspan=3><input type="button" value="Send Request" onClick="onWith()"/></td></tr>
 </table>

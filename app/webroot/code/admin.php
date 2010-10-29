@@ -12,7 +12,11 @@ include('paypal/masspay.php');
 
 function printStats()
 {
-	$sql="SELECT sum(USD)/1000,sum(BTC)/1000,count(*) from Users";
+	global $GOX_BOT_ID;
+	
+	db_connect();
+	
+	$sql="SELECT sum(USD)/1000,sum(BTC)/1000,count(*) from Users where userID != $GOX_BOT_ID";
 	$data=mysql_query($sql);
 	$row=mysql_fetch_array($data);
 	$usd=$row[0];
