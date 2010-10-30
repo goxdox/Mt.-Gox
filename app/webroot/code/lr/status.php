@@ -65,7 +65,7 @@ if(isset($_REQUEST["lr_paidto"]) &&
 	$buyerLR=$_REQUEST["lr_paidby"];
 	$txn_id=$_REQUEST["lr_transfer"];
 	
-	logMsg("valid lr $userID $amount");
+	logMsg("valid lr $userID $amount $fee");
 	
 	db_connect();
 	
@@ -78,21 +78,21 @@ if(isset($_REQUEST["lr_paidto"]) &&
 		if(!$result) { logMsg("insert failed: $sql"); exit(); }
 		$sql="SELECT LAST_INSERT_ID()";
 		$orderID=getSingleDBValue($sql);
-		logMsg("4.1");
+		
 		mysql_query('BEGIN');
 		try{
 			$netAmount=($amount-$fee)*BASIS;
 			$sql="Update Users set USD=USD+$netAmount where userid=$userID";
 			if(!mysql_query($sql)) throw new Exception($sql);
-			logMsg("4.2");
+			
 			$sql="SELECT USD,BTC from Users where UserID=$userID";
 			if(!($data=mysql_query($sql))) throw new Exception($sql);
 			if(!($row=mysql_fetch_array($data)))  throw new Exception("User not found");
 			$usd=$row[0];
 			$btc=$row[1];
-			$sql="INSERT into Activity (UserID,deltaUSD,type,TypeID,TypeData,BTC,USD,Date) values ($userID,$netAmount,11,$orderID,$buyerLR,$btc,$usd,$time)";
+			$sql="INSERT into Activity (UserID,deltaUSD,type,TypeID,TypeData,BTC,USD,Date) values ($userID,$netAmount,11,$orderID,'$buyerLR',$btc,$usd,$time)";
 			if(!mysql_query($sql)) throw new Exception($sql);
-			logMsg("4.3");
+			
 			mysql_query('COMMIT');
 		}catch(Exception $e)
 		{

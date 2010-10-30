@@ -130,7 +130,34 @@ function LRWithdraw($account,$amount)
 	ob_end_clean();
 	curl_close($handler);
 	
-	logMsg("Reply: \r\n $content");
+	
+	
+	$doc = new DOMDocument();	
+	if(!$doc->loadXML($content)) {
+		logMsg("Can't parse: $content");
+		return(true);
+	}
+	
+	$nodes = $doc->getElementsByTagName("TransferResponse");
+	if($nodes->length)
+	{
+		$rootElem = $nodes->item(0);
+		$responseId = $rootElem->getAttribute("id");
+		
+		if ($responseId != $id) {
+			logMsg("IDs don't match: $content");
+			return(true);
+		}		
+		
+		$counter = 0;
+		
+		$nodes = $rootElem->getElementsByTagName("Error");
+		if($nodes->length)
+		{
+			logMsg("Withdraw failed: \r\n $content");
+			return(false);
+		}
+	}
 			
 	return(true);
 }
