@@ -116,12 +116,13 @@ function tradeNotifyUser($uid,$type,$amount,$price)
 	}
 }
 
-function addOrder($table,$uid,$amount,$price,$status,$time)
+function addOrder($table,$uid,$amount,$price,$status)
 {
 	global $result;
 	
 	if($amount>0)
 	{
+		$time=time();
 		if($status)
 			$sql="SELECT OrderID from $table where userid=$uid and round(price,5)=$price and status=$status";
 		else 
@@ -279,7 +280,7 @@ function checkAskOrders($uid)
 						
 						$amountLeft=$amount-$btc;
 						
-						addOrder('Asks',$uid,$amountLeft,$price,2,$date);
+						addOrder('Asks',$uid,$amountLeft,$price,2);
 						
 						$btc=0;
 					}else
@@ -347,7 +348,7 @@ function checkBidOrders($uid)
 						$amountLeft=$amount-$btc;
 						if($amountLeft>0)
 						{
-							addOrder('Bids',$uid,$amountLeft,$price,2,$date);
+							addOrder('Bids',$uid,$amountLeft,$price,2);
 						}
 						
 						$usd=0;
@@ -427,7 +428,7 @@ function findSeller($buyerID,$amount,$buyPrice,$time,$showResults)
 	
 		}else $result['error']="SQL Error.";
 		
-		addOrder('Bids',$buyerID,$amount,$buyPrice,0,$time);
+		addOrder('Bids',$buyerID,$amount,$buyPrice,0);
 	}
 	return($amount);	
 }
@@ -488,7 +489,7 @@ function findBuyer($uid,$amount,$sellPrice,$time)
 		
 	}
 	
-	addOrder('Asks',$uid,$amount,$sellPrice,0,$time);
+	addOrder('Asks',$uid,$amount,$sellPrice,0);
 	
 	return($amount);	
 }

@@ -59,7 +59,7 @@ if($uid)
 		if($usdHeld<$usdNeeded)
 		{
 			$heldAmount=($usdNeeded-$usdHeld)/$price;
-			addOrder('Bids',$uid,$heldAmount,$price,2,$time);
+			addOrder('Bids',$uid,$heldAmount,$price,2);
 			$amount=$usdHeld/$price;	
 			$result['status'] .= "<br>You don't have that much USD. What remains is stored in your open orders.";
 		}
