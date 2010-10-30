@@ -72,7 +72,7 @@ if(isset($_REQUEST["lr_paidto"]) &&
 	if(validate($txn_id)) 
 	{
 		$time=time();
-		$sql = "INSERT INTO LROrders (txn_id, userID, lrAccount, amount, fee, date) values ($txn_id, $userID, $buyerLR, $amount, $fee, $time)";
+		$sql = "INSERT INTO LROrders (txn_id, userID, lrAccount, amount, fee, date) values ('$txn_id', $userID, '$buyerLR', $amount, $fee, $time)";
 	
 		$result = mysql_query($sql);
 		if(!$result) { logMsg("insert failed: $sql"); exit(); }
