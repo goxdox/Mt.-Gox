@@ -27,7 +27,7 @@ function printStats()
 	$data=mysql_query($sql);
 	$row=mysql_fetch_array($data);
 	
-	$pace=$row[1]*365*.018*$row[0];
+	$pace=$row[1]*365*.018*$row[0]/BASIS;
 	
 	return("USD($usd) BTC($btc) $ave Num Users($num) Pace: $pace");
 }

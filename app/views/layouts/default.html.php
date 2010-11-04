@@ -82,6 +82,8 @@ if($gUserID)
 	<p>We are very interested in any suggestions, bug reports, or general feedback!<br>
 	<script>document.write('<A href="mailto:' + 'info' + '@' + 'mt' + 'gox.com' + '">' + 'info' + '@' + 'mt' + 'gox.com' + '</a>')</script> send us mail!
 	</p>
+	
+	<a href="http://www.dragons.tl/launchpad.php?referrer=mtgox" target="_blank" ><img class="banner" src="/img/dt_banner.jpg" /></a>
 	</div>
 </div>
 <div id="ticker">Sorry, you must have Javascript enabled to use Mt. Gox</div>
@@ -91,8 +93,9 @@ if($gUserID)
         
       </div>
       
-      <HR style="margin-top: 30px;">
+     
       <div id="footer">
+       <HR style="margin-top: 30px;">
         <p>Copyright (c) 2010 mtgox.com. All rights reserved.</p>
       </div>
     </div>
