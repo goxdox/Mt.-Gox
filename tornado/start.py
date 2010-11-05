@@ -8,6 +8,10 @@ class MainHandler(tornado.web.RequestHandler):
 
 application = tornado.web.Application([
     (r"/", MainHandler),
+    (r"/subscribe", SubscribeHandler),
+    (r"/php/trade", TradeHandler),
+    (r"/php/order", OrderHandler),
+
 ])
 
 if __name__ == "__main__":

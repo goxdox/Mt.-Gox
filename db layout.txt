@@ -15,6 +15,7 @@ create table Users (UserID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, Username VAR
 	TradeNotify TINYINT default 0, SendNotify TINYINT default 1, 
 	MerchOn TINYINT default 0, payAPIOn TINYINT default 0, MerchNotifyURL VARCHAR(255), merchToken VARCHAR(20),
 	USD INT default 0, BTC INT default 0, 
+	marginBalance INT default 0,
 	FundsHeld INT default 0, paypalTrust FLOAT default 0, 
 	lastLogIP varchar(15), signUpIP varchar(15), Date INT UNSIGNED ) ENGINE = INNODB;
 	
@@ -68,6 +69,32 @@ CREATE TABLE Activity (actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT
 	btc INT, usd INT, date INT UNSIGNED) ENGINE = INNODB;
 
 CREATE TABLE ErrorLog (ErrorType varchar(10), Msg TEXT, Date INT UNSIGNED);
+
+
+CREATE TABLE MarginAccounts (userID INT UNSIGNED, usd INT, Date INT UNSIGNED) ENGINE = INNODB;
+
+#status: 1-ok, 2-Not enough funds
+CREATE TABLE MarginOrders (orderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
+	type TINYINT, amount INT, price FLOAT, status TINYINT,
+	date INT UNSIGNED) ENGINE = INNODB;
+	
+CREATE TABLE MarginPosition (posID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
+	type TINYINT, amount INT, entryPrice FLOAT, takeProfit FLOAT, stopLoss FLOAT,
+	date INT UNSIGNED) ENGINE = INNODB;
+
+#status: 1-closed normally, 2- Stop loss, 3-take profit, 4- MC
+CREATE TABLE MarginTrade (tradeID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
+	type TINYINT, amount INT, startPrice FLOAT, endPrice FLOAT, status TINYINT,
+	dateEntered INT UNSIGNED, dateClosed INT UNSIGNED) ENGINE = INNODB;
+	
+
+#Reason: 0- ? 1-Position Closed, 2-Add Funds, 3-Withdraw Funds, 4- MC
+CREATE TABLE MarginActivity (actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
+	deltaUSD INT default 0, 
+	type TINYINT, typeID INT UNSIGNED default 0, typeData VARCHAR(40), 
+	btc INT, usd INT, date INT UNSIGNED) ENGINE = INNODB;
+	
+
 
 
 

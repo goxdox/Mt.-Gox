@@ -19,11 +19,12 @@ Now suppose you really want those 20 BTC now and you would pay up to $.08 for th
 <fieldset>
  <legend>4 Easy Steps</legend>
 <ul>
-<li>1. Make an Account</li>
-<li>2. Add some funds</li>
-<li>3. Buy or Sell Bitcoins</li>
-<li>4. Withdraw your converted funds</li>
+<li>1. <a href="/users/register">Make an Account</a></li>
+<li>2. <a href="/users/addFunds">Add some funds</a></li>
+<li>3. <a href="/trade">Buy or Sell Bitcoins</a></li>
+<li>4. <a href="/users/withdraw">Withdraw your converted funds</a></li>
 </ul>
+<h2><a href="/users/register">Sign up!</a></h2>
 </fieldset>
 <!--
 <fieldset>

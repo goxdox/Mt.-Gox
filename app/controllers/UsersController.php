@@ -35,6 +35,15 @@ public function welcome()
 	{
 	}
 	
+public function welcome2() 
+	{
+	}
+	
+public function welcome3() 
+	{
+		$this->_render['layout'] = 'clean';
+	}
+	
 public function thanks() 
 	{
 	}

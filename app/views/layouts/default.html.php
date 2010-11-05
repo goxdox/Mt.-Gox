@@ -60,15 +60,15 @@ if($gUserID)
 <?php }else{ ?>
 <script> var userID=0; </script>
 	<div class="header">
-		<div class="top_row_logo" ><h1>Mt. Gox</h1></div>
+		<div class="top_row_logo" ><a href="/" ><h1>Mt. Gox</h1></a></div>
 		<div class="top_row_left">--- 24/7 <a href="http://www.bitcoin.org/" target="_blank">Bitcoin</a> Exchange</div>
 		<div class="top_row_right"><a href="/users/login">Login</a></div>
-		<div class="top_row_right">not logged in</div>
-		
+		<div class="top_row_right">|</div>
+		<div class="top_row_right"><a href="/users/register">Sign Up</a></div>
 	</div>
 	<div class="menu">
 	<table class="btcx_table">
-         <tr><td><a href="/users/register">Register</a></td></tr>
+         <tr><td><a href="/users/register">Sign up</a></td></tr>
          <tr><td><a href="/users/login">Login</a></td></tr>
          <tr><td><a href="/support">How it Works</a></td></tr>
         <tr><td><a href="/trade/history">Trade Data</a></td></tr>
