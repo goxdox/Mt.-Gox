@@ -7,7 +7,7 @@
 
 <h3>Welcome to the Bitcoin Exchange.</h3> 
 Buy and Sell the internet commodity known as Bitcoins!<br>
-<i style="font-size: 11px" >Mt Gox charges a small fee (0.065%) for each trade.</i>
+<i style="font-size: 11px" >Mt Gox charges a small fee (0.65%) for each trade.</i>
 
 <div id="status"></div>
 <div id="error"></div>
