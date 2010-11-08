@@ -33,6 +33,14 @@ public function send()
   		return compact('title');
   }
   
+ public function contact()
+  {
+  	$title='Contact Us';
+		
+  		return compact('title');
+  }
+  
+  
 }
 
 ?>

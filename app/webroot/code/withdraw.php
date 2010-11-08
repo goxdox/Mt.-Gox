@@ -7,6 +7,28 @@ include('lib/bitcoin.inc');
 include('paypal/masspay.php');
 include('lr/functions.php');
 
+// only allow them to withdraw $1000 a day
+function amountLeftToday($userID,$inBTC)
+{
+	$sql="SELECT LastPrice from Ticker";
+	$lastPrice=getSingleDBValue($sql);
+	
+	$dayago=time()-(24*60*60);
+	$sql="SELECT sum(deltaBTC),sum(deltaUSD) from Activity where userid=$userid and (type=4 or type=5 or type=7 or type=10) and deltaUSD<1 and deltaBTC<1 and date>$dayago";
+	if($data=mysql_query($sql))
+	{
+		if($row=mysql_fetch_array($data))
+		{
+			$btc=$row[0];
+			$usd=($btc*$lastPrice)+$row[1];
+			$left=1000000-$usd;
+			if($inBTC) return($left/$lastPrice);
+			return($left);
+		}
+	}	
+	return(0);
+}
+
 function withdrawBTC()
 {
 	global $result;
@@ -15,48 +37,61 @@ function withdrawBTC()
 	{
 		$uid=(int)($_SESSION['UserID']);
 		
-		$amount=BASIS*(float)	$_POST['amount'];
+		$amount=BASIS*(float)$_POST['amount'];
 		$btca=mysql_real_escape_string($_POST['btca']);
 		
 		db_connect();
 		
+		$left=amountLeftToday($userID,true);
 		
-		try{
-			$sql="SELECT USD,BTC,fundsHeld,paypalTrust from Users where userID=$uid";
-			if($data=mysql_query($sql))
+		if($left>0) 
+		{
+			
+			if($amount>$left)
 			{
-				if($row=mysql_fetch_array($data))
+				$amount=$left;
+				$pAmount=round($amount/BASIS,2);
+				$result['error'] = "To comply with US regulations you are only allowed to withdraw a maximum of $1000 within a 24 hour period. $pAmount withdrawn. Please try the rest of your withdrawal tomorrow.";
+			}
+			
+			
+			try{
+				$sql="SELECT USD,BTC,fundsHeld,paypalTrust from Users where userID=$uid";
+				if($data=mysql_query($sql))
 				{
-					$usdHeld=$row['USD'];
-					$minFundsHeld=$row['fundsHeld']*(1-$row['paypalTrust']);
-					$btcHeld=$row['BTC'];
-					if($btcHeld<$amount)
+					if($row=mysql_fetch_array($data))
 					{
-						$result['error'] = "You don't have this much BTC.";
-					}else
-					{
-						$accountTotal=$usdHeld+($btcHeld-$amount)*.06;
-						if($accountTotal < $minFundsHeld)
+						$usdHeld=$row['USD'];
+						$minFundsHeld=$row['fundsHeld']*(1-$row['paypalTrust']);
+						$btcHeld=$row['BTC'];
+						if($btcHeld<$amount)
 						{
-							$allowedBTC= (int)(($btcHeld -(($minFundsHeld-$usdHeld)/.06))/BASIS);
-							if($allowedBTC<0) $allowedBTC=0;
-							$result['status'] = "To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedBTC BTC";
+							$result['error'] = "You don't have this much BTC.";
 						}else
 						{
-							BC_sendFunds($uid,$amount,$btca,$usdHeld,$btcHeld);
-							
-							$result['status'] = "Your funds are on their way...";
+							$accountTotal=$usdHeld+($btcHeld-$amount)*.06;
+							if($accountTotal < $minFundsHeld)
+							{
+								$allowedBTC= (int)(($btcHeld -(($minFundsHeld-$usdHeld)/.06))/BASIS);
+								if($allowedBTC<0) $allowedBTC=0;
+								$result['status'] = "To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedBTC BTC";
+							}else
+							{
+								BC_sendFunds($uid,$amount,$btca,$usdHeld,$btcHeld);
+								
+								$result['status'] = "Your funds are on their way...";
+							}
 						}
-					}
-				}else $result['error'] = "User not found.";
-			}else $result['error'] = 'SQL Error';
-		}catch(Exception $e)
-		{
-			$time=time();
-			$sql="INSERT INTO ErrorLog (ErrorType,Msg,Date) values ('withdraw','$btca $amount $uid $e',$time)";
-			mysql_query($sql);
-			$result['error'] = "Problem Connecting to bitcoind. Please try again shortly. $e";
-		}
+					}else $result['error'] = "User not found.";
+				}else $result['error'] = 'SQL Error';
+			}catch(Exception $e)
+			{
+				$time=time();
+				$sql="INSERT INTO ErrorLog (ErrorType,Msg,Date) values ('withdraw','$btca $amount $uid $e',$time)";
+				mysql_query($sql);
+				$result['error'] = "Problem Connecting to bitcoind. Please try again shortly. $e";
+			}
+		}else $result['error'] = "To comply with US regulations you are only allowed to withdraw a maximum of $1000 within a 24 hour period. Please try your withdraw tomorrow.";
 	}else $result['error'] = "Must enter in a Bitcoin Address.";
 }
 
@@ -71,55 +106,67 @@ function withdrawLR($userID)
 		$email=mysql_real_escape_string($_POST['account']);
 		
 		db_connect();
-		mysql_query("BEGIN");
-		try
+	
+		$left=amountLeftToday($userID,false);
+		
+		if($left>0) 
 		{
-			$sql="SELECT USD,BTC,FundsHeld,paypalTrust from Users where userID=$userID FOR UPDATE";
-			if(!($data=mysql_query($sql))) throw new GoxException("SQL Error",$sql);
-			if(!($row=mysql_fetch_array($data))) throw new GoxException("User not found.");
-				
-			$usdHeld=$row['USD'];
-			$minFundsHeld=$row['FundsHeld']*(1-$row['paypalTrust']);
-			$btcHeld=$row['BTC'];
-			if($usdHeld<$amount)
+			if($amount>$left)
 			{
-				throw new GoxException("You don't have this much USD.");
-			}else
+				$amount=$left;
+				$pAmount=round($amount/BASIS,2);
+				$result['error'] = "To comply with US regulations you are only allowed to withdraw a maximum of $1000 within a 24 hour period. $pAmount withdrawn. Please try the rest of your withdrawal tomorrow.";
+			}
+			mysql_query("BEGIN");
+			try
 			{
-				$accountTotal=($usdHeld-$amount)+$btcHeld*.06;
-				if($accountTotal < $minFundsHeld)
+				$sql="SELECT USD,BTC,FundsHeld,paypalTrust from Users where userID=$userID FOR UPDATE";
+				if(!($data=mysql_query($sql))) throw new GoxException("SQL Error",$sql);
+				if(!($row=mysql_fetch_array($data))) throw new GoxException("User not found.");
+					
+				$usdHeld=$row['USD'];
+				$minFundsHeld=$row['FundsHeld']*(1-$row['paypalTrust']);
+				$btcHeld=$row['BTC'];
+				if($usdHeld<$amount)
 				{
-					$allowedUSD=round(($usdHeld -($minFundsHeld-$btcHeld*.06))/BASIS,2);
-					throw new GoxException("To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedUSD");
+					throw new GoxException("You don't have this much USD.");
 				}else
 				{
-					// A=F+P  , F=P*.02 or F=1 , A=P(.02+1)
-					$pAmount=((float)$amount)/((float)BASIS);
-					$payment=$pAmount/1.01;
-					$fee=$pAmount-$payment;
-					$payment=round($payment,2);
-					
-					$sql="UPDATE Users set USD=USD-$amount where userid=$userID";
-					if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
-					$usdHeld -= $amount;
-					$time=time();
-					$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($userID,-$amount,5,'$email',$btcHeld,$usdHeld,$time)";
-					if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
-					if(!LRWithdraw($account,$payment))  
-						throw new GoxException("Withdraw via Liberty Reserve is currently offline. Please try again tomorrow. Sorry for the inconvenience.");
-					
-					mysql_query('commit');
-					$result['status'] = "Your funds are on their way...";
-					
-					checkBidOrders($userID);
+					$accountTotal=($usdHeld-$amount)+$btcHeld*.06;
+					if($accountTotal < $minFundsHeld)
+					{
+						$allowedUSD=round(($usdHeld -($minFundsHeld-$btcHeld*.06))/BASIS,2);
+						throw new GoxException("To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedUSD");
+					}else
+					{
+						// A=F+P  , F=P*.02 or F=1 , A=P(.02+1)
+						$pAmount=((float)$amount)/((float)BASIS);
+						$payment=$pAmount/1.01;
+						$fee=$pAmount-$payment;
+						$payment=round($payment,2);
+						
+						$sql="UPDATE Users set USD=USD-$amount where userid=$userID";
+						if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
+						$usdHeld -= $amount;
+						$time=time();
+						$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($userID,-$amount,5,'$email',$btcHeld,$usdHeld,$time)";
+						if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
+						if(!LRWithdraw($account,$payment))  
+							throw new GoxException("Withdraw via Liberty Reserve is currently offline. Please try again tomorrow. Sorry for the inconvenience.");
+						
+						mysql_query('commit');
+						$result['status'] = "Your funds are on their way...";
+						
+						checkBidOrders($userID);
+					}
 				}
+			}catch(GoxException $e)
+			{
+				mysql_query("rollback");
+				$result['error'] = $e->getMessage();
+				$e->log();
 			}
-		}catch(GoxException $e)
-		{
-			mysql_query("rollback");
-			$result['error'] = $e->getMessage();
-			$e->log();
-		}
+		}else $result['error'] = "To comply with US regulations you are only allowed to withdraw a maximum of $1000 within a 24 hour period. Please try your withdraw tomorrow.";
 	}else $result['error'] = "Must enter in a Liberty Reserve Account.";
 }
 

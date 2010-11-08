@@ -3,6 +3,7 @@ define('SPREAD',1);
 define('HALF_SPREAD',1);
 define('ROUNDING',4);
 define('BASIS',1000);
+define('GOX_FEE',.0065);
 
 class GoxException extends Exception
 {
@@ -34,12 +35,17 @@ function recordTrade($buyerID,$sellerID,$amount,$price,$time)
 			$tradeID=getSingleDBValue($sql);
 			if($tradeID)
 			{
-				$usdAmount=$price*$amount*HALF_SPREAD;
-				$sql="UPDATE Users set BTC=BTC+$amount, USD=USD-$usdAmount where userid=$buyerID";
+				$usdAmount=(int)($price*$amount*HALF_SPREAD);
+				$btcFee=(int)($amount*GOX_FEE);
+				$usdFee=(int)($usdAmount*GOX_FEE);
+				
+				$feedBTCAmount=$amount-$btcFee;
+				$feedUSDAmount = $usdAmount -$usdFee;
+				
+				$sql="UPDATE Users set BTC=BTC+$feedBTCAmount, USD=USD-$usdAmount where userid=$buyerID";
 				if(mysql_query($sql))
 				{
-					$usdAmount=$price*$amount/HALF_SPREAD;
-					$sql="UPDATE Users set BTC=BTC-$amount, USD=USD+$usdAmount where userid=$sellerID";
+					$sql="UPDATE Users set BTC=BTC-$amount, USD=USD+$feedUSDAmount where userid=$sellerID";
 					if(mysql_query($sql))
 					{
 						$sql="SELECT USD,BTC from Users where UserID=$buyerID";
@@ -50,7 +56,7 @@ function recordTrade($buyerID,$sellerID,$amount,$price,$time)
 							{
 								$usd=$row[0];
 								$btc=$row[1];
-								$sql="INSERT INTO Activity (UserID,DeltaBTC,DeltaUSD,Type,TypeID,BTC,USD,Date) values ($buyerID,$amount,-$usdAmount,2,$tradeID,$btc,$usd,$time)";
+								$sql="INSERT INTO Activity (UserID,DeltaBTC,DeltaUSD,Type,TypeID,BTC,USD,Date) values ($buyerID,$feedBTCAmount,-$usdAmount,2,$tradeID,$btc,$usd,$time)";
 								if(mysql_query($sql))
 								{
 									$sql="SELECT USD,BTC from Users where UserID=$sellerID";
@@ -61,10 +67,15 @@ function recordTrade($buyerID,$sellerID,$amount,$price,$time)
 										{
 											$usd=$row[0];
 											$btc=$row[1];
-											$sql="INSERT INTO Activity (UserID,DeltaBTC,DeltaUSD,Type,TypeID,BTC,USD,Date) values ($sellerID,-$amount,$usdAmount,1,$tradeID,$btc,$usd,$time)";
+											$sql="INSERT INTO Activity (UserID,DeltaBTC,DeltaUSD,Type,TypeID,BTC,USD,Date) values ($sellerID,-$amount,$feedUSDAmount,1,$tradeID,$btc,$usd,$time)";
 											if(mysql_query($sql))
 											{
 												$sql="Commit";
+												mysql_query($sql);
+												
+												global $GOX_BOT_ID;
+												
+												$sql="UPDATE Users set BTC=BTC+$btcFee, USD=USD+$usdFee where userid=$GOX_BOT_ID";
 												mysql_query($sql);
 												return;		
 											}					
@@ -80,7 +91,6 @@ function recordTrade($buyerID,$sellerID,$amount,$price,$time)
 		$sql="rollback";
 		mysql_query($sql);
 	}
-	
 }
 
 function tradeNotifyUser($uid,$type,$amount,$price)
@@ -248,6 +258,7 @@ function checkAskOrders($uid)
 		
 		getFunds($uid);
 		$btc=(int)($result['btcs']*BASIS);
+		$time=time();
 		
 		$sql="SELECT OrderID,Amount,Price,Status,Date from Asks where UserID=$uid order by Price";
 		$data=mysql_query($sql);

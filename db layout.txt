@@ -33,10 +33,14 @@ create table SendMoney (SendID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, FromID I
 
 create table Trades (TradeID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, BuyerID INT UNSIGNED, 
 	SellerID INT UNSIGNED, Amount INT, Price Float, Date INT UNSIGNED) ENGINE = INNODB;
+	
+#status: 1- Active, 2-No Funds, 3-Dark, 4-Dark No Funds
 create table Asks (OrderID  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,UserID INT UNSIGNED, 
 	Amount INT, Price Float, Status TINYINT, Date INT UNSIGNED) ENGINE = INNODB;
 create table Bids (OrderID  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,UserID INT UNSIGNED, 
 	Amount INT, Price Float, Status TINYINT, Date INT UNSIGNED) ENGINE = INNODB;
+	
+
 create table Ticker (HighBuy FLOAT, LowSell Float, LastPrice Float, High Float, Low Float, Volume INT);
 
 create table AddBTC	(AddID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, UserID INT UNSIGNED, 
@@ -61,7 +65,7 @@ CREATE TABLE MerchantOrders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, Me
 	
 CREATE TABLE PasswordResets (ResetID varchar(10), UserID INT UNSIGNED, Username Varchar(30), Date INT UNSIGNED);
 
-#Reason: 0- ? 1-Trade Sell, 2-Trade Buy, 3-Add BTC by sending, 4-Withdraw BTC, 5- Withdraw Paypal, 
+#Reason: 0- ? 1-Trade Sell, 2-Trade Buy, 3-Add BTC by sending, 4-Withdraw BTC, 5- Withdraw USD, 
 #  6- Add by Paypal, 7- Payment Process, 8-Fraud Claim, 9- Manual, 10- Sending money to other users, 11- Add by LR
 CREATE TABLE Activity (actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
 	deltaBTC INT default 0, deltaUSD INT default 0, 
@@ -89,10 +93,11 @@ CREATE TABLE MarginTrade (tradeID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userI
 	
 
 #Reason: 0- ? 1-Position Closed, 2-Add Funds, 3-Withdraw Funds, 4- MC
-CREATE TABLE MarginActivity (actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
-	deltaUSD INT default 0, 
-	type TINYINT, typeID INT UNSIGNED default 0, typeData VARCHAR(40), 
-	btc INT, usd INT, date INT UNSIGNED) ENGINE = INNODB;
+CREATE TABLE DarkAsks (OrderID  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,UserID INT UNSIGNED, 
+	Amount INT, Price Float, Status TINYINT, Date INT UNSIGNED) ENGINE = INNODB;
+	
+	
+
 	
 CREATE TABLE Options (name INT, value INT);
 

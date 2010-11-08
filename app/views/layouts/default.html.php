@@ -94,10 +94,17 @@ if($gUserID)
       </div>
       
      
-      <div id="footer">
+     <div id="footer" class="container" >
        <HR style="margin-top: 30px;">
-        <p>Copyright (c) 2010 mtgox.com. All rights reserved.</p>
-      </div>
+      
+	<div id="etc">
+		
+		<a href="/support/tradeAPI">Trade API</a>
+		<a href="/merch/about">Merchant Services</a>
+		<a href="/support/contact">Contact</a>
+	</div>
+	<div id="legal">&copy; 2010 Pongamia Cultivation Institute, SA</div>
+
     </div>
     <script>btcx_setup();</script>
   </body>
