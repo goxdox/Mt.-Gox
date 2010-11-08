@@ -2,7 +2,7 @@
 include('../../../noserve/config.inc');
 include('../lib/functions.inc');
 
-include('lib/common.inc');
+include('../lib/common.inc');
 
 
 db_connect();
