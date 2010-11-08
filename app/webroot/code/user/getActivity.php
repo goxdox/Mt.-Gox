@@ -110,6 +110,7 @@ function getTypeStr($type)
 		case 8: return('Account Claimed');
 		case 9: return('Manual');
 		case 10: return('Fund Transfer');
+		case 11: return('Add LR');
 	}
 	return('????');
 }
