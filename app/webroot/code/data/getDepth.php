@@ -41,7 +41,7 @@ if($data)
 			{
 				$result['asks'][$count] = array( 0 => .36, 1 => 14000 );
 				$count++;
-				$dit=false;
+				$doit=false;
 			}
 		}
 		
