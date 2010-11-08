@@ -35,10 +35,13 @@ if($data)
 		$amount=(float)$row[0]/BASIS;
 		$price=(float)$row[1];
 		
-		if($price>.37)
+		if($doit)
 		{
-			$result['asks'][$count] = array( 0 => .37, 1 => 15000 );
-			$count++;
+			if($price>.37)
+			{
+				$result['asks'][$count] = array( 0 => .37, 1 => 15000 );
+				$count++;
+			}
 		}
 		
 		if($count && $price==$result['asks'][$count-1][0])
