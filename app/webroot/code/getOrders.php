@@ -7,6 +7,7 @@ include('lib/common.inc');
 // make sure:
 // user is logged in 
 
+db_connect();
 
 if(!isset($_SESSION['UserID']))
 {
@@ -28,8 +29,6 @@ if(!isset($_SESSION['UserID']))
 
 if($uid)
 {
-	
-	db_connect();
 	$result = array();
 	
 	getOrders($uid);

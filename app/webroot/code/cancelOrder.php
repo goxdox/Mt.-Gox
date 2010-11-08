@@ -8,6 +8,8 @@ include('lib/common.inc');
 // user is logged in 
 // user owns this order
 
+db_connect();
+
 if(!isset($_SESSION['UserID']))
 {
 	if(isset($_POST['name']) && isset($_POST['pass']))
@@ -33,7 +35,7 @@ if($uid)
 	
 	if($oid && $type)
 	{
-		db_connect();
+		
 		
 		if($type==1)
 		{
