@@ -77,6 +77,7 @@ In order to trade on the exchange you must add either US Dollars (USD) or Bitcoi
  Mt Gox uses <a href="http://libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>" target="_blank">LibertyReserve.com</a> for adding and withdrawing USD. Liberty Reserve is easy to use. 
  We suggest you use <a href="http://exchangezone.com" target="_blank">ExchangeZone.com</a> to buy and sell your Liberty Reserve dollars.
  Liberty Reserve charges a 1% fee for transfers. 
+<p>We can also accept wire transfers. Please send us an email if interested.
 <form method="post" action="https://sci.libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>">
 
  <input type="hidden" name="lr_acc" value="<?= $LR_ACCOUNT_NUMBER ?>">
