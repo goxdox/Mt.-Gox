@@ -24,13 +24,13 @@ function amountLeftToday($userID,$inBTC)
 			if($btc=='NULL') $btc=0;
 			$usd=$row[1];
 			if($usd=='NULL') $usd=0;
-			logMsg("$btc $usd");
+			//logMsg("$btc $usd");
 			
 			$usd=($btc*$lastPrice)+$usd;
 			$left=1000000-$usd;
 			if($inBTC) return($left/$lastPrice);
 			return($left);
-		}
+		}else return(1000000);
 	}	
 	return(0);
 }
