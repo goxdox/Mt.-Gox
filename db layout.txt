@@ -94,7 +94,7 @@ CREATE TABLE MarginActivity (actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, user
 	type TINYINT, typeID INT UNSIGNED default 0, typeData VARCHAR(40), 
 	btc INT, usd INT, date INT UNSIGNED) ENGINE = INNODB;
 	
-
+CREATE TABLE Options (name INT, value INT);
 
 
 

@@ -26,8 +26,8 @@ function onSave()
 
 function onServer(data)
 {
-	$('#error').text(data.error);
-	$('#status').text(data.status);
+	$('#error').html(data.error);
+	$('#status').html(data.status);
 }
 
 </script>

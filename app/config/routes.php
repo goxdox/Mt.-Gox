@@ -36,6 +36,7 @@ if (!Environment::is('production')) {
 }
 
 Router::connect('/merch/examples/payAPI', array('controller' => 'merch', 'action' => 'example_payAPI') );
+Router::connect('/merch/examples/checkout', array('controller' => 'merch', 'action' => 'example_checkout') );
 
 /**
  * Finally, connect the default routes.

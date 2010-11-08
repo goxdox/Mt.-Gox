@@ -32,7 +32,7 @@ $(function () {
 
 function getDepth()
 {
-	$.post("/code/getDepth.php", { }, onDepth , "json" );
+	$.post("/code/data/getDepth.php", { }, onDepth , "json" );
 	$('#volume').hide();
 	$('#depth').show();
 }

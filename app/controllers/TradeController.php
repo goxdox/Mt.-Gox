@@ -19,6 +19,12 @@ class TradeController extends \lithium\action\Controller
   {
     		
   }
+  
+	 public function realTime()
+	 {
+	 	$title='Real Time Dashboard';
+	  	return compact('title');
+	 }
 }
 
 ?>
