@@ -37,10 +37,11 @@ if($data)
 		
 		if($doit)
 		{
-			if($price>.37)
+			if($price>.3541)
 			{
-				$result['asks'][$count] = array( 0 => .37, 1 => 15000 );
+				$result['asks'][$count] = array( 0 => .3541, 1 => 14000 );
 				$count++;
+				$dit=false;
 			}
 		}
 		
