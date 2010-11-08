@@ -15,7 +15,7 @@ function amountLeftToday($userID,$inBTC)
 	
 	$dayago=time()-(24*60*60);
 	$sql="SELECT sum(deltaBTC),sum(deltaUSD) from Activity where userid=$userID and (type=4 or type=5 or type=7 or type=10) and deltaUSD<1 and deltaBTC<1 and date>$dayago";
-	logMsg($sql);
+	//logMsg($sql);
 	if($data=mysql_query($sql))
 	{
 		if($row=mysql_fetch_array($data))
@@ -49,7 +49,7 @@ function withdrawBTC()
 		
 		db_connect();
 		
-		$left=amountLeftToday($userID,true);
+		$left=amountLeftToday($uid,true);
 		
 		if($left>0) 
 		{
