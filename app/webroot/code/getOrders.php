@@ -8,9 +8,26 @@ include('lib/common.inc');
 // user is logged in 
 
 
-if(isset($_SESSION['UserID']))
+if(!isset($_SESSION['UserID']))
+{
+	if(isset($_POST['name']) && isset($_POST['pass']))
+	{
+		$name=mysql_real_escape_string($_POST['name']);
+		$pass=mysql_real_escape_string($_POST['pass']);
+		
+		// check these against the db
+		$md5pass=md5($pass);
+		$clean_name=strtolower($name);
+		$sql = "select userid from Users where CleanName='$clean_name' and password='$md5pass'";
+		$uid=getSingleDBValue($sql);
+	}
+}else
 {
 	$uid=(int)($_SESSION['UserID']);
+}
+
+if($uid)
+{
 	
 	db_connect();
 	$result = array();
