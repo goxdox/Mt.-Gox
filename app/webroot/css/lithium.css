@@ -38,7 +38,11 @@ h6 { font-size: 1em; }
 p { margin-bottom: 1em; }
 strong { font-weight: bold; }
 em { font-style: italic; }
-a { color: #061CB8; }
+a 
+{ 
+	color: #061CB8;
+	cursor: pointer;  
+}
 a, h1 a, h2 a { text-decoration: none; }
 //a:hover { color: #C6BF02; }
 a:hover { color: #F1D02F; }

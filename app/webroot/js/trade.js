@@ -150,7 +150,8 @@ function onServer(data)
 {
 	onTicker(data);
 	if(data.orders) setOrders(data.orders);
-	$('#error').text(data.error);
+	if(data.error) $('#error').html(data.error);
+	else $('#error').text("");
 	$('#status').text("");
 	
 	if(data.usds) 

@@ -85,7 +85,7 @@ if($uid)
 	}else $result=array( 'error' => "Invalid Amount." );
 }else
 { // not found in db
-	$result=array( 'error' => "Not logged in." );
+	$result=['error'] = "Not logged in. <a href='/users/login'>Log in</a>";
 }
 
 echo( json_encode($result));

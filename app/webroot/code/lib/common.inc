@@ -76,7 +76,7 @@ function recordTrade($buyerID,$sellerID,$amount,$price,$time)
 												global $GOX_BOT_ID;
 												
 												$sql="UPDATE Users set BTC=BTC+$btcFee, USD=USD+$usdFee where userid=$GOX_BOT_ID";
-												logMsg($sql);
+												//logMsg($sql);
 												mysql_query($sql);
 												return;		
 											}					

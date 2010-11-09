@@ -30,6 +30,10 @@ function onServer(data)
 }
 
 </script>
+
+<div id="ticker">Use Mt Gox to send or recieve money for free! <a href="/">learn more</a></div>
+<div id="page">
+
 <p></p>
 <div class="container">
 	<h2><?= $business ?></h2>
@@ -68,4 +72,6 @@ function onServer(data)
 	<div id="error"></div>
 	</fieldset>
 	</form>
+</div>
+
 </div>

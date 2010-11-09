@@ -57,17 +57,12 @@ if($gUserID)
 	
     
 <?php } ?>
-<div id="ticker">Mt. Gox charges no fee and is free to use. <a href="/">learn more</a></div>
-<div id="page">
-		
-        <?php echo $this->content(); ?>
-        
-      </div>
+
+<?php echo $this->content(); ?>
+
+
       
-      <HR style="margin-top: 30px;">
-      <div id="footer">
-        <p>Copyright (c) 2010 mtgox.com. All rights reserved.</p>
-      </div>
+      <?= $this->view()->render(array('element' => 'footer') ); ?>
     </div>
   </body>
 </html>

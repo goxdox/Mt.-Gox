@@ -38,6 +38,9 @@ function onRecent(result)
 }
 
 </script>
+<div id="ticker">Mt Gox is your safe and easy bitcoin wallet <a href="/support">learn more</a></div>
+<div id="page">
+
 <div class="info_menu" >
 	<div class="info_box"><div class="info_title"><a href="http://www.bitcoin.org/" target="_blank">What are Bitcoins?</a></div>
  		Bitcoins are a decentralized internet commodity.<br><br> <a href="http://www.bitcoin.org/" target="_blank">Learn more about Bitcoins here.</a>
@@ -46,7 +49,7 @@ function onRecent(result)
 
 <fieldset class="info_frame" >
  <legend style="margin-left: 22px" >What is Mt Gox?</legend>
- <div class="info_box"><div class="info_title"><a href="support">Bitcoin Exchange</a></div>
+ <div class="info_box"><div class="info_title"><a href="/support">Bitcoin Exchange</a></div>
  	Mt Gox is an exchange. It allows you to trade US Dollars (USD) for Bitcoins (BTC) or Bitcoins for US Dollars with other Mt Gox users. You set the price you want to buy or sell your BTC for.<br><br>Fully automated, always available, 24 hours a day.</div>
  <div class="info_box"><div class="info_title"><a href="merch/about">Merchant Services</a></div>
  	<ul><li>Take Bitcoin or USD payments quickly and easily.</li>
@@ -82,4 +85,5 @@ function onRecent(result)
 </ul>
 <h2><a href="/users/register">Sign up!</a></h2>
 </fieldset>
+</div>
 

@@ -18,6 +18,11 @@
 	margin-left: 16px; margin-bottom: 10px;
 }
 
+#ticker a:hover
+{
+	color: #FFFFFF;
+}
+
 #footer
 {
 	padding-top: 16px;
@@ -124,10 +129,6 @@ margin-bottom: 5px;
 	padding-left: 25px;
 }
  
- 
-a {
-	cursor: pointer; 
-}
 
 .container {
 margin-left:auto;
