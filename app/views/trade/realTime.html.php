@@ -14,16 +14,23 @@ $(document).ready(function(){
 		    ws.send("subscribe");
 		};
 		ws.onmessage = function(event) {
-		    onServer(event.data);
+			//alert(event.data);
+			
+			var data = eval('(' + event.data + ')');
+		    onServer(data);
 		};
 	}
 	
 });
 
-var gLastData;
+var gLastData={ "ticker": {"last": 0, "highBuy": 0, "lowSell": 0}, 
+				"depth": {"bid1000" : 0, "ask1000" : 0}, "volume" : 0,
+				"usds" : 0, "btcs" : 0 };
 
 function onServer(data)
 {
+	//alert(data.ticker);
+	
 	var beep=false;
 	
 	onTicker(data);
@@ -61,7 +68,8 @@ function onServer(data)
 	
 	if(beep)
 	{
-		document.getElementById("sound").Play();
+		//alert("beep");
+		document.getElementById("sound").play();
 	}
 
 	
@@ -95,4 +103,4 @@ function onServer(data)
 </div>
 <p>
 <p>
-<embed src="/wav/notify.mp3" autostart="false" width="0" height="0" id="sound" enablejavascript="true">
+<audio id="sound" src="/wav/notify.mp3" preload="auto">

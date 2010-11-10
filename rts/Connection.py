@@ -22,7 +22,7 @@ class Connection(tornado.websocket.WebSocketHandler):
        
 
     def on_message(self, message):
-        self.write_message(u"You said: " + message)
+        #self.write_message(u"You said: " + message)
         if message == "subscribe":
             SubscribePool.thePool.add(self)
         

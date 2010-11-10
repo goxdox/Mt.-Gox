@@ -17,7 +17,7 @@ class SubscribePool():
         
         try:
             self.mDatabase = MySQLdb.connect("localhost", "land", "-island-", "btcx")
-            self.mCursor = self.mDatabase.cursor()
+            self.mCursor = self.mDatabase.cursor(MySQLdb.cursors.DictCursor)
             self.update()
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])
