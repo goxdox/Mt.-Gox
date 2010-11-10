@@ -29,7 +29,11 @@ function onServer(data)
 	onTicker(data);
 	if(data.ticker)
 	{
-		$('#lastCell').text(data.ticker.last);
+		if(data.ticker.last != gLastData.ticker.last)
+		{
+			$('#lastCell').text(data.ticker.last);
+			gLastData.ticker.last=data.ticker.last;
+		}
 		$('#bidCell').text(data.ticker.highBuy);
 		$('#askCell').text(data.ticker.lowSell);
 		if($('#beepTrade').attr('checked')) beep=true;
@@ -59,6 +63,8 @@ function onServer(data)
 	{
 		document.getElementById("sound").Play();
 	}
+
+	
 }
 
 </script>

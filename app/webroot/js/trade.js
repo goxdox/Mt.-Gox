@@ -152,7 +152,8 @@ function onServer(data)
 	if(data.orders) setOrders(data.orders);
 	if(data.error) $('#error').html(data.error);
 	else $('#error').text("");
-	$('#status').text("");
+	if(data.status) $('#status').html(data.status);
+	else $('#status').text("");
 	
 	if(data.usds) 
 	{

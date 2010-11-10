@@ -37,7 +37,7 @@ class SubscribePool():
     def update(self):
         try:
             self.mCursor.execute ("SELECT * from Ticker")
-            row = cursor.fetchone()
+            row = self.mCursor.fetchone()
             
             self.mData['ticker']['high']=round( row['High'],4)
             self.mData['ticker']['low']=round( row['Low'],4)
