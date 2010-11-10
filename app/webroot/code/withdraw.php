@@ -36,13 +36,13 @@ function amountLeftToday($userID,$inBTC)
 	return(0);
 }
 
-function withdrawBTC()
+function withdrawBTC($userID)
 {
 	global $result;
 	
 	if(isset($_POST['btca']) && isset($_POST['amount']))
 	{
-		$uid=(int)($_SESSION['UserID']);
+		$uid=$userID;
 		
 		$amount=BASIS*(float)$_POST['amount'];
 		$btca=mysql_real_escape_string($_POST['btca']);
@@ -238,15 +238,33 @@ function withdrawPaypal()
 	}else $result['error'] = "Must enter in a Bitcoin Address.";
 }
 
-if(isset($_SESSION['UserID']))
+if(!isset($_SESSION['UserID']))
+{
+	if(isset($_POST['name']) && isset($_POST['pass']))
+	{
+		$name=mysql_real_escape_string($_POST['name']);
+		$pass=mysql_real_escape_string($_POST['pass']);
+		
+		// check these against the db
+		$md5pass=md5($pass);
+		$clean_name=strtolower($name);
+		$sql = "select userid from Users where CleanName='$clean_name' and password='$md5pass'";
+		$userID=getSingleDBValue($sql);
+	}else $userID=0;
+}else
+{
+	$userID=(int)($_SESSION['UserID']);
+}
+
+if($userID)
 {
 	$type=$_POST['group1'];
 	if($type=="BTC")
 	{
-		withdrawBTC();		
+		withdrawBTC($userID);		
 	}else
 	{ // paypal
-		withdrawLR($_SESSION['UserID']);
+		withdrawLR($userID);
 		
 		/*
 		//$method=$_POST['method'];
