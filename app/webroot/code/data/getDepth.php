@@ -15,14 +15,10 @@ db_connect();
 
 $sql="SELECT LastPrice From Ticker";
 $price=getSingleDBValue($sql);
-$minPrice=$price*.75;
+$minPrice=$price*.72;
 $maxPrice=$price*1.7;
 
-$sql="SELECT value from Options where name=1";
-if(getSingleDBValue($sql)==1)
-{
-	$doit=true;
-}else $doit=false;
+
 
 $sql="SELECT Amount,Price From Asks where status=1 and price<$maxPrice and price>$minPrice order by Price";
 $data=mysql_query($sql);
@@ -34,16 +30,6 @@ if($data)
 	{	
 		$amount=(float)$row[0]/BASIS;
 		$price=(float)$row[1];
-		
-		if($doit)
-		{
-			if($price>.36)
-			{
-				$result['asks'][$count] = array( 0 => .36, 1 => 14000 );
-				$count++;
-				$doit=false;
-			}
-		}
 		
 		if($count && $price==$result['asks'][$count-1][0])
 		{

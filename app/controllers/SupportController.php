@@ -40,6 +40,13 @@ public function send()
   		return compact('title');
   }
   
+  public function noWebSocket()
+  {
+  	$title='Incompatible Browser';
+		
+  		return compact('title');
+  }
+  
   
 }
 

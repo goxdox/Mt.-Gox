@@ -64,12 +64,6 @@ if($uid)
 			$result['status'] .= "<br>You don't have that much USD. What remains is stored in your open orders.";
 		}
 		
-		if($price>=.37) 
-		{
-			$sql="UPDATE Options set value=0 where name=1";
-			mysql_query($sql);
-		}
-		
 		$amount=findSeller($uid,$amount,$price,$time,true);
 		if($amount>0) 
 		{

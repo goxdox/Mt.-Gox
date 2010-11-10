@@ -22,6 +22,7 @@ class TradeController extends \lithium\action\Controller
   
 	 public function realTime()
 	 {
+	 	$this->_render['layout'] = 'clean';
 	 	$title='Real Time Dashboard';
 	  	return compact('title');
 	 }
