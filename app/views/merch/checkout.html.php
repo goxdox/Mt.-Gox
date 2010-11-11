@@ -48,7 +48,7 @@ function onServer(data)
 			html += data.btcAddr;
 			html += "<button onClick='onSent()' >I have sent them</button><hr>";
 			
-			$('#btcAddr').html(html);
+			$('#btcDiv').html(html);
 		}
 		$('#error').text(data.error);
 		$('#status').text(data.status);
@@ -85,7 +85,9 @@ function onServer(data)
 if( $currency_code == "BTC" ) {
 	?>
 <div id="dialog" ></div>
-<button id="sendBTCButton" onClick="onSend()" >&raquo; Send Bitcoins</button> or pay instantly with your Mt Gox balance below.
+<button id="sendBTCButton" onClick="onSend()" >&raquo; Send Bitcoins</button> 
+<div id="btcDiv"></div>
+or pay instantly with your Mt Gox balance below.
 <?php } ?>
 	<?php 
 	if(!$gUserID){
