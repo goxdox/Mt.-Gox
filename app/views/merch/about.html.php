@@ -84,7 +84,8 @@ Here is how the flow works:
 	</td></tr>
 </table>
 
-<a href="/merch/examples/checkout">Example Code</a>
+<a href="/examples/checkout">Checkout Example Code</a><br>
+<a href="/examples/ipn">Payment Notification Example Code</a>
 <p>
 Please email us if you have any problems or questions: <script>document.write('<A href="mailto:' + 'info' + '@' + 'mt' + 'gox.com' + '">' + 'info' + '@' + 'mt' + 'gox.com' + '</a>')</script>
 

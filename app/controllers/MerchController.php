@@ -23,25 +23,7 @@ class MerchController extends \lithium\action\Controller
   }
   
   
- public function example_payAPI() 
-  {		
-  	$vars['title'] = 'Payment API Example';
-		
-		$this->set($vars);
-  	$this->render('examples/payAPI');	
-  }
-  
-public function example_checkout() 
-  {		
-  	$vars['title'] = 'Checkout Example';
-		
-		$this->set($vars);
-  	$this->render('examples/checkout');	
-  }
-  
-public function cb_example() 
-  {		
-  }
+ 
   
    public function widget() 
   {		
