@@ -69,12 +69,12 @@ function onServer(data)
 <div id="error"></div>
 
 <fieldset>
-<table class="btcx_table"><tr><td><a href="/merch/widget">Get Widget</a></td><td><a href="merch/about">About Merchant Services</a></td></tr></table>
+<a href="merch/about">About Merchant Services</a>
 
 </fieldset>
 
 <fieldset>
-<legend>BTC Payments to you</legend>
+<legend>Payments to you</legend>
 <table  width="100%" class="sort_table" id="payments" >
 <thead><tr><th>Status</th><th>Amount</th><th>Amount Received</th><th>Custom</th><th>When</th></tr></thead>
 <tf colspan=4 id="paging"></tf>

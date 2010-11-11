@@ -60,7 +60,8 @@ CREATE TABLE LiqpayOrders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, txn_
 #currency 1- USD, 2-BTC
 #status 0-incomplete, 1- ok, 2- timed out, 3- incorrect amount
 CREATE TABLE MerchantOrders (OrderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, MerchantID INT UNSIGNED,
-	CustomerID INT UNSIGNED, currency TINYINT, Amount INT, AmountRecv INT,Custom VARCHAR(255),txn_id VARCHAR(8),
+	CustomerID INT UNSIGNED, currency TINYINT, Amount INT, AmountRecv INT,Custom VARCHAR(255),
+	notifyURL VARCHAR(255), txn_id VARCHAR(8),
 	RecvAddr varchar(40),Status TINYINT default 0,Date INT UNSIGNED) ENGINE = INNODB;
 	
 CREATE TABLE PasswordResets (ResetID varchar(10), UserID INT UNSIGNED, Username Varchar(30), Date INT UNSIGNED);

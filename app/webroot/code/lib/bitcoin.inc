@@ -1,6 +1,7 @@
 <?php 
 require_once 'jsonRPCClient.php';
 
+
 function BC_getNewAddr($label)
 {
 	$bitcoind = new jsonRPCClient('http://jed:test@127.0.0.1:8332');	
@@ -123,7 +124,7 @@ function BC_process_Merch()
 	$sql="UPDATE MerchantOrders set Status=2 where Status=0 and Date<$oldest";
 	if(mysql_query($sql))
 	{
-		$sql="SELECT OrderID,MerchantID,Amount from MerchantOrders where status=0";
+		$sql="SELECT OrderID,MerchantID,Amount,custom,notifyURL,txn_id from MerchantOrders where status=0";
 		$data=mysql_query($sql);
 		if($data)
 		{
@@ -132,6 +133,9 @@ function BC_process_Merch()
 				$orderID=$row[0];
 				$merchID=$row[1];
 				$amount=round($row[2],4);
+				$custom=$row[3];
+				$notifyURL=$row[4];
+				$txn_id=$row[5];
 				//echo("$addID");
 				
 				$bitcoind = new jsonRPCClient('http://jed:test@127.0.0.1:8332');	
@@ -146,6 +150,10 @@ function BC_process_Merch()
 					}else
 					{
 						$sql="UPDATE MerchantOrders set Status=3 where OrderID=$orderID";
+					}
+					if($notifyURL)
+					{
+						notifyMerch($notifyURL,"",$custom,$txn_id,'BTC',$total);
 					}
 					mysql_query($sql);
 					$sql="UPDATE Users set BTC=BTC+$total where UserID=$merchID";
