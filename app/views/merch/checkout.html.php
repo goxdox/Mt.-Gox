@@ -46,7 +46,7 @@ function onServer(data)
 		{
 			html  = "<hr> Send <?= $amount ?> Bitcoins to this address in your bitcoin client: <p>";
 			html += data.btcAddr;
-			html += "<button onClick="onSent()" >I have sent them</button><hr>";
+			html += "<button onClick='onSent()' >I have sent them</button><hr>";
 			
 			$('#btcAddr').html(html);
 		}
