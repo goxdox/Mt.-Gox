@@ -27,7 +27,7 @@ function onSend()
 	$.post("/code/gateway/getBTCAddr.php", { 
 			"amount" : <?= $amount ?>, 
 			"custom" : "<?= $custom ?>",
-			"merchID": <? $merchID ?> }, onServer , "json" );
+			"merchID": <?= $merchID ?> }, onServer , "json" );
 	
 }
 
