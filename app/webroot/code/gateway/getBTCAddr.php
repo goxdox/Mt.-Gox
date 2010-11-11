@@ -13,6 +13,8 @@ if(isset($_REQUEST['merchID']) && isset($_REQUEST['amount']))
 	$merchID=(int)$_REQUEST['merchID'];    
 	$notify_url=mysql_real_escape_string($_REQUEST['notify_url']); 
 	
+	logMsg("getBTCAddr $amount , $custom , $merchID , $notify_url");
+	
 	$time=time();
 	
 	$txn_id=generateRandomString(8);
@@ -26,22 +28,15 @@ if(isset($_REQUEST['merchID']) && isset($_REQUEST['amount']))
 			$addr=BC_getNewAddr("m$orderID");
 			$sql="UPDATE MerchantOrders set RecvAddr='$addr' where OrderID=$orderID";
 			mysql_query($sql);
-		}else die("SQL Failed"); //$result['error']="SQL Failed.";
+			$result['btcAddr']=$addr;
+		}else $result['error']="SQL Failed.";
 	}catch(Exception $e)
 	{
-		 die("Exception"); //$result['error']="Exception!";
+		 $result['error']="Exception!";
 	}
-}else  die("Invalid"); //$result['error']="Invalid";
+}else  $result['error']="Invalid";
 
-$line= "Make your own Mt Gox account for quicker and easier transfers.";
+echo( json_encode($result));
 
 ?>
 
-<html>
-<body>
-Send <?php echo($amount); ?> Bitcoins to this address: <p>
-<?php echo($addr); ?>
-<p><hr><p><p>
-<?php echo($line); ?>
-</body>
-</html>

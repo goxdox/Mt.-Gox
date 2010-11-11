@@ -1,6 +1,4 @@
 <script type="text/javascript" language="javascript" src="/js/jquery.validate.js"></script>
-<script type="text/javascript" language="javascript" src="/js/jquery.ui.js"></script>
-<link rel="stylesheet" type="text/css" href="/css/jquery.ui.css" />
 <script type="text/javascript" language="javascript">
 
 $(document).ready(function(){
@@ -22,16 +20,20 @@ function onSave()
 
 function onSend()
 {	
-	var src="http://mtgox.com/code/gateway/getBTCAddr.php?amount=<?= $amount ?> &custom=<?= $custom ?>&merchID=<? $merchID ?>";
-	var html = '<iframe name="mtgox_frame" src="'+src+'" width="100%" height="100%" style="border:0px;" />';
-	$('#dialog').html(html);
+	$('#sendBTCButton').attr("disabled", true);
+
+	$('#status').text="Fetching the bitcoin address ...";
 	
+	$.post("/code/gateway/getBTCAddr.php", { 
+			"amount" : <?= $amount ?>, 
+			"custom" : "<?= $custom ?>",
+			"merchID": <? $merchID ?> }, onServer , "json" );
 	
-	$('#dialog').dialog({
-		height: 330,
-		width: 400,
-		title: 'Pay Using Bitcoins!'
-	});
+}
+
+function onSent()
+{
+	window.location="<?= $return ?>";
 }
 
 
@@ -39,7 +41,15 @@ function onServer(data)
 {
 	if(data.result==1) window.location="<?= $return ?>";
 	else
-	{
+	{ 
+		if(data.btcAddr)
+		{
+			html  = "<hr> Send <?= $amount ?> Bitcoins to this address in your bitcoin client: <p>";
+			html += data.btcAddr;
+			html += "<button onClick="onSent()" >I have sent them</button><hr>";
+			
+			$('#btcAddr').html(html);
+		}
 		$('#error').text(data.error);
 		$('#status').text(data.status);
 	}
@@ -75,7 +85,7 @@ function onServer(data)
 if( $currency_code == "BTC" ) {
 	?>
 <div id="dialog" ></div>
-<button id="go" onClick="onSend()" >&raquo; Send Bitcoins</button> or pay instantly with your Mt Gox balance below.
+<button id="sendBTCButton" onClick="onSend()" >&raquo; Send Bitcoins</button> or pay instantly with your Mt Gox balance below.
 <?php } ?>
 	<?php 
 	if(!$gUserID){
