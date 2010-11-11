@@ -22,11 +22,12 @@ function onSend()
 {	
 	$('#sendBTCButton').attr("disabled", true);
 
-	$('#status').text="Fetching the bitcoin address ...";
+	$('#btcDiv').html("<p>Fetching the bitcoin address ...<p><hr>");
 	
 	$.post("/code/gateway/getBTCAddr.php", { 
 			"amount" : <?= $amount ?>, 
 			"custom" : "<?= $custom ?>",
+			"notify_url" : "<?= $notify_url ?>",
 			"merchID": <?= $merchID ?> }, onServer , "json" );
 	
 }
@@ -45,8 +46,8 @@ function onServer(data)
 		if(data.btcAddr)
 		{
 			html  = "<hr> Send <?= $amount ?> Bitcoins to this address in your bitcoin client: <p>";
-			html += data.btcAddr;
-			html += "<button onClick='onSent()' >I have sent them</button><hr>";
+			html += '<div class="center"><b>'+data.btcAddr+"</b></div>";
+			html += "<p><button onClick='onSent()' >I have sent them</button><hr>";
 			
 			$('#btcDiv').html(html);
 		}
