@@ -22,7 +22,7 @@ function onSend()
 {
 	$.post("/code/addBTC.php", { "amount": gBTCAmount }, onServer , "json" );
 	
-	var src="http://mtgox.com/code/gateway/getBTCAddr.php?amount=<?= $amount ?> &custom=<?= $custom ?>&merchID=<? $merchID";
+	var src="http://mtgox.com/code/gateway/getBTCAddr.php?amount=<?= $amount ?> &custom=<?= $custom ?>&merchID=<? $merchID ?>";
 	var html = '<iframe name="mtgox_frame" src="'+src+'" width="100%" height="100%" style="border:0px;" />';
 	$('#dialog').html(html);
 	
