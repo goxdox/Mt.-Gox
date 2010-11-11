@@ -1,4 +1,6 @@
 <script type="text/javascript" language="javascript" src="/js/jquery.validate.js"></script>
+<script type="text/javascript" language="javascript" src="/js/jquery.ui.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/jquery.ui.css" />
 <script type="text/javascript" language="javascript">
 
 $(document).ready(function(){

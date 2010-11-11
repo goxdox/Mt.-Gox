@@ -180,3 +180,7 @@ create table EmailMap (EmailID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, UserID I
 create table SendMoney (SendID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, FromID INT UNSIGNED, 
 	Currency TINYINT, Amount INT, ToEmail VARCHAR(60), Token VARCHAR(10), Note VARCHAR(255), 
 	Status TINYINT, Date INT UNSIGNED) ENGINE = INNODB;
+	
+###########
+
+ALTER TABLE MerchantOrders add Column notifyURL VARCHAR(255) after Custom;
