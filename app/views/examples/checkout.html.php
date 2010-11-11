@@ -1,6 +1,4 @@
-<script>
-var code= 
-</script>
+
 <fieldset>
 <legend>Example Checkout Form</legend>
 Here is an example of offering payment by Mt Gox on your site.
@@ -29,4 +27,6 @@ Parameters:
 	<li>custom - Custom string only sent to your notify_url</li>
 	<li>return - URL user is directed to after confirming the transaction</li>
 </ul>
+You will see all checkout activity in your Account History and on your <a href="/merch">Merchant Page</a>.<p>
+If you want instant notification anytime a checkout happens you can enable <a href="/examples/ipn">Payment Notifications</a>.
 </fieldset>

@@ -16,5 +16,5 @@ You can use the Mt Gox Payment API to easily send Bitcoins or USD to any other M
 		</table>
 	</li>
 </ul> 
-<a href="/merch/examples/payAPI">PHP example code</a>
+<a href="/examples/payAPI">PHP example code</a>
 </fieldset>

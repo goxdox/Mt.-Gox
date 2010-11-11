@@ -1,51 +1,59 @@
-<?php
-use \lithium\analysis\Logger;
-
-
+<fieldset>
+<legend>Payment API Example</legend>
+Here is an example of using the payment API from PHP.
+<div class="code_box" ><xmp>
 function httpsPost($url, $strRequest)
 {
-	// Initialisation
 	$ch=curl_init();
-	// Set parameters
 	curl_setopt($ch, CURLOPT_URL, $url);
-	// Return a variable instead of posting it directly
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	// Active the POST method
 	curl_setopt($ch, CURLOPT_POST, 1) ;
-	// Request
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $strRequest);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 	curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-	// execute the connexion
 	$result = curl_exec($ch);
-	// Close it
 	curl_close($ch);
 	return $result;
 } 
 
 function sendFunds($goxName,$currency,$amount)
 {
-	global $gGoxToken;
+	$goxToken="get this from your settings page";
+	$goxMerchID=0; // get this from your settings page;
 	
-	$itemName =urlencode('Five Grinder Withdrawal');
+	$itemName =urlencode('Note to reciever');
 	$receiver = urlencode($goxName);
-	if($currency==1) $currency='USD';
-	else if($currency==2) $currency='BTC';
-	else return(0);
-	
-	
+	$currency = urlencode($currency);
 	$amount = urlencode($amount);
-	$goxToken = urlencode($gGoxToken);
+	$goxToken = urlencode($goxToken);
 	
-	$postVars ="merchID=$gGoxMerchID&token=$goxToken&item=$itemName&receiver=$receiver&currency=$currency&amount=$amount";
+	$postVars ="merchID=$goxMerchID&token=$goxToken&item=$itemName&receiver=$receiver&currency=$currency&amount=$amount";
 	
 	$httpResponse=httpsPost("https://mtgox.com/gateway/send.php",$postVars);
-	if($httpResponse=='ok') return(1);
-	else if($httpResponse=='none') return(2);
-	else Logger::alert("goxwithdraw fail: $httpResponse");
+	if($httpResponse=='ok') 
+	{
+		// payment was sent successfully
+		return(1);
+	}else if($httpResponse=='none') 
+	{
+		// the username of the receiver wasn't found
+		return(0);
+	}else 
+	{
+		// some other error occured
+	}
 	
 	return(0);
 }
-
-
-?>
+</xmp>
+</div> 
+You simply need to post to our https://mtgox.com/gateway/send.php page with the following parameters:
+<ul>
+	<li>merchID - Your Merchant ID. You can get this <a href="/users/settings">here</a>.</li>
+	<li>token - Your Merchant PayAPI Token. You can get this <a href="/users/settings">here</a>.</li>
+	<li>currency - USD or BTC</li>
+	<li>amount - Amount of transaction</li>
+	<li>item - String displayed to you and the receiver in their Account history.</li>
+	<li>receiver - Mt Gox user name of the person you are trying to send to.</li>
+</ul>
+</fieldset>
