@@ -50,7 +50,6 @@ if($uid)
 			$result['status']="";
 			
 			$btcHeld=getSingleDBValue("SELECT BTC From Users where userid=$uid");
-			$btcHeld=round($btcHeld,ROUNDING);
 			$time=time();
 			if($btcHeld<$amount)
 			{
@@ -59,8 +58,8 @@ if($uid)
 				$result['status'] .="<br>You don't have that much BTC. What remains is stored in your open orders.";	
 			}
 			
-			$amount=findBuyer($uid,$amount,$price,$time,true);
-			if($amount>0)
+			$amountLeft=findBuyer($uid,$amount,$price,$time,true);
+			if($amountLeft>0)
 			{
 				$result['status'] .="<br>Your entire order can't be filled at that price. What remains is stored in your open orders.";
 			}
@@ -70,6 +69,8 @@ if($uid)
 			updateTicker($lastPrice);
 			
 			getOrders($uid);
+			if($amountLeft<$amount) httpGetAsync("http://127.0.0.1:8080/php/trade"); 
+			else if($btcHeld>0) httpGetAsync("http://127.0.0.1:8080/php/order"); 
 	
 		}else $result['error']="Invalid Amount.";
 	}catch(GoxException $e)

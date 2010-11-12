@@ -53,6 +53,7 @@ if($uid)
 			getOrders($uid);
 			getFunds($uid);
 			updateTicker(0);
+			httpGetAsync("http://127.0.0.1:8080/php/order"); 
 		}else $result=array( 'error' => "SQL Error." );
 		
 	}else $result=array( 'error' => "Invalid." );

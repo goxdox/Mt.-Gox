@@ -42,7 +42,7 @@ class SubscribePool():
         for row in rows:
             price=row['price']
             amount=row['amount']
-            if sum+amount >= 1000:
+            if sum+amount >= 1000000:
                 totalPrice=totalPrice+(1000-sum)*price
                 break
             else:
@@ -50,7 +50,7 @@ class SubscribePool():
                 sum += amount
         
         
-        return totalPrice/1000
+        return totalPrice/1000000
    
     # see what the avergae price you would get for filling 1000BTC at market
     def calcDepth(self):

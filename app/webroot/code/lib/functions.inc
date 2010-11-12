@@ -252,6 +252,66 @@ function logMsg($msg)
 	fclose($fd);
 }
 
+// takes $params as a php array
+// $params=compact('custom','amount','txn_id','payer_username','currency_code');
+function httpPostAsync($url, $params=array())
+{
+	$params=array();
+    foreach($params as $key => &$val) 
+    {
+      	if(is_array($val)) $val = implode(',', $val);
+        $post_params[] = $key.'='.urlencode($val);
+    }
+    if(isset($post_params)) $post_string = implode('&', $post_params);
+    else $post_string='';
+
+    $parts=parse_url($url);
+
+    $fp = fsockopen($parts['host'],
+        isset($parts['port'])?$parts['port']:80,
+        $errno, $errstr, 30);
+
+    //pete_assert(($fp!=0), "Couldn't open a socket to ".$url." (".$errstr.")");
+
+    $out = "POST ".$parts['path']." HTTP/1.1\r\n";
+    $out.= "Host: ".$parts['host']."\r\n";
+    $out.= "Content-Type: application/x-www-form-urlencoded\r\n";
+    $out.= "Content-Length: ".strlen($post_string)."\r\n";
+    $out.= "Connection: Close\r\n\r\n";
+    if (isset($post_string)) $out.= $post_string;
+
+    fwrite($fp, $out);
+    fclose($fp);
+}
+function httpGetAsync($url, $params=array())
+{
+	$params=array();
+    foreach($params as $key => &$val) 
+    {
+      	if(is_array($val)) $val = implode(',', $val);
+        $post_params[] = $key.'='.urlencode($val);
+    }
+    if(isset($post_params)) $post_string = implode('&', $post_params);
+    else $post_string='';
+
+    $parts=parse_url($url);
+
+    $fp = fsockopen($parts['host'],
+        isset($parts['port'])?$parts['port']:80,
+        $errno, $errstr, 30);
+
+    //pete_assert(($fp!=0), "Couldn't open a socket to ".$url." (".$errstr.")");
+
+    $out = "GET ".$parts['path']." HTTP/1.1\r\n";
+    $out.= "Host: ".$parts['host']."\r\n";
+    $out.= "Content-Type: application/x-www-form-urlencoded\r\n";
+    $out.= "Content-Length: ".strlen($post_string)."\r\n";
+    $out.= "Connection: Close\r\n\r\n";
+    if (isset($post_string)) $out.= $post_string;
+
+    fwrite($fp, $out);
+    fclose($fp);
+}
 function httpPost($url, $strRequest)
 {
 	//open connection

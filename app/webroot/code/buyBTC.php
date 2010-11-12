@@ -64,8 +64,8 @@ if($uid)
 			$result['status'] .= "<br>You don't have that much USD. What remains is stored in your open orders.";
 		}
 		
-		$amount=findSeller($uid,$amount,$price,$time,true);
-		if($amount>0) 
+		$amountLeft=findSeller($uid,$amount,$price,$time,true);
+		if($amountLeft>0) 
 		{
 			$result['status'] .="<br>Your entire order can't be filled at that price. What remains is stored in your open orders.";
 		}
@@ -75,6 +75,9 @@ if($uid)
 		updateTicker($lastPrice);
 		
 		getOrders($uid);
+		if($amountLeft<$amount) httpGetAsync("http://127.0.0.1:8080/php/trade"); 
+		else if($usdHeld>0) httpGetAsync("http://127.0.0.1:8080/php/order"); 
+		
 
 	}else $result=array( 'error' => "Invalid Amount." );
 }else
