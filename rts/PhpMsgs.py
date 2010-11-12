@@ -11,5 +11,5 @@ class PhpTradeHandler(tornado.web.RequestHandler):
 class PhpOrderHandler(tornado.web.RequestHandler):
     def get(self):
         print "PhpOrderHandler"
-        SubscribePool.thePool.updateOrder()
+        SubscribePool.thePool.updateDepth()
        
