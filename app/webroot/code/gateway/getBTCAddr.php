@@ -13,7 +13,7 @@ if(isset($_REQUEST['merchID']) && isset($_REQUEST['amount']))
 	$merchID=(int)$_REQUEST['merchID'];    
 	$notify_url=mysql_real_escape_string($_REQUEST['notify_url']); 
 	
-	logMsg("getBTCAddr $amount , $custom , $merchID , $notify_url");
+	//logMsg("getBTCAddr $amount , $custom , $merchID , $notify_url");
 	
 	$time=time();
 	

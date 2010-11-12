@@ -80,25 +80,33 @@ public function settings()
 		global $gUserID;
 		global $gMerchOn;
 		
-		$error='';
-		db_connect();
-		$sql="SELECT Email,TradeNotify,payAPIOn,MerchNotifyURL,merchToken from btcx.Users where UserID=$gUserID";
-		if( $data=mysql_query($sql))
+		if(! $gUserID ) 
 		{
-			$row=mysql_fetch_array($data);
-			if($row)
+			$url = "https://". $_SERVER['SERVER_NAME'] . ":443/users/login";
+			header("Location: $url");
+			die();
+		}else 
+		{	
+			$error='';
+			db_connect();
+			$sql="SELECT Email,TradeNotify,payAPIOn,MerchNotifyURL,merchToken from btcx.Users where UserID=$gUserID";
+			if( $data=mysql_query($sql))
 			{
-				$email=$row[0];
-				$notify=$row[1];
-				$payAPIOn=$row[2];
-				$noteurl=$row[3];
-				$token=$row[4];
-			}else $error="User Not found: $gUserID";	
-		}else $error='SQL Error';
-		
-		$title='Change Settings';
-		$merch=$gMerchOn;
-		return compact('gUserID','title','email','notify','noteurl','token','payAPIOn','merch','error');
+				$row=mysql_fetch_array($data);
+				if($row)
+				{
+					$email=$row[0];
+					$notify=$row[1];
+					$payAPIOn=$row[2];
+					$noteurl=$row[3];
+					$token=$row[4];
+				}else $error="User Not found: $gUserID";	
+			}else $error='SQL Error';
+			
+			$title='Change Settings';
+			$merch=$gMerchOn;
+			return compact('gUserID','title','email','notify','noteurl','token','payAPIOn','merch','error');
+		}
 	}
 	
 	public function trades() 
