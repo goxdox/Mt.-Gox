@@ -50,15 +50,14 @@ class SubscribePool():
                 sum += amount
         
         
-        return totalPrice/1000000
+        return round(totalPrice/1000000,4)
    
     # see what the avergae price you would get for filling 1000BTC at market
     def calcDepth(self):
         try:
-
             self.mData['depth']['ask1000']=self.getDepth("SELECT amount,price from Asks where status=1 order by price")
             self.mData['depth']['bid1000']=self.getDepth("SELECT amount,price from Bids where status=1 order by price desc")
-            
+            print "Depth %f  :  %f" % (self.mData['depth']['ask1000'], self.mData['depth']['bid1000'])
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])
              

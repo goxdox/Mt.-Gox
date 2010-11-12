@@ -4,12 +4,12 @@ import SubscribePool
 
 class PhpTradeHandler(tornado.web.RequestHandler):
     def get(self):
-        print "PhpTradeHandler"
+        print "Trade"
         SubscribePool.thePool.updateTrade()
         
         
 class PhpOrderHandler(tornado.web.RequestHandler):
     def get(self):
-        print "PhpOrderHandler"
+        print "Order"
         SubscribePool.thePool.updateDepth()
        
