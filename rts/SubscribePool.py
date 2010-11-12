@@ -56,8 +56,8 @@ class SubscribePool():
     def calcDepth(self):
         try:
 
-            self.mData['depth']['ask1000']=getDepth("SELECT amount,price from Asks where status=1 order by price")
-            self.mData['depth']['bid1000']=getDepth("SELECT amount,price from Bids where status=1 order by price desc")
+            self.mData['depth']['ask1000']=self.getDepth("SELECT amount,price from Asks where status=1 order by price")
+            self.mData['depth']['bid1000']=self.getDepth("SELECT amount,price from Bids where status=1 order by price desc")
             
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])

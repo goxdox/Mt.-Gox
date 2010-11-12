@@ -3,7 +3,7 @@ import tornado.ioloop
 import tornado.web
 import tornado.websocket
 import Connection
-import PhpUpdateHandler
+import PhpMsgs
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
