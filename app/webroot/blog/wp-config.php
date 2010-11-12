@@ -1,5 +1,5 @@
 <?php
-include('../../noserve/config.inc');
+include('var/www/www.mtgox.com/gox/app/noserve/config.inc');
 /**
  * The base configurations of the WordPress.
  *

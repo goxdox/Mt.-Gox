@@ -1,10 +1,10 @@
 <div id="sidebar">
 <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) : ?>
+
 <div class="block">
-Bit coin Market Anaylsis brought to you by
-		<h3><a href="/">Mt Gox</a></h3>
-		Bitcoin Exchange.
-	</div>
+	Brought to you by
+	<a href="/"><img src="/img/mtgox.small.png" /></a>
+</div>
 	
 <div class="block">
 		<h3>Categories</h3>
