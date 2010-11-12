@@ -60,15 +60,18 @@ class SubscribePool():
             bid=self.getDepth("SELECT amount,price from Bids where status=1 order by price desc")
             self.mData['depth']['ask1000']=ask
             self.mData['depth']['bid1000']=bid
-            print "Depth %f(%f)  :  %f(%f)" % (self.mData['depth']['ask1000'],ask, self.mData['depth']['bid1000'],bid)
+            #print "Depth %f(%f)  :  %f(%f)" % (self.mData['depth']['ask1000'],ask, self.mData['depth']['bid1000'],bid)
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])
              
     def updateDepth(self):
+        beforeAsk=self.mData['depth']['ask1000']
+        beforeBid=self.mData['depth']['bid1000']
         self.calcDepth();
-                
-        for connection in self.mList:
-            connection.write_message(json.dumps(self.mData))
+        
+        if (((beforeAsk-self.mData['depth']['ask1000'])>.00001) or ((beforeBid-self.mData['depth']['bid1000'])>.00001)) :       
+            for connection in self.mList:
+                connection.write_message(json.dumps(self.mData))
             
              
     # send a market update to all the subscribed connections    

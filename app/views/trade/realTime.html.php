@@ -70,12 +70,12 @@ function onServer(data)
 	{
 		if(data.depth.bid1000 != gLastData.depth.bid1000)
 		{
-			$('#bid1000Cell').text(data.depth.bid1000).flash();
+			$('#bid1000Cell').text(data.depth.bid1000+" for 1000 BTC").flash();
 			if($('#beepDepth').attr('checked')) beep=true;
 		}
 		if(data.depth.ask1000 != gLastData.depth.ask1000)
 		{
-			$('#ask1000Cell').text(data.depth.ask1000).flash();
+			$('#ask1000Cell').text(data.depth.ask1000+" for 1000 BTC").flash();
 			if($('#beepDepth').attr('checked')) beep=true;
 		}
 		
