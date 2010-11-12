@@ -43,7 +43,7 @@ class SubscribePool():
             price=row['price']
             amount=row['amount']
             if sum+amount >= 1000000:
-                totalPrice=totalPrice+(1000-sum)*price
+                totalPrice=totalPrice+(1000000-sum)*price
                 break
             else:
                 totalPrice=totalPrice+amount*price
