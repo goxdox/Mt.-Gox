@@ -1,0 +1,6 @@
+#search #s { margin-top: -1px; }
+#sidebar .block li, #inhalt .post-list li { list-style-position: outside; }
+#wrapper-unten { overflow: hidden; background: url(images/wrapper-unten.gif) no-repeat top; }
+#inhalt input { width: auto; overflow: visible; padding:0 .6em 0 .6em; }
+
+
