@@ -184,3 +184,5 @@ create table SendMoney (SendID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, FromID I
 ###########
 
 ALTER TABLE MerchantOrders add Column notifyURL VARCHAR(255) after Custom;
+
+Alter table Users add column TradeFee float default 0.0065 after paypalTrust;

@@ -13,7 +13,8 @@ class MainHandler(tornado.web.RequestHandler):
 application = tornado.web.Application([
     (r"/", MainHandler),
     (r"/connect", Connection.Connection),
-    (r"/php/update", PhpUpdateHandler.PhpUpdateHandler),
+    (r"/php/trade", PhpMsgs.PhpTradeHandler),
+    (r"/php/order", PhpMsgs.PhpOrderHandler),
 
 ])
 

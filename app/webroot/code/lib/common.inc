@@ -20,7 +20,7 @@ class GoxException extends Exception
     	if($this->mSql) logMsg($this->getFile().'('.$this->getLine().') '.$this->mSql);
     }
 }
-
+/*
 function recordTrade($buyerID,$sellerID,$amount,$price,$time)
 {	
 	if($amount>0)
@@ -50,7 +50,7 @@ function recordTrade($buyerID,$sellerID,$amount,$price,$time)
 					{
 						$sql="SELECT USD,BTC from Users where UserID=$buyerID";
 						if($data=mysql_query($sql))
-						{
+						{ 
 							$row=mysql_fetch_array($data);
 							if($row)
 							{
@@ -91,6 +91,79 @@ function recordTrade($buyerID,$sellerID,$amount,$price,$time)
 		}
 		$sql="rollback";
 		mysql_query($sql);
+	}
+}
+ */
+
+function recordTrade($buyerID,$sellerID,$amount,$price,$time)
+{	
+	if($amount>0)
+	{
+		$sql="BEGIN";
+		mysql_query($sql);
+		try {
+			
+			$sql="SELECT USD,BTC,TradeFee from Users where UserID=$buyerID";
+			if(!($data=mysql_query($sql))) throw new GoxException("SQL Error",$sql);
+			if(!($row=mysql_fetch_array($data))) throw new GoxException("User not found.");
+			$buyerUSD=$row[0];
+			$buyerBTC=$row[1];
+			$buyerFee=$row[2];
+			
+			$sql="SELECT USD,BTC,TradeFee from Users where UserID=$sellerID";
+			if(!($data=mysql_query($sql))) throw new GoxException("SQL Error",$sql);
+			if(!($row=mysql_fetch_array($data))) throw new GoxException("User not found.");
+			$sellerUSD=$row[0];
+			$sellerBTC=$row[1];
+			$sellerFee=$row[2];
+			
+			
+			$sql="INSERT INTO Trades (BuyerID,SellerID,Amount,Price,Date) values ($buyerID,$sellerID,$amount,$price,$time)";
+			if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
+			$sql="SELECT LAST_INSERT_ID()";
+			$tradeID=getSingleDBValue($sql);
+			if(!$tradeID) throw new GoxException("SQL Error",$sql); 
+			
+			$usdAmount=(int)($price*$amount*HALF_SPREAD);
+			$btcFee=(int)($amount*$buyerFee);
+			$usdFee=(int)($usdAmount*$sellerFee);
+			
+			$feedBTCAmount=$amount-$btcFee;
+			$feedUSDAmount = $usdAmount -$usdFee;
+			
+			$sql="UPDATE Users set BTC=BTC+$feedBTCAmount, USD=USD-$usdAmount where userid=$buyerID";
+			if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
+			$sql="UPDATE Users set BTC=BTC-$amount, USD=USD+$feedUSDAmount where userid=$sellerID";
+			if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
+			
+			$buyerUSD -= $usdAmount;
+			$buyerBTC += $feedBTCAmount;
+			$sellerUSD += $feedUSDAmount;
+			$sellerBTC -= $amount;
+			
+			$sql="INSERT INTO Activity (UserID,DeltaBTC,DeltaUSD,Type,TypeID,BTC,USD,Date) values ($buyerID,$feedBTCAmount,-$usdAmount,2,$tradeID,$buyerBTC,$buyerUSD,$time)";
+			if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
+			$sql="INSERT INTO Activity (UserID,DeltaBTC,DeltaUSD,Type,TypeID,BTC,USD,Date) values ($sellerID,-$amount,$feedUSDAmount,1,$tradeID,$sellerBTC,$sellerUSD,$time)";
+			if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
+			
+	
+			mysql_query("Commit");
+			
+			if($btcFee || $usdFee)
+			{
+				global $GOX_BOT_ID;
+				
+				$sql="UPDATE Users set BTC=BTC+$btcFee, USD=USD+$usdFee where userid=$GOX_BOT_ID";
+				//logMsg($sql);
+				mysql_query($sql);
+			}
+		}catch(GoxException $e)
+		{
+			mysql_query("rollback");
+			global $result;
+			$result['error'] = $e->getMessage();
+			$e->log();
+		}
 	}
 }
 

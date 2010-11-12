@@ -12,8 +12,6 @@ if(!userID)
 	$('#error').text('You have been logged out.');
 }else
 {
-	$('#status').text('Loading...');
-	//$.post("/code/user/getHistory.php", {  }, onServer , "json" );
 	gHistoryTable=$('#history').dataTable({
 		"bLengthChange": false,
 		"iDisplayLength": 30,

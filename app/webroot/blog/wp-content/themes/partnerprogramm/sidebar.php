@@ -2,7 +2,7 @@
 <?php if ( !function_exists('dynamic_sidebar') || !dynamic_sidebar() ) : ?>
 
 <div class="block">
-	Brought to you by
+	Brought to you by<p>
 	<a href="/"><img src="/img/mtgox.small.png" /></a>
 </div>
 	

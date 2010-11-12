@@ -40,7 +40,8 @@ $(document).ready(function(){
 		"bLengthChange": false,
 		"bFilter": false,
 		"bPaginate": false,
-		"bAutoWidth": false 
+		"bAutoWidth": false,
+		"aaSorting": [[ 2, "desc" ]]
 		});
 	
 	

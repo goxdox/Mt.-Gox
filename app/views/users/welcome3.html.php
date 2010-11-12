@@ -45,6 +45,9 @@ function onRecent(result)
 	<div class="info_box"><div class="info_title"><a href="http://www.bitcoin.org/" target="_blank">What are Bitcoins?</a></div>
  		Bitcoins are a decentralized internet commodity.<br><br> <a href="http://www.bitcoin.org/" target="_blank">Learn more about Bitcoins here.</a>
  	</div>
+ 	<p>
+ 	<p>
+ 	<div style="text-align: center"><a href="/trade/history">Trade data</a></div>
 </div>
 
 <fieldset class="info_frame" >
