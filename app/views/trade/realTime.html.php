@@ -3,9 +3,6 @@
 
 $(document).ready(function(){
 
-	$("#go").click(function(){
-		  $("#lastCell").flash();
-		});
 
 	$.fn.flash = function() {
 	    var highlightBg = "#FFFF9C";
@@ -42,7 +39,7 @@ var gLastData={ "ticker": {"last": 0, "buy": 0, "sell": 0},
 
 function onServer(data)
 {
-	//alert(data.ticker);
+	//alert(data);
 	
 	var beep=false;
 	
@@ -117,7 +114,6 @@ function onServer(data)
 </script>
 
 <div id="ticker">Use Mt Gox to send or recieve money for free! <a href="/">learn more</a></div>
-<button id="go">&raquo; Run</button>
 <hr>
 <table width="100%"  >
 	<tr  align="center">

@@ -17,6 +17,7 @@ class SubscribePool():
         
         try:
             self.mDatabase = MySQLdb.connect("localhost", "land", "-island-", "btcx")
+            self.mDatabase.autocommit(True)
             self.mCursor = self.mDatabase.cursor(MySQLdb.cursors.DictCursor)
             self.updateTrade()
         except MySQLdb.Error, e:
@@ -55,9 +56,11 @@ class SubscribePool():
     # see what the avergae price you would get for filling 1000BTC at market
     def calcDepth(self):
         try:
-            self.mData['depth']['ask1000']=self.getDepth("SELECT amount,price from Asks where status=1 order by price")
-            self.mData['depth']['bid1000']=self.getDepth("SELECT amount,price from Bids where status=1 order by price desc")
-            print "Depth %f  :  %f" % (self.mData['depth']['ask1000'], self.mData['depth']['bid1000'])
+            ask=self.getDepth("SELECT amount,price from Asks where status=1 order by price")
+            bid=self.getDepth("SELECT amount,price from Bids where status=1 order by price desc")
+            self.mData['depth']['ask1000']=ask
+            self.mData['depth']['bid1000']=bid
+            print "Depth %f(%f)  :  %f(%f)" % (self.mData['depth']['ask1000'],ask, self.mData['depth']['bid1000'],bid)
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])
              
