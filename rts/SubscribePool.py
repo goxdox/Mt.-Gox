@@ -34,7 +34,7 @@ class SubscribePool():
     def sendData(self,connection):
         connection.write_message(json.dumps(self.mData))
     
-    def getDepth(self,sql):
+    def getDepth(self,sql,ticker):
         self.mCursor.execute(sql)
         rows = self.mCursor.fetchall()
         
@@ -42,6 +42,7 @@ class SubscribePool():
         totalPrice=0
         for row in rows:
             price=row['price']
+            if sum==0: self.mData['ticker'][ticker]=price
             amount=row['amount']
             if sum+amount >= 1000000:
                 totalPrice=totalPrice+(1000000-sum)*price
@@ -56,8 +57,8 @@ class SubscribePool():
     # see what the avergae price you would get for filling 1000BTC at market
     def calcDepth(self):
         try:
-            ask=self.getDepth("SELECT amount,price from Asks where status=1 order by price")
-            bid=self.getDepth("SELECT amount,price from Bids where status=1 order by price desc")
+            ask=self.getDepth("SELECT amount,price from Asks where status=1 order by price","sell")
+            bid=self.getDepth("SELECT amount,price from Bids where status=1 order by price desc","buy")
             self.mData['depth']['ask1000']=ask
             self.mData['depth']['bid1000']=bid
             #print "Depth %f(%f)  :  %f(%f)" % (self.mData['depth']['ask1000'],ask, self.mData['depth']['bid1000'],bid)
