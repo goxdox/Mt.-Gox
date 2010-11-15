@@ -42,7 +42,7 @@ if($data)
 	}
 }else $result=array( 'error' => "SQL Failed." );
 
-$sql="SELECT Amount,Price From Bids where status=1 and price<$maxPrice and price>$minPrice order by Price";
+$sql="SELECT Amount,Price From Bids where status=1 and price<$maxPrice and price>$minPrice order by Price desc";
 $data=mysql_query($sql);
 if($data)
 {
