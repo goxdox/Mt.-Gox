@@ -15,7 +15,7 @@ What we want from the chart:
 	
 	Mouse move should:
 		-Show cross hairs and info in bottom left:
-			Price
+			-Price
 			Time
 			Volume
 			Depth
@@ -66,20 +66,27 @@ function MegaChart()
 	this.priceLabel = function(){ return("Price: "+i4_round(mMouseY,4)); }
 	this.depthLabel = function()
 	{
+		//alert(gBids.map(prices).reverse()+" "+mMouseY);
 		var depthIndex = pv.search(gAsks.map(prices), mMouseY);
-		if(depthIndex<0)
+		depthIndex = depthIndex < 0 ? (-depthIndex - 2) : depthIndex;
+		//alert(depthIndex);
+		if(depthIndex==-1)
 		{
-			depthIndex = pv.search(gBids.map(prices), mMouseY);
-			if(depthIndex<0) return("0");
-			else return("Bid: ");
+			depthIndex = pv.search(gBids.map(prices), mMouseY)-1;
+			depthIndex = depthIndex < 0 ? (-depthIndex - 2) : depthIndex;
+			if(depthIndex==-1 || depthIndex>=gBids.length) return("0");
+			else return("Bid Depth: "+gBids[depthIndex][1]);
 		}else
 		{
-			return("Ask: ");
+			
+			return("Ask Depth: "+gAsks[depthIndex][1]);
 		}
 	}
-	
+	// the average price to buy this many
 	this.depthPriceLabel = function()
 	{
+		// how many
+		
 		return("depthPrice");
 	}
 	
@@ -94,7 +101,7 @@ var w = 800,
     
     gAsks=[],
     gBids=[],
-    depthAxis=pv.Scale.linear(0, 1000).range(0, w/4),
+    depthAxis=pv.Scale.linear(0, 1000).range(0, w/2),
     x = pv.Scale.linear(0, 50).range(0, w),
     //y = pv.Scale.linear(gMegaChart.getMinPrice, .70 ).range(0, h);
     //y = pv.Scale.linear(function(){ return(gMinPrice);}, function(){ return(gMaxPrice);} ).range(0, h);
@@ -105,7 +112,7 @@ var vis = new pv.Panel()
     .width(w)
     .height(h)
     .bottom(20)
-    .left(20)
+    .left(30)
     .right(10)
     .top(5)
     .cursor('crosshair')
@@ -117,7 +124,7 @@ var vis = new pv.Panel()
 
 /* X-axis ticks. */
 vis.add(pv.Rule)
-    .data(x.ticks())
+    .data(function(){ return(x.ticks()); })
     .visible(f1)
     .left(x)
     .strokeStyle("#eee")
@@ -130,7 +137,7 @@ vis.add(pv.Rule)
 
 /* Y-axis ticks. */
 vis.add(pv.Rule)
-    .data(y.ticks(5))
+    .data(function(){ return(y.ticks(6)); })
     .top(y)
     .strokeStyle(f2)
   .anchor("left").add(pv.Label)
@@ -140,13 +147,13 @@ vis.add(pv.Rule)
 // Y-axis cursor 
 vis.add(pv.Rule)
     .top(function(){ return(y(gMegaChart.getMouseY())); })
-    .strokeStyle("#e00")
+    .strokeStyle("rgba(255,0,0,.5)")
   .anchor("left");
 
 //X-axis cursor 
 var gXCursor=vis.add(pv.Rule)
     .left(function(){ return(x(gMegaChart.getMouseX())); })
-    .strokeStyle("#e00")
+    .strokeStyle("rgba(255,0,0,.5)")
   .anchor("top");
 
 /*
@@ -174,7 +181,7 @@ vis.add(pv.Area)
 .interpolate("step-before")
 .left(1)
 .width(function(d){ return(depthAxis(d[1])); })
-.bottom(function(d){ return(y(d[0]));} )
+.top(function(d){ return(y(d[0]));} )
 .fillStyle("rgba(121,173,210,.5)")
 .anchor("right").add(pv.Line)
 .lineWidth(1);
@@ -182,22 +189,15 @@ vis.add(pv.Area)
 // Bids
 vis.add(pv.Area)
 .data(function() {return(gBids);})
-.interpolate("step-before")
+.interpolate("step-after")
 .left(1)
 .width(function(d) depthAxis(d[1]))
-.bottom(function(d) y(d[0]))
+.top(function(d) y(d[0]))
 .fillStyle("rgba(255,173,210,.5)")
 .anchor("right").add(pv.Line)
 .lineWidth(1);
 
-/* works
-// legend
-vis.add(pv.Dot)
-.left(10)
-.bottom(10)
-.anchor("right").add(pv.Label)
-.text(function() mouseX.toFixed(2));
-*/
+/// Legend
 vis.add(pv.Label)
 .left(10)
 .bottom(10)
@@ -216,12 +216,12 @@ vis.add(pv.Label)
 vis.add(pv.Label)
 .left(10)
 .bottom(70)
-.text(function() gMegaChart.volumeLabel());
+.text(gMegaChart.volumeLabel);
 
 vis.add(pv.Label)
 .left(10)
 .bottom(90)
-.text(gMegaChart.dateLabel);
+.text(gMegaChart.timeLabel);
 
 ///////////
 
@@ -252,6 +252,7 @@ function updateDepth(asks,bids)
 	}
 	gBids.push([gMegaChart.getMinPrice(),total]);
 	if(total>gMegaChart.getMaxDepth()) gMegaChart.setMaxDepth(total);
+	gBids.reverse();
 	
 	depthAxis.domain(0,gMegaChart.getMaxDepth());
 	y.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
