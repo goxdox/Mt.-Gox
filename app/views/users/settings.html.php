@@ -70,7 +70,7 @@ function onPass()
 		var newpass=$("#passwordn").val();
 		var oldpass=$('#passwordo').val();
 		
-		$.post("/code/users/changePass.php", { "newpass": newpass , "oldpass": oldpass }, onServer , "json" );
+		$.post("/code/user/changePass.php", { "newpass": newpass , "oldpass": oldpass }, onServer , "json" );
 	}else return(false);
 }
 
