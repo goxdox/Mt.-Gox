@@ -38,7 +38,7 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 	$xml .= "<ReceiptId>$txn_id</ReceiptId>";
 	$xml .='</History></HistoryRequest>';
 	
-	logMsg($xml);
+	//logMsg($xml);
 	
 	$url = "https://api.libertyreserve.com/xml/history.aspx?req=".urlencode($xml);
 	
@@ -118,7 +118,7 @@ function LRWithdraw($account,$amount)
 	
 	
 	
-	logMsg($xml);
+	//logMsg($xml);
 	
 	$url = "https://api.libertyreserve.com/xml/transfer.aspx?req=".urlencode($xml);
 	

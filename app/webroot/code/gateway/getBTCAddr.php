@@ -8,7 +8,7 @@ if(isset($_REQUEST['merchID']) && isset($_REQUEST['amount']))
 {
 	db_connect();
 	
-	$amount=(float)$_REQUEST['amount']; 
+	$amount=(int)($_REQUEST['amount']*BASIS); 
 	$custom=mysql_real_escape_string($_REQUEST['custom']); 
 	$merchID=(int)$_REQUEST['merchID'];    
 	$notify_url=mysql_real_escape_string($_REQUEST['notify_url']); 

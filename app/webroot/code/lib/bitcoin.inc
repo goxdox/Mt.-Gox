@@ -149,7 +149,7 @@ function BC_process_Merch()
 						$sql="UPDATE MerchantOrders set Status=1 where OrderID=$orderID";			
 					}else
 					{
-						$sql="UPDATE MerchantOrders set Status=3 where OrderID=$orderID";
+						$sql="UPDATE MerchantOrders set Status=3, AmountRecv=$total where OrderID=$orderID";
 					}
 					if($notifyURL)
 					{

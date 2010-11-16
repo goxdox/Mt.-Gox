@@ -18,7 +18,7 @@ What we want from the chart:
 			-Price
 			Time
 			Volume
-			Depth
+			-Depth
 			average price for that depth
 		
 	Click should:
@@ -44,6 +44,14 @@ function MegaChart()
 	var mMaxDepth=0;
 	var mMaxPrice=1;
 	var mMinPrice=0;
+	
+	
+	var mDepthMode=0;
+	
+	// options
+	this.setDepthMode=function(x){ mDepthMode=x; }
+	this.getDepthMode=function(){ return(mDepthMode); }
+	///
 	
 	this.setMouseX = function(x){ mMouseX=x; }
 	this.setMouseY = function(x){ mMouseY=x; }
@@ -75,11 +83,10 @@ function MegaChart()
 			depthIndex = pv.search(gBids.map(prices), mMouseY)-1;
 			depthIndex = depthIndex < 0 ? (-depthIndex - 2) : depthIndex;
 			if(depthIndex==-1 || depthIndex>=gBids.length) return("0");
-			else return("Bid Depth: "+gBids[depthIndex][1]);
+			else return("Bid Depth: "+i4_addCommas(i4_round(gBids[depthIndex][1],0)));
 		}else
 		{
-			
-			return("Ask Depth: "+gAsks[depthIndex][1]);
+			return("Ask Depth: "+i4_addCommas(i4_round(gAsks[depthIndex][1],0)));
 		}
 	}
 	// the average price to buy this many
@@ -97,14 +104,11 @@ var gMegaChart=new MegaChart();
 
 /* Sizing and scales. */
 var w = 800,
-    h = 600,
-    
+    h = 600,    
     gAsks=[],
     gBids=[],
     depthAxis=pv.Scale.linear(0, 1000).range(0, w/2),
     x = pv.Scale.linear(0, 50).range(0, w),
-    //y = pv.Scale.linear(gMegaChart.getMinPrice, .70 ).range(0, h);
-    //y = pv.Scale.linear(function(){ return(gMinPrice);}, function(){ return(gMaxPrice);} ).range(0, h);
     y = pv.Scale.linear(0, 1).range(0, h);
 
 /* The root panel. */
@@ -198,30 +202,31 @@ vis.add(pv.Area)
 .lineWidth(1);
 
 /// Legend
-vis.add(pv.Label)
-.left(10)
-.bottom(10)
-.text(gMegaChart.depthLabel);
 
 vis.add(pv.Label)
 .left(10)
-.bottom(30)
+.bottom(10)
 .text(gMegaChart.depthPriceLabel);
 
 vis.add(pv.Label)
 .left(10)
-.bottom(50)
-.text(gMegaChart.priceLabel);
+.bottom(30)
+.text(gMegaChart.depthLabel);
 
 vis.add(pv.Label)
 .left(10)
-.bottom(70)
+.bottom(50)
 .text(gMegaChart.volumeLabel);
 
 vis.add(pv.Label)
 .left(10)
-.bottom(90)
+.bottom(70)
 .text(gMegaChart.timeLabel);
+
+vis.add(pv.Label)
+.left(10)
+.bottom(90)
+.text(gMegaChart.priceLabel);
 
 ///////////
 
