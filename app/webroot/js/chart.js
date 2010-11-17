@@ -2,28 +2,44 @@
 **************  MEGA CHART!!!!!!!!!!!!!!! *******
  
 What we want from the chart:
-	Full width of screen
-	Variable height
+	-Full width of screen
 	Price line or
-	Candelsticks for > than tick time scale
-	Variable time scale for history
+	-Candelsticks for > than tick time scale
+		calculate the correct width of the sticks	
+		what should we do when there is no action?
+		tooltips or highligh the closest and add to label
+		start time correctly
+		They are located incorrectly
+	Allow you to zoom on sections of history
+	-Variable time scale for history
+	It is laggy
+	Hook it up to realtime feed
+	Price line
 	Order Depth
 		As dots
-		Cumaltive
+		-Cumaltive
 	Your open orders
-	Volume
+	-Volume
+		calculate the correct width of the bars	
 	
 	Mouse move should:
 		-Show cross hairs and info in bottom left:
 			-Price
-			Time
-			Volume
+			-Time
+			-Volume
 			-Depth
 			average price for that depth
 		
 	Click should:
 		open buy/sell order dialog
 		
+	Options:
+		Display Volume
+		Display Depth
+		Display your orders
+		Display price line
+		
+	Variable height	
 	Axies:
 		y
 			Price
@@ -65,13 +81,15 @@ function MegaChart()
 	this.getMouseY = function(){ return(mMouseY); }
 	this.getMaxDepth = function(){ return(mMaxDepth); }
 	
+	this.getTickWidth = function(){ return(w/500); }
+	
 	
 	this.prices = prices;
 	function prices(d){ return(d[0]); }
 	function date(d){ return(d[5]); }
 
 
-	this.timeLabel = function(){ return(dateFormat(mMouseX,"mm/dd HH:MM:ss") ); }
+	this.timeLabel = function(){ return(dateFormat(mMouseX*1000,"mm/dd HH:MM:ss") ); }
 	this.priceLabel = function(){ return("Price: "+i4_round(mMouseY,4)); }
 	this.depthLabel = function()
 	{
@@ -105,6 +123,18 @@ function MegaChart()
 		//alert(plotIndex+" "+mMouseX)
 		if(plotIndex==-1 || plotIndex>=gPlot.length) return("Volume: 0");
 		else return("Volume: "+i4_addCommas(i4_round(gPlot[plotIndex][4],0)));
+	}
+	
+	this.ohlcLabel = function()
+	{
+		plotIndex = pv.search(gPlot.map(date).reverse(), mMouseX)-1;
+		plotIndex = plotIndex < 0 ? (-plotIndex - 2) : plotIndex;
+		//alert(plotIndex+" "+mMouseX)
+		if(plotIndex==-1 || plotIndex>=gPlot.length) return("");
+		else return("o:"+i4_round(gPlot[plotIndex][0],3)+
+					" h:"+i4_round(gPlot[plotIndex][1],3)+
+					" l:"+i4_round(gPlot[plotIndex][2],3)+
+					" c:"+i4_round(gPlot[plotIndex][3],3));
 	}
 }
 
@@ -148,8 +178,9 @@ vis.add(pv.Rule)
     .height(5)
     .strokeStyle("#000")
   .anchor("bottom").add(pv.Label)
-    .text(x.tickFormat);
-
+   .text(function(t){ return(dateFormat(t*1000,"mm/dd HH:MM:ss"));});
+  //  .text( dateFormat(x.tickFormat*1000,"mm/dd HH:MM:ss") );
+  
 /* Y-axis ticks. */
 vis.add(pv.Rule)
     .data(function(){ return(y.ticks(6)); })
@@ -215,14 +246,14 @@ vis.add(pv.Area)
 // candles
 vis.add(pv.Rule)
 .data(function() {return(gPlot);})
-.right(function(d) x(d[5]))
-.bottom(function(d) y(Math.min(d[1], d[2])))
-.height(function(d) Math.abs(y(d[1]) - y(d[2])))
-.strokeStyle(function(d) d[0] < d[3] ? "#ae1325" : "#06982d")
+.right(function(d){ return x(d[5]); })
+.top(function(d){ return y(Math.min(d[1], d[2]));})
+.height(function(d){ return(1+Math.abs(y(d[1]) - y(d[2]))); } )
+.strokeStyle(function(d){ return(d[0] < d[3] ? "#FF0000" : "#00FF00"); } )
 .add(pv.Rule)
-.bottom(function(d) y(Math.min(d[0], d[3])))
-.height(function(d) Math.abs(y(d[0]) - y(d[3])))
-.lineWidth(10);
+.top(function(d){ return y(Math.min(d[0], d[3])); } )
+.height(function(d){ return Math.abs(y(d[0]) - y(d[3])); } )
+.lineWidth(gMegaChart.getTickWidth);
 
 //volume bars
 vis.add(pv.Rule)
@@ -231,32 +262,37 @@ vis.add(pv.Rule)
 .bottom(1)
 .height(function(d) volumeAxis(d[4]) )
 .strokeStyle("rgba(0,255,0,.5)")
-.lineWidth(3);
+.lineWidth(gMegaChart.getTickWidth);
 
 /// Legend
 vis.add(pv.Label)
 .left(10)
 .bottom(10)
-.text(gMegaChart.depthPriceLabel);
+.text(gMegaChart.ohlcLabel);
 
 vis.add(pv.Label)
 .left(10)
 .bottom(30)
-.text(gMegaChart.depthLabel);
+.text(gMegaChart.depthPriceLabel);
 
 vis.add(pv.Label)
 .left(10)
 .bottom(50)
-.text(gMegaChart.volumeLabel);
+.text(gMegaChart.depthLabel);
 
 vis.add(pv.Label)
 .left(10)
 .bottom(70)
-.text(gMegaChart.timeLabel);
+.text(gMegaChart.volumeLabel);
 
 vis.add(pv.Label)
 .left(10)
 .bottom(90)
+.text(gMegaChart.timeLabel);
+
+vis.add(pv.Label)
+.left(10)
+.bottom(110)
 .text(gMegaChart.priceLabel);
 
 ///////////
