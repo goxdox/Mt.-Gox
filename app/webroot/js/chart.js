@@ -248,11 +248,11 @@ vis.add(pv.Rule)
 .data(function() {return(gPlot);})
 .right(function(d){ return x(d[5]); })
 .top(function(d){ return y(Math.min(d[1], d[2]));})
-.height(function(d){ return(1+Math.abs(y(d[1]) - y(d[2]))); } )
-.strokeStyle(function(d){ return(d[0] < d[3] ? "#FF0000" : "#00FF00"); } )
+.height(function(d){ return(-(Math.abs(y(d[1]) - y(d[2])))); } )
+.strokeStyle(function(d){ return(d[0] < d[3] ? "#00FF00" : "#FF0000"); } )
 .add(pv.Rule)
 .top(function(d){ return y(Math.min(d[0], d[3])); } )
-.height(function(d){ return Math.abs(y(d[0]) - y(d[3])); } )
+.height(function(d){ return(-(1+Math.abs(y(d[0]) - y(d[3])))); } )
 .lineWidth(gMegaChart.getTickWidth);
 
 //volume bars
@@ -261,7 +261,7 @@ vis.add(pv.Rule)
 .right(function(d) x(d[5]))
 .bottom(1)
 .height(function(d) volumeAxis(d[4]) )
-.strokeStyle("rgba(0,255,0,.5)")
+.strokeStyle("rgba(0,255,255,.5)")
 .lineWidth(gMegaChart.getTickWidth);
 
 /// Legend
@@ -299,6 +299,9 @@ vis.add(pv.Label)
 
 function updateHistory(result)
 {
+	gMegaChart.setMinPrice(1000);
+	gMegaChart.setMaxPrice(0);
+	
 	var maxVolume=0;
 	gPlot=result.plot;
 	for(var n=0; n<gPlot.length; n++)
