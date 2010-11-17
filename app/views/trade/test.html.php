@@ -1,5 +1,6 @@
 <script type="text/javascript" language="javascript" src="/js/jquery.ui.js"></script>
 <script type="text/javascript" src="/js/protovis.js"></script>
+<script type="text/javascript" src="/js/date.format.js"></script>
 
 <script>
 
@@ -27,7 +28,7 @@ function onHistory(result)
 {
 	if(result.plot)
 	{
-		updateHistory(result.plot);
+		updateHistory(result);
 	}
 }
 
@@ -37,6 +38,7 @@ function onHistory(result)
 <div id="status"></div>
 <div id="error"></div>
 <hr>
+<div id="page">
 <form id="timeScale">
 <select  name="timeScale" onchange="fetchPrice()" >
 <option value="0"  selected>Real Time</option>
@@ -47,6 +49,7 @@ function onHistory(result)
 <option value="1440">1 day</option>
 </select>
 </form>
-
+<div id="megaChart" class="megaChart" >.
 <script type="text/javascript" src="/js/chart.js"> </script>
-
+</div>
+</div>

@@ -68,9 +68,10 @@ function MegaChart()
 	
 	this.prices = prices;
 	function prices(d){ return(d[0]); }
+	function date(d){ return(d[5]); }
 
 
-	this.timeLabel = function(){ return("Date: "+mMouseX); }
+	this.timeLabel = function(){ return(dateFormat(mMouseX,"mm/dd HH:MM:ss") ); }
 	this.priceLabel = function(){ return("Price: "+i4_round(mMouseY,4)); }
 	this.depthLabel = function()
 	{
@@ -97,30 +98,40 @@ function MegaChart()
 		return("depthPrice");
 	}
 	
-	this.volumeLabel = function(){  return("Volume: "+mMouseX); }
+	this.volumeLabel = function()
+	{
+		plotIndex = pv.search(gPlot.map(date).reverse(), mMouseX)-1;
+		plotIndex = plotIndex < 0 ? (-plotIndex - 2) : plotIndex;
+		//alert(plotIndex+" "+mMouseX)
+		if(plotIndex==-1 || plotIndex>=gPlot.length) return("Volume: 0");
+		else return("Volume: "+i4_addCommas(i4_round(gPlot[plotIndex][4],0)));
+	}
 }
 
 var gMegaChart=new MegaChart();
 
 /* Sizing and scales. */
-var w = 800,
-    h = 600,    
+var w = $("#megaChart").width()-30-5,
+    h = $("#megaChart").height()-20-5,    
     gAsks=[],
     gBids=[],
+    gPlot=[],
+    volumeAxis=pv.Scale.linear(0, 1000).range(0, h/3),
     depthAxis=pv.Scale.linear(0, 1000).range(0, w/2),
     x = pv.Scale.linear(0, 50).range(0, w),
     y = pv.Scale.linear(0, 1).range(0, h);
 
 /* The root panel. */
 var vis = new pv.Panel()
-    .width(w)
-    .height(h)
+	.canvas('megaChart')
+  //  .width(w)
+  //  .height(h)
     .bottom(20)
     .left(30)
-    .right(10)
+    .right(5)
     .top(5)
     .cursor('crosshair')
-     .events("all")
+    .events("all")
     .event("mousemove" , moveMouse )
     .event("mousedown", placeOrder );
 
@@ -201,8 +212,28 @@ vis.add(pv.Area)
 .anchor("right").add(pv.Line)
 .lineWidth(1);
 
-/// Legend
+// candles
+vis.add(pv.Rule)
+.data(function() {return(gPlot);})
+.right(function(d) x(d[5]))
+.bottom(function(d) y(Math.min(d[1], d[2])))
+.height(function(d) Math.abs(y(d[1]) - y(d[2])))
+.strokeStyle(function(d) d[0] < d[3] ? "#ae1325" : "#06982d")
+.add(pv.Rule)
+.bottom(function(d) y(Math.min(d[0], d[3])))
+.height(function(d) Math.abs(y(d[0]) - y(d[3])))
+.lineWidth(10);
 
+//volume bars
+vis.add(pv.Rule)
+.data(function() {return(gPlot);})
+.right(function(d) x(d[5]))
+.bottom(1)
+.height(function(d) volumeAxis(d[4]) )
+.strokeStyle("rgba(0,255,0,.5)")
+.lineWidth(3);
+
+/// Legend
 vis.add(pv.Label)
 .left(10)
 .bottom(10)
@@ -229,6 +260,26 @@ vis.add(pv.Label)
 .text(gMegaChart.priceLabel);
 
 ///////////
+
+function updateHistory(result)
+{
+	var maxVolume=0;
+	gPlot=result.plot;
+	for(var n=0; n<gPlot.length; n++)
+	{
+		gPlot[n][5]=result.date-n*result.period;
+		if(gPlot[n][1]>gMegaChart.getMaxPrice()) gMegaChart.setMaxPrice(gPlot[n][1]);
+		if(gPlot[n][2]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(gPlot[n][2]);
+		if(gPlot[n][4]>maxVolume) maxVolume=gPlot[n][4];
+	}
+	
+	//alert(gMegaChart.getMinPrice()+" "+gMegaChart.getMaxPrice());
+	
+	x.domain(result.date-gPlot.length*result.period,result.date);
+	y.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
+	volumeAxis.domain(0,maxVolume);
+	vis.render();
+}
 
 function updateDepth(asks,bids)
 {
@@ -261,7 +312,7 @@ function updateDepth(asks,bids)
 	
 	depthAxis.domain(0,gMegaChart.getMaxDepth());
 	y.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
-	//alert(gMegaChart.getMinPrice()+" "+gMaxPrice+" "+gMaxDepth);
+	
 	//alert( "("+depthAxis(gAsks[0][1])+","+y(gAsks[0][0])+")");
 	vis.render();
 }

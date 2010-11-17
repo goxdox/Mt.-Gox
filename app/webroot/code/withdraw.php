@@ -23,8 +23,10 @@ function amountLeftToday($userID,$inBTC)
 			
 			$btc=$row[0];
 			if($btc=='NULL') $btc=0;
+			else $btc=-$btc;
 			$usd=$row[1];
 			if($usd=='NULL') $usd=0;
+			else $usd=-$usd;
 			//logMsg("$btc $usd");
 			
 			$usd=($btc*$lastPrice)+$usd;
