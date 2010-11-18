@@ -47,7 +47,7 @@ function refreshData($filename,$json)
 				$open=(float)getSingleDBValue($sql);
 				if(!$open) $open=$lastValidPrice;
 				
-				$json['plot'][$index]=array( 0 => $open, 1 => $high, 2=> $low,  3 => $close, 4 => round($volume/BASIS,0) );
+				$json['plot'][$index]=array( 0 => round($open,4), 1 => round($high,4), 2=> round($low,4),  3 => round($close,4), 4 => round($volume/BASIS,0) );
 				$index++;
 			}
 		}
@@ -58,7 +58,7 @@ function refreshData($filename,$json)
 	// keep the history to only the last N periods
 	if($index>NUM_PERIODS)
 	{
-		$json=array_slice($json,$index-NUM_PERIODS);
+		$json['plot']=array_slice($json['plot'],$index-NUM_PERIODS);
 	}
 	$json['date']=$endDate;
 	
