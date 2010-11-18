@@ -362,30 +362,39 @@ function updateOptions()
 
 function updateHistory(result)
 {
+	var maxVolume=0;
 	gMegaChart.setMinPrice(1000);
 	gMegaChart.setMaxPrice(0);
-	
-	var maxVolume=0;
 	gPlot=result.plot;
-	for(var n=0; n<gPlot.length; n++)
-	{
-		if(result.period) gPlot[n][5]=result.date-((gPlot.length-n)*result.period);
-		if(gPlot[n][1]>gMegaChart.getMaxPrice()) gMegaChart.setMaxPrice(gPlot[n][1]);
-		if(gPlot[n][3]>0 && gPlot[n][2]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(gPlot[n][2]);
-		if(gPlot[n][4]>maxVolume) maxVolume=gPlot[n][4];
-	}
 	
-	//alert(gMegaChart.getMinPrice()+" "+gMegaChart.getMaxPrice());
-	
-	if(result.period) 
+	if(result.period)
 	{
+		for(var n=0; n<gPlot.length; n++)
+		{
+			gPlot[n][5]=result.date-((gPlot.length-n)*result.period);
+			if(gPlot[n][1]>gMegaChart.getMaxPrice()) gMegaChart.setMaxPrice(gPlot[n][1]);
+			if(gPlot[n][3]>0 && gPlot[n][2]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(gPlot[n][2]);
+			if(gPlot[n][4]>maxVolume) maxVolume=gPlot[n][4];
+		}
+		
 		focusX.domain(result.date-gPlot.length*result.period,result.date);
 		contextX.domain(result.date-gPlot.length*result.period,result.date);
-	}else 
+	}else
 	{
+		gMegaChart.setShowCandles(false);
+		
+		for(var n=0; n<gPlot.length; n++)
+		{
+			
+			if(gPlot[n][0]>gMegaChart.getMaxPrice()) gMegaChart.setMaxPrice(gPlot[n][0]);
+			if(gPlot[n][0]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(gPlot[n][0]);
+			if(gPlot[n][4]>maxVolume) maxVolume=gPlot[n][4];
+		}
+		
 		focusX.domain(result.date-24*60*60,result.date);
 		contextX.domain(result.date-24*60*60,result.date);
 	}
+	
 	
 	focusY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
 	contextY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
