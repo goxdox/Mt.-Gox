@@ -88,7 +88,7 @@ function MegaChart()
 	this.getMouseY = function(){ return(mMouseY); }
 	this.getMaxDepth = function(){ return(mMaxDepth); }
 	
-	this.getTickWidth = function(){ return(w/500); }
+	this.getTickWidth = function(){ return(w/(500*(i.dx/w))); }
 	
 	
 	this.prices = prices;
@@ -125,7 +125,7 @@ function MegaChart()
 	
 	this.volumeLabel = function()
 	{
-		plotIndex = pv.search(gPlot.map(date).reverse(), mMouseX)-1;
+		plotIndex = pv.search(gPlot.map(date), mMouseX)-1;
 		plotIndex = plotIndex < 0 ? (-plotIndex - 2) : plotIndex;
 		//alert(plotIndex+" "+mMouseX)
 		if(plotIndex==-1 || plotIndex>=gPlot.length) return("Volume: 0");
@@ -134,7 +134,7 @@ function MegaChart()
 	
 	this.ohlcLabel = function()
 	{
-		plotIndex = pv.search(gPlot.map(date).reverse(), mMouseX)-1;
+		plotIndex = pv.search(gPlot.map(date), mMouseX)-1;
 		plotIndex = plotIndex < 0 ? (-plotIndex - 2) : plotIndex;
 		//alert(plotIndex+" "+mMouseX)
 		if(plotIndex==-1 || plotIndex>=gPlot.length) return("");
@@ -174,10 +174,11 @@ var focus=vis.add(pv.Panel)
 	.def("init", function() {
 		 var d1 = contextX.invert(i.x),
 		     d2 = contextX.invert(i.x + i.dx),
-		     dd = gPlot.slice(
-		                Math.max(0, pv.search.index(gPlot, d1, function(d) d[5]) - 1),
-		                pv.search.index(gPlot, d2, function(d) d[5]) + 1);
+		     i1= pv.search.index(gPlot, d1, function(d) d[5]) - 1,
+		     i2= pv.search.index(gPlot, d2, function(d) d[5]) + 1,
+		     dd = gPlot.slice( Math.max(0, i1), i2);
 		 focusX.domain(d1, d2);
+		 if(gPlot.length) $('#status').text("("+i.x+","+i.dx+")"+d1+" , "+d2+" , "+i1+" , "+i2+" , "+gPlot[0][5]);
 		 //fy.domain(scale.checked ? [0, pv.max(dd, function(d) d.y)] : y.domain());
 		 return dd;
 	})
@@ -270,8 +271,9 @@ focus.add(pv.Area)
 // candles
 focus.add(pv.Rule)
 .visible(gMegaChart.getShowCandles)
-.data(function() {return(gPlot);})
-.right(function(d){ return focusX(d[5]); })
+//.data(function() {return(gPlot);})
+.data(function() focus.init())
+.left(function(d){ return focusX(d[5]); })
 .top(function(d){ return focusY(Math.min(d[1], d[2]));})
 .height(function(d){ return(-(Math.abs(focusY(d[1]) - focusY(d[2])))); } )
 .strokeStyle(function(d){ return(d[0] < d[3] ? "#00FF00" : "#FF0000"); } )
@@ -280,11 +282,20 @@ focus.add(pv.Rule)
 .height(function(d){ return(-(1+Math.abs(focusY(d[0]) - focusY(d[3])))); } )
 .lineWidth(gMegaChart.getTickWidth);
 
+// Price Line
+focus.add(pv.Line)
+.visible(gMegaChart.getShowPrice)
+.data(function() {return(gPlot);})
+.left(function(d) focusX(d[5]))
+.top(function(d) focusY(d[0]))
+.strokeStyle("steelblue")
+.lineWidth(2);
+
 //volume bars
 focus.add(pv.Rule)
 .visible(gMegaChart.getShowVolume)
 .data(function() {return(gPlot);})
-.right(function(d) focusX(d[5]))
+.left(function(d) focusX(d[5]))
 .bottom(1)
 .height(function(d) volumeAxis(d[4]) )
 .strokeStyle("rgba(0,255,255,.5)")
@@ -342,8 +353,8 @@ context.add(pv.Rule)
 
 /* Context area chart. */
 context.add(pv.Area)
-    .data(gPlot)
-    .right(function(d) contextX(d[5]))
+    .data(function() {return(gPlot);})
+    .left(function(d) contextX(d[5]))
     .bottom(1)
     .height(function(d) contextY(d[0]))
     .fillStyle("lightsteelblue")
@@ -382,9 +393,9 @@ function updateHistory(result)
 	gPlot=result.plot;
 	for(var n=0; n<gPlot.length; n++)
 	{
-		gPlot[n][5]=result.date-n*result.period;
+		gPlot[n][5]=result.date-((gPlot.length-n)*result.period);
 		if(gPlot[n][1]>gMegaChart.getMaxPrice()) gMegaChart.setMaxPrice(gPlot[n][1]);
-		if(gPlot[n][2]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(gPlot[n][2]);
+		if(gPlot[n][3]>0 && gPlot[n][2]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(gPlot[n][2]);
 		if(gPlot[n][4]>maxVolume) maxVolume=gPlot[n][4];
 	}
 	
@@ -394,7 +405,7 @@ function updateHistory(result)
 	focusY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
 	contextY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
 	contextX.domain(result.date-gPlot.length*result.period,result.date);
-	//alert(result.date-gPlot.length*result.period+" "+result.date);
+	$('#error').text(result.date-gPlot.length*result.period+" "+result.date);
 	volumeAxis.domain(0,maxVolume);
 	
 	
