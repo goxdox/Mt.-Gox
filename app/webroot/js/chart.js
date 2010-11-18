@@ -2,14 +2,14 @@
 **************  MEGA CHART!!!!!!!!!!!!!!! *******
  
 What we want from the chart:
-	-Full width of screen
+	
 	Price line or
 	-Candelsticks for > than tick time scale
-		calculate the correct width of the sticks	
-		what should we do when there is no action?
-		tooltips or highligh the closest and add to label
+		-calculate the correct width of the sticks	
+		-what should we do when there is no action?
+		-tooltips or highligh the closest and add to label
 		start time correctly
-		They are located incorrectly
+		-They are located incorrectly
 	Allow you to zoom on sections of history
 	-Variable time scale for history
 	It is laggy
@@ -19,8 +19,6 @@ What we want from the chart:
 		As dots
 		-Cumaltive
 	Your open orders
-	-Volume
-		calculate the correct width of the bars	
 	
 	Mouse move should:
 		-Show cross hairs and info in bottom left:
@@ -33,11 +31,6 @@ What we want from the chart:
 	Click should:
 		open buy/sell order dialog
 		
-	Options:
-		Display Volume
-		Display Depth
-		Display your orders
-		Display price line
 		
 	Variable height	
 	Axies:
@@ -47,8 +40,6 @@ What we want from the chart:
 		x
 			Depth amount
 			Time
-		
-		
 */
 
 
@@ -64,9 +55,25 @@ function MegaChart()
 	
 	var mDepthMode=0;
 	
+	var mShowDepth=true;
+	var mShowVolume=true;
+	var mShowOrders=true;
+	var mShowPrice=true;
+	var mShowCandles=true;
+	
 	// options
 	this.setDepthMode=function(x){ mDepthMode=x; }
 	this.getDepthMode=function(){ return(mDepthMode); }
+	this.setShowDepth=function(x){ mShowDepth=x; }
+	this.getShowDepth=function(){ return(mShowDepth); }
+	this.setShowVolume=function(x){ mShowVolume=x; }
+	this.getShowVolume=function(){ return(mShowVolume); }
+	this.setShowOrders=function(x){ mShowOrders=x; }
+	this.getShowOrders=function(){ return(mShowOrders); }
+	this.setShowPrice=function(x){ mShowPrice=x; }
+	this.getShowPrice=function(){ return(mShowPrice); }
+	this.setShowCandles=function(x){ mShowCandles=x; }
+	this.getShowCandles=function(){ return(mShowCandles); }
 	///
 	
 	this.setMouseX = function(x){ mMouseX=x; }
@@ -142,36 +149,51 @@ var gMegaChart=new MegaChart();
 
 /* Sizing and scales. */
 var w = $("#megaChart").width()-30-5,
-    h = $("#megaChart").height()-20-5,    
+    h1 = $("#megaChart").height()-20-5-60,    
+    h2 = 30,
+    i = {x: w-100, dx:100},
     gAsks=[],
     gBids=[],
     gPlot=[],
-    volumeAxis=pv.Scale.linear(0, 1000).range(0, h/3),
+    volumeAxis=pv.Scale.linear(0, 1000).range(0, h1/3),
     depthAxis=pv.Scale.linear(0, 1000).range(0, w/2),
-    x = pv.Scale.linear(0, 50).range(0, w),
-    y = pv.Scale.linear(0, 1).range(0, h);
+    contextY=pv.Scale.linear(0, 1).range(0, h2),
+    contextX=pv.Scale.linear(0, 50).range(0, w),
+    focusX = pv.Scale.linear(0, 50).range(0, w),
+    focusY = pv.Scale.linear(0, 1).range(0, h1);
 
 /* The root panel. */
 var vis = new pv.Panel()
 	.canvas('megaChart')
-  //  .width(w)
-  //  .height(h)
     .bottom(20)
     .left(30)
     .right(5)
-    .top(5)
-    .cursor('crosshair')
+    .top(5);
+
+var focus=vis.add(pv.Panel)
+	.def("init", function() {
+		 var d1 = contextX.invert(i.x),
+		     d2 = contextX.invert(i.x + i.dx),
+		     dd = gPlot.slice(
+		                Math.max(0, pv.search.index(gPlot, d1, function(d) d[5]) - 1),
+		                pv.search.index(gPlot, d2, function(d) d[5]) + 1);
+		 focusX.domain(d1, d2);
+		 //fy.domain(scale.checked ? [0, pv.max(dd, function(d) d.y)] : y.domain());
+		 return dd;
+	})
+	.cursor('crosshair')
     .events("all")
     .event("mousemove" , moveMouse )
-    .event("mousedown", placeOrder );
-
+    .event("mousedown", placeOrder )
+    .top(0)
+    .height(h1);
 
 
 /* X-axis ticks. */
-vis.add(pv.Rule)
-    .data(function(){ return(x.ticks()); })
+focus.add(pv.Rule)
+    .data(function(){ return(focusX.ticks()); })
     .visible(f1)
-    .left(x)
+    .left(focusX)
     .strokeStyle("#eee")
   .add(pv.Rule)
     .bottom(-5)
@@ -182,23 +204,23 @@ vis.add(pv.Rule)
   //  .text( dateFormat(x.tickFormat*1000,"mm/dd HH:MM:ss") );
   
 /* Y-axis ticks. */
-vis.add(pv.Rule)
-    .data(function(){ return(y.ticks(6)); })
-    .top(y)
+focus.add(pv.Rule)
+    .data(function(){ return(focusY.ticks(6)); })
+    .top(focusY)
     .strokeStyle(f2)
   .anchor("left").add(pv.Label)
-    .text(y.tickFormat);
+    .text(focusY.tickFormat);
 
 
 // Y-axis cursor 
-vis.add(pv.Rule)
-    .top(function(){ return(y(gMegaChart.getMouseY())); })
+focus.add(pv.Rule)
+    .top(function(){ return(focusY(gMegaChart.getMouseY())); })
     .strokeStyle("rgba(255,0,0,.5)")
   .anchor("left");
 
 //X-axis cursor 
-var gXCursor=vis.add(pv.Rule)
-    .left(function(){ return(x(gMegaChart.getMouseX())); })
+var gXCursor=focus.add(pv.Rule)
+    .left(function(){ return(focusX(gMegaChart.getMouseX())); })
     .strokeStyle("rgba(255,0,0,.5)")
   .anchor("top");
 
@@ -222,80 +244,134 @@ vis.add(pv.Line)
 */
 
 // Asks
-vis.add(pv.Area)
+focus.add(pv.Area)
+.visible(gMegaChart.getShowDepth)
 .data(function() {return(gAsks);})
 .interpolate("step-before")
 .left(1)
 .width(function(d){ return(depthAxis(d[1])); })
-.top(function(d){ return(y(d[0]));} )
+.top(function(d){ return(focusY(d[0]));} )
 .fillStyle("rgba(121,173,210,.5)")
 .anchor("right").add(pv.Line)
 .lineWidth(1);
 
 // Bids
-vis.add(pv.Area)
+focus.add(pv.Area)
+.visible(gMegaChart.getShowDepth)
 .data(function() {return(gBids);})
 .interpolate("step-after")
 .left(1)
 .width(function(d) depthAxis(d[1]))
-.top(function(d) y(d[0]))
+.top(function(d) focusY(d[0]))
 .fillStyle("rgba(255,173,210,.5)")
 .anchor("right").add(pv.Line)
 .lineWidth(1);
 
 // candles
-vis.add(pv.Rule)
+focus.add(pv.Rule)
+.visible(gMegaChart.getShowCandles)
 .data(function() {return(gPlot);})
-.right(function(d){ return x(d[5]); })
-.top(function(d){ return y(Math.min(d[1], d[2]));})
-.height(function(d){ return(-(Math.abs(y(d[1]) - y(d[2])))); } )
+.right(function(d){ return focusX(d[5]); })
+.top(function(d){ return focusY(Math.min(d[1], d[2]));})
+.height(function(d){ return(-(Math.abs(focusY(d[1]) - focusY(d[2])))); } )
 .strokeStyle(function(d){ return(d[0] < d[3] ? "#00FF00" : "#FF0000"); } )
 .add(pv.Rule)
-.top(function(d){ return y(Math.min(d[0], d[3])); } )
-.height(function(d){ return(-(1+Math.abs(y(d[0]) - y(d[3])))); } )
+.top(function(d){ return focusY(Math.min(d[0], d[3])); } )
+.height(function(d){ return(-(1+Math.abs(focusY(d[0]) - focusY(d[3])))); } )
 .lineWidth(gMegaChart.getTickWidth);
 
 //volume bars
-vis.add(pv.Rule)
+focus.add(pv.Rule)
+.visible(gMegaChart.getShowVolume)
 .data(function() {return(gPlot);})
-.right(function(d) x(d[5]))
+.right(function(d) focusX(d[5]))
 .bottom(1)
 .height(function(d) volumeAxis(d[4]) )
 .strokeStyle("rgba(0,255,255,.5)")
 .lineWidth(gMegaChart.getTickWidth);
 
 /// Legend
-vis.add(pv.Label)
+focus.add(pv.Label)
 .left(10)
 .bottom(10)
 .text(gMegaChart.ohlcLabel);
 
-vis.add(pv.Label)
+focus.add(pv.Label)
 .left(10)
 .bottom(30)
 .text(gMegaChart.depthPriceLabel);
 
-vis.add(pv.Label)
+focus.add(pv.Label)
 .left(10)
 .bottom(50)
 .text(gMegaChart.depthLabel);
 
-vis.add(pv.Label)
+focus.add(pv.Label)
 .left(10)
 .bottom(70)
 .text(gMegaChart.volumeLabel);
 
-vis.add(pv.Label)
+focus.add(pv.Label)
 .left(10)
 .bottom(90)
 .text(gMegaChart.timeLabel);
 
-vis.add(pv.Label)
+focus.add(pv.Label)
 .left(10)
 .bottom(110)
 .text(gMegaChart.priceLabel);
 
+/////////////////////////////////
+
+/* Context panel (zoomed out). */
+var context = vis.add(pv.Panel)
+    .bottom(0)
+    .height(h2);
+
+/* X-axis ticks. */
+context.add(pv.Rule)
+    .data(function(){ return(contextX.ticks()); })
+    .left(contextX)
+    .strokeStyle("#eee")
+  .anchor("bottom").add(pv.Label)
+    .text(function(t){ return(dateFormat(t*1000,"mm/dd HH:MM:ss"));});
+
+/* Y-axis ticks. */
+context.add(pv.Rule)
+    .bottom(0);
+
+/* Context area chart. */
+context.add(pv.Area)
+    .data(gPlot)
+    .right(function(d) contextX(d[5]))
+    .bottom(1)
+    .height(function(d) contextY(d[0]))
+    .fillStyle("lightsteelblue")
+  .anchor("top").add(pv.Line)
+    .strokeStyle("steelblue")
+    .lineWidth(2);
+
+/* The selectable, draggable focus region. */
+context.add(pv.Panel)
+	.data([i])
+	.cursor("crosshair")
+	.events("all")
+	.event("mousedown", pv.Behavior.select())
+	.event("select", focus)
+	.add(pv.Bar)
+		.left(function(d){return d.x; })
+		.width(function(d) d.dx)
+		.fillStyle("rgba(255, 128, 128, .4)")
+		.cursor("move")
+		.event("mousedown", pv.Behavior.drag())
+		.event("drag", focus);
+
 ///////////
+
+function updateOptions()
+{
+	vis.render();
+}
 
 function updateHistory(result)
 {
@@ -314,9 +390,14 @@ function updateHistory(result)
 	
 	//alert(gMegaChart.getMinPrice()+" "+gMegaChart.getMaxPrice());
 	
-	x.domain(result.date-gPlot.length*result.period,result.date);
-	y.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
+	focusX.domain(result.date-gPlot.length*result.period,result.date);
+	focusY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
+	contextY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
+	contextX.domain(result.date-gPlot.length*result.period,result.date);
+	//alert(result.date-gPlot.length*result.period+" "+result.date);
 	volumeAxis.domain(0,maxVolume);
+	
+	
 	vis.render();
 }
 
@@ -350,7 +431,7 @@ function updateDepth(asks,bids)
 	gBids.reverse();
 	
 	depthAxis.domain(0,gMegaChart.getMaxDepth());
-	y.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
+	focusY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
 	
 	//alert( "("+depthAxis(gAsks[0][1])+","+y(gAsks[0][0])+")");
 	vis.render();
@@ -364,8 +445,8 @@ function placeOrder()
 function moveMouse()
 {
 	//alert("hello");
-	gMegaChart.setMouseY(y.invert(vis.mouse().y));
-	gMegaChart.setMouseX(x.invert(vis.mouse().x));
+	gMegaChart.setMouseY(focusY.invert(vis.mouse().y));
+	gMegaChart.setMouseX(focusX.invert(vis.mouse().x));
 	
 	//alert(gMegaChart.mMouseX);
 	
@@ -376,7 +457,7 @@ function moveMouse()
 
 function f1(d) { return(d > 0); }
 function f2(d) { return( d ? "#eee" : "#000"); }
-function f3(d) { return( x(d[0]) ); }
-function f4(d) { return( y(d[1]) ); }
+function f3(d) { return( focusX(d[0]) ); }
+function f4(d) { return( focusY(d[1]) ); }
 function f5(d) { return(d[0]); }
 
