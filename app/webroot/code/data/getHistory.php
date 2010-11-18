@@ -27,6 +27,8 @@ function refreshData($filename,$json)
 		$data=mysql_query($sql);
 		if($data)
 		{
+			//$json['plot'][0]=array( 0 => 0, 1 => 0, 2=> 0,  3 => 0, 4 => 0 );
+			
 			$row=mysql_fetch_array($data);
 			if($row)
 			{
@@ -59,8 +61,9 @@ function refreshData($filename,$json)
 	if($index>NUM_PERIODS)
 	{
 		$json['plot']=array_slice($json['plot'],$index-NUM_PERIODS);
+		$json['date']=$startDate;
 	}
-	$json['date']=$endDate;
+	
 	
 	$resultStr=json_encode($json);
 	

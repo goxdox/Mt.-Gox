@@ -380,12 +380,11 @@ function updateHistory(result)
 		focusX.domain(result.date-gPlot.length*result.period,result.date);
 		contextX.domain(result.date-gPlot.length*result.period,result.date);
 	}else
-	{
+	{	// realtime
 		gMegaChart.setShowCandles(false);
 		
 		for(var n=0; n<gPlot.length; n++)
 		{
-			
 			if(gPlot[n][0]>gMegaChart.getMaxPrice()) gMegaChart.setMaxPrice(gPlot[n][0]);
 			if(gPlot[n][0]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(gPlot[n][0]);
 			if(gPlot[n][4]>maxVolume) maxVolume=gPlot[n][4];
@@ -393,6 +392,8 @@ function updateHistory(result)
 		
 		focusX.domain(result.date-24*60*60,result.date);
 		contextX.domain(result.date-24*60*60,result.date);
+		$('#error').text(result.date-24*60*60+" "+result.date+" "+gMegaChart.getMaxPrice()+" "+gMegaChart.getMinPrice());
+		
 	}
 	
 	
