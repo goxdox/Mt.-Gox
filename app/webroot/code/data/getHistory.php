@@ -114,7 +114,7 @@ if($timeScale==0 || $timeScale==1 || $timeScale==5 || $timeScale==15 || $timeSca
 	}else
 	{
 		$result['period']=0;
-		$json['date']=$time;
+		$result['date']=$time;
 		
 		$startTime=$time-24*60*60;
 	
