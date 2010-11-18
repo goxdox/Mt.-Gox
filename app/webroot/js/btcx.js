@@ -30,7 +30,6 @@ function onTicker(data)
 	}
 }
 
-
 function i4_round(number,places)
 {
 	places=Math.pow(10,places);
