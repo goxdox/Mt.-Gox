@@ -164,8 +164,8 @@ var focus=vis.add(pv.Panel)
 	.def("init", function() {
 		 var d1 = contextX.invert(i.x),
 		     d2 = contextX.invert(i.x + i.dx),
-		     i1= pv.search.index(gPlot, d1, function(d) d[5]) - 1,
-		     i2= pv.search.index(gPlot, d2, function(d) d[5]) + 1,
+		     i1= pv.search.index(gPlot, d1, gMegaChart.date) - 1,
+		     i2= pv.search.index(gPlot, d2, gMegaChart.date) + 1,
 		     dd = gPlot.slice( Math.max(0, i1), i2);
 		 focusX.domain(d1, d2);
 		 //if(gPlot.length) $('#status').text("("+i.x+","+i.dx+")"+d1+" , "+d2+" , "+i1+" , "+i2+" , "+gPlot[0][5]);
@@ -194,7 +194,7 @@ focus.add(pv.Rule)
    .text(function(t){ return(dateFormat(t*1000,"mm/dd HH:MM:ss"));});
   //  .text( dateFormat(x.tickFormat*1000,"mm/dd HH:MM:ss") );
   
-/* Y-axis ticks. */
+// Y-axis ticks. 
 focus.add(pv.Rule)
     .data(function(){ return(focusY.ticks(6)); })
     .top(focusY)
@@ -241,8 +241,8 @@ focus.add(pv.Area)
 .data(function() {return(gBids);})
 .interpolate("step-after")
 .left(1)
-.width(function(d) depthAxis(d[1]))
-.top(function(d) focusY(d[0]))
+.width(function(d){ return depthAxis(d[1]);} )
+.top(function(d){ return focusY(d[0]); })
 .fillStyle("rgba(255,173,210,.5)")
 .anchor("right").add(pv.Line)
 .lineWidth(1);
@@ -251,8 +251,7 @@ focus.add(pv.Area)
 focus.add(pv.Rule)
 .visible(gMegaChart.getShowCandles)
 .overflow("hidden")
-//.data(function() {return(gPlot);})
-.data(function() focus.init())
+.data(function(){ return(focus.init()); })
 .left(function(d){ return focusX(d[5]); })
 .top(function(d){ return focusY(Math.min(d[1], d[2]));})
 .height(function(d){ return(-(Math.abs(focusY(d[1]) - focusY(d[2])))); } )
@@ -267,8 +266,8 @@ focus.add(pv.Line)
 .visible(gMegaChart.getShowPrice)
 .overflow("hidden")
 .data(function() {return(gPlot);})
-.left(function(d) focusX(d[5]))
-.top(function(d) focusY(d[0]))
+.left(function(d) {return focusX(d[5]);} )
+.top(function(d){ return focusY(d[0]); })
 .strokeStyle("steelblue")
 .lineWidth(2);
 
@@ -277,9 +276,9 @@ focus.add(pv.Rule)
 .visible(gMegaChart.getShowVolume)
 .overflow("hidden")
 .data(function() {return(gPlot);})
-.left(function(d) focusX(d[5]))
+.left(function(d){ return focusX(d[5]); })
 .bottom(1)
-.height(function(d) volumeAxis(d[4]) )
+.height(function(d){ return volumeAxis(d[4]); } )
 .strokeStyle("rgba(0,255,255,.5)")
 .lineWidth(gMegaChart.getTickWidth);
 
@@ -316,12 +315,12 @@ overlayPanel.add(pv.Label)
 
 /////////////////////////////////
 
-/* Context panel (zoomed out). */
+// Context panel (zoomed out). 
 var context = vis.add(pv.Panel)
     .bottom(0)
     .height(h2);
 
-/* X-axis ticks. */
+// X-axis ticks. 
 context.add(pv.Rule)
     .data(function(){ return(contextX.ticks()); })
     .left(contextX)
@@ -329,22 +328,22 @@ context.add(pv.Rule)
   .anchor("bottom").add(pv.Label)
     .text(function(t){ return(dateFormat(t*1000,"mm/dd HH:MM:ss"));});
 
-/* Y-axis ticks. */
+// Y-axis ticks. 
 context.add(pv.Rule)
     .bottom(0);
 
-/* Context area chart. */
+// Context area chart. 
 context.add(pv.Area)
     .data(function() {return(gPlot);})
-    .left(function(d) contextX(d[5]))
+    .left(function(d){ return contextX(d[5]); })
     .bottom(1)
-    .height(function(d) h2-contextY(d[0]))
+    .height(function(d){ return(h2-contextY(d[0])); })
     .fillStyle("lightsteelblue")
   .anchor("top").add(pv.Line)
     .strokeStyle("steelblue")
     .lineWidth(2);
 
-/* The selectable, draggable focus region. */
+// The selectable, draggable focus region. 
 context.add(pv.Panel)
 	.data([i])
 	.cursor("crosshair")
@@ -353,7 +352,7 @@ context.add(pv.Panel)
 	.event("select", focus)
 	.add(pv.Bar)
 		.left(function(d){return d.x; })
-		.width(function(d) d.dx)
+		.width(function(d){ return d.dx; })
 		.fillStyle("rgba(255, 128, 128, .4)")
 		.cursor("move")
 		.event("mousedown", pv.Behavior.drag())
