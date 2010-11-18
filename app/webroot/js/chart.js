@@ -5,14 +5,15 @@ What we want from the chart:
 	
 	start history time at correct dates
 	
-	It is laggy
 	Hook it up to realtime feed
 	
 	Order Depth
 		As dots
 		-Cumaltive
+		
 	Your open orders
 		Cancel or change open orders
+		Allow you to change the bounds of the Y axis
 	
 	Mouse move should:
 			average price for that depth
@@ -140,7 +141,7 @@ var gMegaChart=new MegaChart();
 var w = $("#megaChart").width()-30-5,
     h1 = $("#megaChart").height()-20-5-60,    
     h2 = 30,
-    i = {x: w-200, dx:200},
+    i = {x: w-300, dx:300},
     gAsks=[],
     gBids=[],
     gPlot=[],
@@ -201,15 +202,20 @@ focus.add(pv.Rule)
   .anchor("left").add(pv.Label)
     .text(focusY.tickFormat);
 
+var overlayPanel=vis.add(pv.Panel)
+	.top(0)
+	.left(0)
+	.height(h1)
+	.width(w);
 
 // Y-axis cursor 
-focus.add(pv.Rule)
+overlayPanel.add(pv.Rule)
     .top(function(){ return(focusY(gMegaChart.getMouseY())); })
     .strokeStyle("rgba(255,0,0,.5)")
   .anchor("left");
 
 //X-axis cursor 
-var gXCursor=focus.add(pv.Rule)
+overlayPanel.add(pv.Rule)
     .left(function(){ return(focusX(gMegaChart.getMouseX())); })
     .strokeStyle("rgba(255,0,0,.5)")
   .anchor("top");
@@ -278,32 +284,32 @@ focus.add(pv.Rule)
 .lineWidth(gMegaChart.getTickWidth);
 
 /// Legend
-focus.add(pv.Label)
+overlayPanel.add(pv.Label)
 .left(10)
 .bottom(10)
 .text(gMegaChart.ohlcLabel);
 
-focus.add(pv.Label)
+overlayPanel.add(pv.Label)
 .left(10)
 .bottom(30)
 .text(gMegaChart.depthPriceLabel);
 
-focus.add(pv.Label)
+overlayPanel.add(pv.Label)
 .left(10)
 .bottom(50)
 .text(gMegaChart.depthLabel);
 
-focus.add(pv.Label)
+overlayPanel.add(pv.Label)
 .left(10)
 .bottom(70)
 .text(gMegaChart.volumeLabel);
 
-focus.add(pv.Label)
+overlayPanel.add(pv.Label)
 .left(10)
 .bottom(90)
 .text(gMegaChart.timeLabel);
 
-focus.add(pv.Label)
+overlayPanel.add(pv.Label)
 .left(10)
 .bottom(110)
 .text(gMegaChart.priceLabel);
@@ -392,7 +398,7 @@ function updateHistory(result)
 		
 		focusX.domain(result.date-24*60*60,result.date);
 		contextX.domain(result.date-24*60*60,result.date);
-		$('#error').text(result.date-24*60*60+" "+result.date+" "+gMegaChart.getMaxPrice()+" "+gMegaChart.getMinPrice());
+		//$('#error').text(result.date-24*60*60+" "+result.date+" "+gMegaChart.getMaxPrice()+" "+gMegaChart.getMinPrice());
 		
 	}
 	
@@ -457,7 +463,7 @@ function moveMouse()
 	//alert(gMegaChart.mMouseX);
 	
 	//yLine.data([mouseY]);
-	vis.render();
+	overlayPanel.render();
 	//idx = x.invert(vis.mouse().x) >> 0; update();
 }
 

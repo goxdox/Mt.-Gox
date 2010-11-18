@@ -50,6 +50,7 @@ function changeOptions()
 <div id="error"></div>
 <hr>
 <div id="page">
+<h1>Mega Chart!</h1>
 <table width="100%" ><tr><td>
 <form id="timeScale">
 <select  name="timeScale" onchange="fetchPrice()" >
