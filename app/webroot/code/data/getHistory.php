@@ -78,10 +78,10 @@ $timeScale=$_POST['timeScale'];
 if($timeScale==0 || $timeScale==1 || $timeScale==5 || $timeScale==15 || $timeScale==30 || $timeScale==60 || $timeScale==1440)
 {
 	db_connect();
-	
+	$time=time();
 	if($timeScale)
 	{
-		$time=time();
+		
 		$filename=DATA_DIR."history.$timeScale.json";
 		if(file_exists($filename)) 
 		{
@@ -111,24 +111,27 @@ if($timeScale==0 || $timeScale==1 || $timeScale==5 || $timeScale==15 || $timeSca
 	}else
 	{
 		$result['period']=0;
-		$startTime=time()-24*60*60;
+		$json['date']=$time;
+		
+		$startTime=$time-24*60*60;
 	
-		$sql="SELECT Price,Date,Amount From Trades where Date>$startTime order by Date";
+		$sql="SELECT Price,Amount,Date From Trades where Date>$startTime order by Date";
 		
 		$data=mysql_query($sql);
 		if($data)
 		{
-			$result['plot'][0] = array( 0 => 0, 1 => 0, 2 => 0 );
+			$result['plot'][0] = array( 0 => 0, 1 => 0, 2 => 0, 3 =>0, 4=>0, 5=>0 );
 			
 			$price=0;
 			$count=0;
 			while($row=mysql_fetch_array($data))
 			{	
 				$price=(float)$row[0];
-				$date=(int)$row[1];
-				$volume=(int)$row[2];
+				$volume=(int)$row[1];
+				$date=(int)$row[2];
 				
-				$result['plot'][$count] = array( 0 => $date, 1 => $price, 2 => $volume );
+				
+				$result['plot'][$count] = array( 0 => $price, 1 => 0, 2 => 0, 3 =>0,  4 => round($volume/BASIS,0), 5 => $date );
 				$count++;
 			}	
 		}else $result['error']="SQL Failed.";

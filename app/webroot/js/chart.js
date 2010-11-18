@@ -3,29 +3,18 @@
  
 What we want from the chart:
 	
-	Price line or
-	-Candelsticks for > than tick time scale
-		-calculate the correct width of the sticks	
-		-what should we do when there is no action?
-		-tooltips or highligh the closest and add to label
-		start time correctly
-		-They are located incorrectly
-	Allow you to zoom on sections of history
-	-Variable time scale for history
+	start history time at correct dates
+	
 	It is laggy
 	Hook it up to realtime feed
-	Price line
+	
 	Order Depth
 		As dots
 		-Cumaltive
 	Your open orders
+		Cancel or change open orders
 	
 	Mouse move should:
-		-Show cross hairs and info in bottom left:
-			-Price
-			-Time
-			-Volume
-			-Depth
 			average price for that depth
 		
 	Click should:
@@ -151,7 +140,7 @@ var gMegaChart=new MegaChart();
 var w = $("#megaChart").width()-30-5,
     h1 = $("#megaChart").height()-20-5-60,    
     h2 = 30,
-    i = {x: w-100, dx:100},
+    i = {x: w-200, dx:200},
     gAsks=[],
     gBids=[],
     gPlot=[],
@@ -179,7 +168,7 @@ var focus=vis.add(pv.Panel)
 		     dd = gPlot.slice( Math.max(0, i1), i2);
 		 focusX.domain(d1, d2);
 		 //if(gPlot.length) $('#status').text("("+i.x+","+i.dx+")"+d1+" , "+d2+" , "+i1+" , "+i2+" , "+gPlot[0][5]);
-		 focusY.domain(pv.max(dd, f5), pv.min(dd,f5) );
+		 focusY.domain(pv.max(dd, f5), pv.min(dd,f5) ).nice();
 		 return dd;
 	})
 	.cursor('crosshair')
@@ -229,6 +218,7 @@ var gXCursor=focus.add(pv.Rule)
 // Asks
 focus.add(pv.Area)
 .visible(gMegaChart.getShowDepth)
+.overflow("hidden")
 .data(function() {return(gAsks);})
 .interpolate("step-before")
 .left(1)
@@ -241,6 +231,7 @@ focus.add(pv.Area)
 // Bids
 focus.add(pv.Area)
 .visible(gMegaChart.getShowDepth)
+.overflow("hidden")
 .data(function() {return(gBids);})
 .interpolate("step-after")
 .left(1)
@@ -378,7 +369,7 @@ function updateHistory(result)
 	gPlot=result.plot;
 	for(var n=0; n<gPlot.length; n++)
 	{
-		gPlot[n][5]=result.date-((gPlot.length-n)*result.period);
+		if(result.period) gPlot[n][5]=result.date-((gPlot.length-n)*result.period);
 		if(gPlot[n][1]>gMegaChart.getMaxPrice()) gMegaChart.setMaxPrice(gPlot[n][1]);
 		if(gPlot[n][3]>0 && gPlot[n][2]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(gPlot[n][2]);
 		if(gPlot[n][4]>maxVolume) maxVolume=gPlot[n][4];
@@ -386,15 +377,24 @@ function updateHistory(result)
 	
 	//alert(gMegaChart.getMinPrice()+" "+gMegaChart.getMaxPrice());
 	
-	focusX.domain(result.date-gPlot.length*result.period,result.date);
+	if(result.period) 
+	{
+		focusX.domain(result.date-gPlot.length*result.period,result.date);
+		contextX.domain(result.date-gPlot.length*result.period,result.date);
+	}else 
+	{
+		focusX.domain(result.date-24*60*60,result.date);
+		contextX.domain(result.date-24*60*60,result.date);
+	}
+	
 	focusY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
 	contextY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
-	contextX.domain(result.date-gPlot.length*result.period,result.date);
 	//$('#error').text(result.date-gPlot.length*result.period+" "+result.date);
 	volumeAxis.domain(0,maxVolume);
 	
 	
 	vis.render();
+	
 }
 
 function updateDepth(asks,bids)
