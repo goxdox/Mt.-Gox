@@ -178,8 +178,8 @@ var focus=vis.add(pv.Panel)
 		     i2= pv.search.index(gPlot, d2, function(d) d[5]) + 1,
 		     dd = gPlot.slice( Math.max(0, i1), i2);
 		 focusX.domain(d1, d2);
-		 if(gPlot.length) $('#status').text("("+i.x+","+i.dx+")"+d1+" , "+d2+" , "+i1+" , "+i2+" , "+gPlot[0][5]);
-		 //fy.domain(scale.checked ? [0, pv.max(dd, function(d) d.y)] : y.domain());
+		 //if(gPlot.length) $('#status').text("("+i.x+","+i.dx+")"+d1+" , "+d2+" , "+i1+" , "+i2+" , "+gPlot[0][5]);
+		 focusY.domain(pv.min(dd,f5), pv.max(dd, f5) );
 		 return dd;
 	})
 	.cursor('crosshair')
@@ -225,24 +225,6 @@ var gXCursor=focus.add(pv.Rule)
     .strokeStyle("rgba(255,0,0,.5)")
   .anchor("top");
 
-/*
-// The price line 
-vis.add(pv.Line)
-    .data(data)
-    //.interpolate("step-after")
-    .left(f3)
-    .bottom(f4)
-    .lineWidth(3);
-*/
-/* works:
-vis.add(pv.Line)
-.data(function() gAsks)
-.interpolate("step-after")
-.left(function(d) depthAxis(d[1]))
-.bottom(function(d) y(d[0]))
-.strokeStyle("#e00")
-.lineWidth(3);
-*/
 
 // Asks
 focus.add(pv.Area)
@@ -271,6 +253,7 @@ focus.add(pv.Area)
 // candles
 focus.add(pv.Rule)
 .visible(gMegaChart.getShowCandles)
+.overflow("hidden")
 //.data(function() {return(gPlot);})
 .data(function() focus.init())
 .left(function(d){ return focusX(d[5]); })
@@ -285,6 +268,7 @@ focus.add(pv.Rule)
 // Price Line
 focus.add(pv.Line)
 .visible(gMegaChart.getShowPrice)
+.overflow("hidden")
 .data(function() {return(gPlot);})
 .left(function(d) focusX(d[5]))
 .top(function(d) focusY(d[0]))
@@ -294,6 +278,7 @@ focus.add(pv.Line)
 //volume bars
 focus.add(pv.Rule)
 .visible(gMegaChart.getShowVolume)
+.overflow("hidden")
 .data(function() {return(gPlot);})
 .left(function(d) focusX(d[5]))
 .bottom(1)
@@ -356,7 +341,7 @@ context.add(pv.Area)
     .data(function() {return(gPlot);})
     .left(function(d) contextX(d[5]))
     .bottom(1)
-    .height(function(d) contextY(d[0]))
+    .height(function(d) h2-contextY(d[0]))
     .fillStyle("lightsteelblue")
   .anchor("top").add(pv.Line)
     .strokeStyle("steelblue")
@@ -405,7 +390,7 @@ function updateHistory(result)
 	focusY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
 	contextY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
 	contextX.domain(result.date-gPlot.length*result.period,result.date);
-	$('#error').text(result.date-gPlot.length*result.period+" "+result.date);
+	//$('#error').text(result.date-gPlot.length*result.period+" "+result.date);
 	volumeAxis.domain(0,maxVolume);
 	
 	
