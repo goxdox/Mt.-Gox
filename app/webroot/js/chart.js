@@ -179,7 +179,7 @@ var focus=vis.add(pv.Panel)
 		     dd = gPlot.slice( Math.max(0, i1), i2);
 		 focusX.domain(d1, d2);
 		 //if(gPlot.length) $('#status').text("("+i.x+","+i.dx+")"+d1+" , "+d2+" , "+i1+" , "+i2+" , "+gPlot[0][5]);
-		 focusY.domain(pv.min(dd,f5), pv.max(dd, f5) );
+		 focusY.domain(pv.max(dd, f5), pv.min(dd,f5) );
 		 return dd;
 	})
 	.cursor('crosshair')
