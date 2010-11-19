@@ -96,9 +96,10 @@ function withdrawBTC($userID)
 			}catch(Exception $e)
 			{
 				$time=time();
-				$sql="INSERT INTO ErrorLog (ErrorType,Msg,Date) values ('withdraw','$btca $amount $uid $e',$time)";
+				$sql="INSERT INTO ErrorLog (ErrorType,Msg,Date) values ('withdraw','$btca $amount $uid',$time)";
 				mysql_query($sql);
-				$result['error'] = "Problem Connecting to bitcoind. Please try again shortly. $e";
+				logMsg($e);
+				$result['error'] = "Invlaid Bitcoin Address: '$btca'";
 			}
 		}else $result['error'] = "To comply with US regulations you are only allowed to withdraw a maximum of $1000 within a 24 hour period. Please try your withdraw tomorrow.";
 	}else $result['error'] = "Must enter in a Bitcoin Address.";

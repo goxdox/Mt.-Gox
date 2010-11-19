@@ -89,7 +89,7 @@ If you live in the US and want to withdraw more than $800 we can send it to you 
 <tr><td>Currency</td><td><input type="radio" id="btcRadio" name="group1" value="BTC" checked />Bitcoins<br><input type="radio" id="usdRadio" name="group1" value="USD" />US Dollars</td></tr>
 <tr><td>Amount to Withdraw</td><td><input type="text" name="amount" id="amount" class="number required" /></td></tr>
 <tr class="usd" ><td>Liberty Reserve Account</td><td><input type="text" name="account" /></td></tr>
-<tr class="btc" ><td>Bitcoin Address</td><td><input type="text" name="btca" id="btca" /></td></tr>
+<tr class="btc" ><td>Bitcoin Address</td><td  width="300px" ><input type="text" name="btca" id="btca" /></td></tr>
 <tr><td colspan=3><input type="button" value="Send Request" onClick="onWith()"/></td></tr>
 </table>
 <div id="error"></div>
