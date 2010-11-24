@@ -51,7 +51,10 @@ function withdrawBTC($userID)
 		
 		db_connect();
 		
-		$left=amountLeftToday($uid,true);
+		$sql="SELECT SUM(deltaBTC) from Activity where userid=$userID and (type=3 or type=4 or type=10 or type=7)";
+		$addedBTC=getSingleDBValue($sql);
+		if($addedBTC>=$amount) $left=$amount;
+		else $left=amountLeftToday($uid,true);
 		
 		if($left>0) 
 		{
@@ -98,8 +101,8 @@ function withdrawBTC($userID)
 				$time=time();
 				$sql="INSERT INTO ErrorLog (ErrorType,Msg,Date) values ('withdraw','$btca $amount $uid',$time)";
 				mysql_query($sql);
-				logMsg($e);
-				$result['error'] = "Invlaid Bitcoin Address: '$btca'";
+				//logMsg($e);
+				$result['error'] = "Invalid Bitcoin Address: '$btca'";
 			}
 		}else $result['error'] = "To comply with US regulations you are only allowed to withdraw a maximum of $1000 within a 24 hour period. Please try your withdraw tomorrow.";
 	}else $result['error'] = "Must enter in a Bitcoin Address.";
