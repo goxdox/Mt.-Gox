@@ -41,9 +41,18 @@ if(!isset($_SESSION['UserID']))
 
 if($uid)
 {
-	
 	$amount=BASIS*(float)$_POST['amount'];    
 	$price=(float)$_POST['price'];
+	//echo($_POST['dark']);
+	if(isset($_POST['dark'])) 
+	{
+		$darkStatus=(int)$_POST['dark'];
+		if($darkStatus && ($amount*$price<1000*BASIS)) 
+		{
+			$result['error'] = "Order must be for greater than $1000 to be listed in the Dark Pool.";
+			die(json_encode($result));
+		}
+	}else $darkStatus=0;
 	
 	if($amount>9*BASIS && $price>0)
 	{
@@ -59,12 +68,12 @@ if($uid)
 		if($usdHeld<$usdNeeded)
 		{
 			$heldAmount=($usdNeeded-$usdHeld)/$price;
-			addOrder('Bids',$uid,$heldAmount,$price,2);
+			addOrder('Bids',$uid,$heldAmount,$price,2,$darkStatus);
 			$amount=$usdHeld/$price;	
 			$result['status'] .= "<br>You don't have that much USD. What remains is stored in your open orders.";
 		}
 		
-		$amountLeft=findSeller($uid,$amount,$price,$time,true);
+		$amountLeft=findSeller($uid,$amount,$price,$time,true,$darkStatus);
 		if($amountLeft>0) 
 		{
 			$result['status'] .="<br>Your entire order can't be filled at that price. What remains is stored in your open orders.";
@@ -75,11 +84,10 @@ if($uid)
 		updateTicker($lastPrice);
 		
 		getOrders($uid);
-		if($amountLeft<$amount) httpGetAsync("http://127.0.0.1:8080/php/trade"); 
-		else if($usdHeld>0) httpGetAsync("http://127.0.0.1:8080/php/order"); 
+		if((!DEBUG) && $amountLeft<$amount) httpGetAsync("http://127.0.0.1:8080/php/trade"); 
+		else if( (!DEBUG) && $usdHeld>0 && $darkStatus==0) httpGetAsync("http://127.0.0.1:8080/php/order"); 
 		
-
-	}else $result=array( 'error' => "Invalid Amount." );
+	}else $result['error']="Invalid Amount.";
 }else
 { // not found in db
 	$result['error'] = "Not logged in. <a href='/users/login'>Log in</a>";

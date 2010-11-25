@@ -35,11 +35,12 @@ create table SendMoney (SendID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, FromID I
 create table Trades (TradeID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, BuyerID INT UNSIGNED, 
 	SellerID INT UNSIGNED, Amount INT, Price Float, Date INT UNSIGNED) ENGINE = INNODB;
 	
-#status: 1- Active, 2-No Funds, 3-Dark, 4-Dark No Funds
+#status: 1- Active, 2-No Funds
+#DarkStatus: 0- Not Dark 1-Take Open orders 2-Dark Only
 create table Asks (OrderID  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,UserID INT UNSIGNED, 
-	Amount INT, Price Float, Status TINYINT, Date INT UNSIGNED) ENGINE = INNODB;
+	Amount INT, Price Float, Status TINYINT, DarkStatus TINYINT default 0, Date INT UNSIGNED) ENGINE = INNODB;
 create table Bids (OrderID  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,UserID INT UNSIGNED, 
-	Amount INT, Price Float, Status TINYINT, Date INT UNSIGNED) ENGINE = INNODB;
+	Amount INT, Price Float, Status TINYINT, DarkStatus TINYINT default 0, Date INT UNSIGNED) ENGINE = INNODB;
 	
 
 create table Ticker (HighBuy FLOAT, LowSell Float, LastPrice Float, High Float, Low Float, Volume INT);
@@ -94,7 +95,7 @@ CREATE TABLE MarginTrade (tradeID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userI
 	dateEntered INT UNSIGNED, dateClosed INT UNSIGNED) ENGINE = INNODB;
 	
 
-#Reason: 0- ? 1-Position Closed, 2-Add Funds, 3-Withdraw Funds, 4- MC
+#Status: 0- ? 1-Take Open orders 2-Dark Only
 CREATE TABLE DarkAsks (OrderID  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,UserID INT UNSIGNED, 
 	Amount INT, Price Float, Status TINYINT, Date INT UNSIGNED) ENGINE = INNODB;
 	

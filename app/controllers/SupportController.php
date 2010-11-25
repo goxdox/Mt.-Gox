@@ -33,6 +33,13 @@ public function send()
   		return compact('title');
   }
   
+public function darkPool()
+  {
+  	$title='Dark Pool';
+		
+  		return compact('title');
+  }
+  
  public function contact()
   {
   	$title='Contact Us';

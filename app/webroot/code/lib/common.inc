@@ -200,7 +200,7 @@ function tradeNotifyUser($uid,$type,$amount,$price)
 	}
 }
 
-function addOrder($table,$uid,$amount,$price,$status)
+function addOrder($table,$uid,$amount,$price,$status,$darkStatus)
 {
 	global $result;
 	
@@ -208,10 +208,10 @@ function addOrder($table,$uid,$amount,$price,$status)
 	{
 		$time=time();
 		if($status)
-			$sql="SELECT OrderID from $table where userid=$uid and round(price,5)=$price and status=$status";
+			$sql="SELECT OrderID from $table where userid=$uid and round(price,5)=$price and status=$status and darkStatus=$darkStatus";
 		else 
 		{
-			$sql="SELECT OrderID from $table where userid=$uid and round(price,5)=$price";
+			$sql="SELECT OrderID from $table where userid=$uid and round(price,5)=$price and darkStatus=$darkStatus";
 			$status=1;
 		}
 		$oldID=getSingleDBValue($sql);
@@ -220,7 +220,7 @@ function addOrder($table,$uid,$amount,$price,$status)
 			$sql="UPDATE $table set Amount=Amount+$amount,Date=$time,Status=$status where OrderID=$oldID";
 		}else
 		{
-			$sql="INSERT INTO $table (UserID,Amount,Price,Status,Date) values ($uid,$amount,$price,$status,$time)";
+			$sql="INSERT INTO $table (UserID,Amount,Price,Status,DarkStatus,Date) values ($uid,$amount,$price,$status,$darkStatus,$time)";
 		}
 		if(!mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
 	}
@@ -297,10 +297,11 @@ function getTypeOrders($table,$type,$uid,$count)
 			$amount=round($row['Amount']/BASIS,2);
 			$price=round($row['Price'],ROUNDING);
 			$status=$row['Status'];
+			$darkStatus=$row['DarkStatus'];
 			$date=$row['Date'];
 				
 			//ID, Name, Desc, # members, $ in treasury, Time Till Vote, Time Till Execute, if you are a memeber, group options?
-			$offer=array('oid' => $id, 'type' => $type, 'amount' => $amount, 'price' => $price, 'status' => $status, 'date' => $date );
+			$offer=array('oid' => $id, 'type' => $type, 'amount' => $amount, 'price' => $price, 'status' => $status, 'dark' => $darkStatus, 'date' => $date );
 			$result['orders'][$count]=$offer;
 	
 			$count++;
@@ -314,7 +315,6 @@ function getOrders($uid)
 	global $result;
 	$count=0; 
 	$result['orders']= array();
-	
 	
 	$count=getTypeOrders('Bids',2,$uid,$count);
 	getTypeOrders('Asks',1,$uid,$count);
@@ -334,7 +334,7 @@ function checkAskOrders($uid)
 		$btc=(int)($result['btcs']*BASIS);
 		$time=time();
 		
-		$sql="SELECT OrderID,Amount,Price,Status,Date from Asks where UserID=$uid order by Price";
+		$sql="SELECT OrderID,Amount,Price,Status,DarkStatus,Date from Asks where UserID=$uid order by Price";
 		$data=mysql_query($sql);
 		if($data)
 		{
@@ -344,7 +344,8 @@ function checkAskOrders($uid)
 				$amount=$row[1];
 				$price=$row[2];
 				$status=$row[3];
-				$date=$row[4];
+				$darkStatus=$row[4];
+				$date=$row[5];
 				
 				if($btc>0)
 				{
@@ -359,13 +360,13 @@ function checkAskOrders($uid)
 							$sql="DELETE from Asks where OrderID=$orderID";
 							mysql_query($sql);
 							
-							findBuyer($uid,$btc,$price,$time,false);
+							findBuyer($uid,$btc,$price,$time,false,$darkStatus);
 						}
 						
 						
 						$amountLeft=$amount-$btc;
 						
-						addOrder('Asks',$uid,$amountLeft,$price,2);
+						addOrder('Asks',$uid,$amountLeft,$price,2,$darkStatus);
 						
 						$btc=0;
 					}else
@@ -376,7 +377,7 @@ function checkAskOrders($uid)
 							$sql="DELETE from Asks where OrderID=$orderID";
 							mysql_query($sql);
 							
-							findBuyer($uid,$amount,$price,$time,false);
+							findBuyer($uid,$amount,$price,$time,false,$darkStatus);
 						}
 					}
 				}else 
@@ -400,7 +401,7 @@ function checkBidOrders($uid)
 		$time=time();
 		
 		
-		$sql="SELECT OrderID,Amount,Price,Status,Date from Bids where UserID=$uid order by Price desc";
+		$sql="SELECT OrderID,Amount,Price,Status,DarkStatus,Date from Bids where UserID=$uid order by Price desc";
 		$data=mysql_query($sql);
 		if($data)
 		{
@@ -410,7 +411,8 @@ function checkBidOrders($uid)
 				$amount=$row[1];
 				$price=$row[2];
 				$status=$row[3];
-				$date=$row[4];
+				$darkStatus=$row[4];
+				$date=$row[5];
 				
 				if($usd>0)
 				{
@@ -427,13 +429,13 @@ function checkBidOrders($uid)
 							$sql="DELETE from Bids where OrderID=$orderID";
 							mysql_query($sql);
 							
-							findSeller($uid,$btc,$price,$time,false);
+							findSeller($uid,$btc,$price,$time,false,$darkStatus);
 						}
 						
 						$amountLeft=$amount-$btc;
 						if($amountLeft>0)
 						{
-							addOrder('Bids',$uid,$amountLeft,$price,2);
+							addOrder('Bids',$uid,$amountLeft,$price,2,$darkStatus);
 						}
 						
 						$usd=0;
@@ -445,7 +447,7 @@ function checkBidOrders($uid)
 							$sql="DELETE from Bids where OrderID=$orderID";
 							mysql_query($sql);
 							
-							findSeller($uid,$amount,$price,$time,false);
+							findSeller($uid,$amount,$price,$time,false,$darkStatus);
 						}
 					}
 				}else 
@@ -458,7 +460,7 @@ function checkBidOrders($uid)
 	}
 }
 
-function findSeller($buyerID,$amount,$buyPrice,$time,$showResults)
+function findSeller($buyerID,$amount,$buyPrice,$time,$showResults,$darkStatus)
 {
 	if($amount>0)
 	{
@@ -468,7 +470,8 @@ function findSeller($buyerID,$amount,$buyPrice,$time,$showResults)
 		$sellPrice=$buyPrice/SPREAD;
 		
 		// TODO: this needs to also sort by time in cases of ties
-		$sql="SELECT * from Asks where Status=1 and round(Price,6)<=$sellPrice order by Price";
+		if($darkStatus==2) $sql="SELECT * from Asks where Status=1 and (darkStatus>0 or amount>=$amount) and round(Price,6)<=$sellPrice order by Price";
+		else $sql="SELECT * from Asks where Status=1 and round(Price,6)<=$sellPrice order by Price";
 		$data=mysql_query($sql);
 		if($data)
 		{
@@ -513,14 +516,14 @@ function findSeller($buyerID,$amount,$buyPrice,$time,$showResults)
 	
 		}else $result['error']="SQL Error.";
 		
-		addOrder('Bids',$buyerID,$amount,$buyPrice,0);
+		addOrder('Bids',$buyerID,$amount,$buyPrice,0,$darkStatus);
 	}
 	return($amount);	
 }
 
 // returns amount left unbought
 // throws GoxException
-function findBuyer($uid,$amount,$sellPrice,$time)
+function findBuyer($uid,$amount,$sellPrice,$time,$showResults,$darkStatus)
 {
 	global $result;
 	global $lastPrice;
@@ -528,7 +531,8 @@ function findBuyer($uid,$amount,$sellPrice,$time)
 	$buyPrice=$sellPrice*SPREAD;
 	
 	// TODO: this needs to also sort by time in cases of ties
-	$sql="SELECT * from Bids where Status=1 and round(Price,6)>=$buyPrice order by Price desc";
+	if($darkStatus==2) $sql="SELECT * from Bids where Status=1 and (darkStatus>0 or amount>=$amount) and round(Price,6)>=$buyPrice order by Price desc";
+	else $sql="SELECT * from Bids where Status=1 and round(Price,6)>=$buyPrice order by Price desc";
 	if(!$data=mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
 
 	$tradeCount=0;
@@ -564,8 +568,10 @@ function findBuyer($uid,$amount,$sellPrice,$time)
 		recordTrade($buyerID,$uid,$tradeAmount,$lastPrice,$time);
 		$pTradeAmount=round($tradeAmount/BASIS,2);
 		tradeNotifyUser($buyerID,"Bought",$pTradeAmount,$lastPrice*HALF_SPREAD);
+		if(!$showResults) tradeNotifyUser($sellerID,"Sold",$pTradeAmount,$lastPrice/HALF_SPREAD);
+				 
 					
-		$result['trades'][$tradeCount]="Sold $pTradeAmount BTC for $lastPrice.";
+		if($showResults) $result['trades'][$tradeCount]="Sold $pTradeAmount BTC for $lastPrice.";
 		$tradeCount++;
 		
 		$amount=$amount-$bidAmount;
@@ -574,7 +580,7 @@ function findBuyer($uid,$amount,$sellPrice,$time)
 		
 	}
 	
-	addOrder('Asks',$uid,$amount,$sellPrice,0);
+	addOrder('Asks',$uid,$amount,$sellPrice,0,$darkStatus);
 	
 	return($amount);	
 }

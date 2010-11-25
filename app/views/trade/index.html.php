@@ -24,6 +24,11 @@ Buy and Sell the internet commodity known as Bitcoins!<br>
 <tr><td>Amount to Buy</td><td colspan=2><input type="text" name="buyAmount" id="buyAmount" onKeyUp="changeBuyAmount()" /></td></tr>
 <tr><td>Price per coin in Dollars</td><td colspan=2><input type="text" name="buyPrice" id="buyPrice"  onKeyUp="changeBuyPrice()" /></td></tr>
 <tr><td>Total</td><td colspan=2 id="buyCost">0</td></tr>
+<tr><td><a href="/support/darkPool">Advanced</a></td><td colspan=2><select id="buyDark" name="dark">
+<option value="0"  selected>Normal</option>
+<option value="1">Dark Pool and Normal</option>
+<option value="2">Dark Pool Only</option>
+</select></td></tr>
 <tr><td colspan=3><input type="button" value="Buy Bitcoins" onClick="onBuy()"/></td></tr>
 <tr><td colspan=3 ><i id="buyStatus">You can make a lower offer but it wont be filled until someone accepts it.</i></td></tr>
 </table>
@@ -40,6 +45,11 @@ Buy and Sell the internet commodity known as Bitcoins!<br>
 <tr><td>Amount to Sell</td><td colspan=2><input type="text" name="sellAmount" id="sellAmount" onKeyUp="changeSellAmount()" /></td></tr>
 <tr><td>Price per coin in Dollars</td><td colspan=2><input type="text" name="sellPrice" id="sellPrice"  onKeyUp="changeSellPrice()" /></td></tr>
 <tr><td>Total</td><td colspan=2> <span id="sellCost">0</span></td></tr>
+<tr><td><a href="/support/darkPool">Advanced</a></td><td colspan=2><select id="sellDark" name="dark">
+<option value="0"  selected>Normal</option>
+<option value="1">Dark Pool and Normal</option>
+<option value="2">Dark Pool Only</option>
+</select></td></tr>
 <tr><td colspan=3><input type="button" value="Sell Bitcoins" onClick="onSell()"/></td></tr>
 <tr><td colspan=3 ><i id="sellStatus">You can make a higher offer but it wont be filled until someone accepts it.</i></td></tr>
 </table>

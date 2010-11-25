@@ -7,6 +7,8 @@
 $(document).ready(function(){
 	
 	$.post("/code/data/getDepth.php", { }, onDepth , "json" );
+
+	fetchPrice();
 	
 });
 
@@ -53,11 +55,11 @@ function changeOptions()
 <h1>Mega Chart!</h1>
 <table width="100%" ><tr><td>
 <form id="timeScale">
-<select  name="timeScale" onchange="fetchPrice()" >
-<option value="0"  selected>Real Time</option>
+<select name="timeScale" onchange="fetchPrice()" >
+<option value="0">Real Time</option>
 <option value="5">5 min</option>
 <option value="15">15 min</option>
-<option value="30">30 min</option>
+<option value="30"  selected>30 min</option>
 <option value="60">1 hour</option>
 <option value="1440">1 day</option>
 </select>

@@ -59,9 +59,16 @@ $(document).ready(function(){
 });
 
 
-function orderTypeStr(type)
+function orderTypeStr(type,dark)
 {
-	if(type==1) return("Selling");
+	if(type==1) 
+	{
+		if(dark==1) return("Selling Dark");
+		if(dark==2) return("Selling Dark Only");
+		return("Selling");
+	}
+	if(dark==1) return("Buying Dark");
+	if(dark==2) return("Buying Dark Only");
 	return("Buying");
 }
 
@@ -76,7 +83,7 @@ function setOrders(data)
 	gOrdersTable.fnClearTable();
 	for(var n=0; n<data.length; n++)
 	{
-		var type=orderTypeStr(data[n].type);
+		var type=orderTypeStr(data[n].type,data[n].dark);
 		var status=orderStatusStr(data[n].status);
 		var date=new Date(data[n].date*1000);
 		var dateStr= dateFormat(date,"mm/dd HH:MM");
@@ -189,6 +196,7 @@ function printStatusAndTrades(status,data)
 		}
 	}
 	if(data.status)	str = str+data.status;
+	if(data.error)	str = str+'<font color=red>'+data.error+'</font>';
 	
 	$(status).html(str);
 }
@@ -209,9 +217,10 @@ function onSell()
 		{
 			var amount=$('#sellAmount').val();
 			var price=$('#sellPrice').val();
+			var dark=$('#sellDark').val();
 			$('#sellStatus').text('Selling...');
 			$('#error').text('');
-			$.post("/code/sellBTC.php", { "amount": amount , "price": price }, onSellResp , "json" );
+			$.post("/code/sellBTC.php", { "dark": dark, "amount": amount , "price": price }, onSellResp , "json" );
 		}
 	}else
 	{
@@ -228,9 +237,11 @@ function onBuy()
 		{
 			var amount=$('#buyAmount').val();
 			var price=$('#buyPrice').val();
+			var dark=$('#buyDark').val();
+	
 			$('#buyStatus').text('Buying...');
 			$('#error').text('');
-			$.post("/code/buyBTC.php", { "amount": amount , "price": price }, onBuyResp , "json" );
+			$.post("/code/buyBTC.php", { "dark": dark, "amount": amount , "price": price }, onBuyResp , "json" );
 		}
 	}else
 	{

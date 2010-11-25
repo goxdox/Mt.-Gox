@@ -72,7 +72,7 @@ function onRecent(result)
  	
  <div class="info_box"><div class="info_title"><a href="support/advancedTrading">Advanced Trading</a></div>
  	<ul><li>Automate your trading with our <a href="support/tradeAPI">Trading API</a></li>
- 	<li>Dark pools allow you to trade large quantities without moving the market. (coming soon)</li>
+ 	<li><a href="/support/darkPools">Dark pools</a> allow you to trade large quantities without moving the market.</li>
  	<li>Margin trading. (coming soon)</li></ul></div>
  	
  <div id="plot" class="info_graphic" ></div>

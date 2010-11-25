@@ -42,6 +42,16 @@ if($uid)
 	try{
 		$amount=BASIS*(float)$_POST['amount'];    
 		$price=(float)$_POST['price'];
+		if(isset($_POST['dark'])) 
+		{
+			$darkStatus=(int)$_POST['dark'];
+			if($darkStatus && ($amount*$price<1000*BASIS)) 
+			{
+				$result['error'] = "Order must be for greater than $1000 to be listed in the Dark Pool.";
+				die(json_encode($result));
+			}
+		}else $darkStatus=0;
+	
 		$lastPrice=0;
 		if($amount>9*BASIS && $price>0)
 		{
@@ -58,7 +68,7 @@ if($uid)
 				$result['status'] .="<br>You don't have that much BTC. What remains is stored in your open orders.";	
 			}
 			
-			$amountLeft=findBuyer($uid,$amount,$price,$time,true);
+			$amountLeft=findBuyer($uid,$amount,$price,$time,true,$darkStatus);
 			if($amountLeft>0)
 			{
 				$result['status'] .="<br>Your entire order can't be filled at that price. What remains is stored in your open orders.";
@@ -69,8 +79,8 @@ if($uid)
 			updateTicker($lastPrice);
 			
 			getOrders($uid);
-			if($amountLeft<$amount) httpGetAsync("http://127.0.0.1:8080/php/trade"); 
-			else if($btcHeld>0) httpGetAsync("http://127.0.0.1:8080/php/order"); 
+			if((!DEBUG) && $amountLeft<$amount) httpGetAsync("http://127.0.0.1:8080/php/trade"); 
+			else if((!DEBUG) && $btcHeld>0 && $darkStatus==0) httpGetAsync("http://127.0.0.1:8080/php/order"); 
 	
 		}else $result['error']="Invalid Amount.";
 	}catch(GoxException $e)
