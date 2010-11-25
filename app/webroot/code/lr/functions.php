@@ -135,7 +135,7 @@ function LRWithdraw($account,$amount)
 	$doc = new DOMDocument();	
 	if(!$doc->loadXML($content)) {
 		logMsg("Can't parse: $content");
-		return(true);
+		return(0);
 	}
 	
 	$nodes = $doc->getElementsByTagName("TransferResponse");
@@ -146,7 +146,7 @@ function LRWithdraw($account,$amount)
 		
 		if ($responseId != $id) {
 			logMsg("IDs don't match: $content");
-			return(true);
+			return(0);
 		}		
 		
 		$counter = 0;
@@ -154,12 +154,22 @@ function LRWithdraw($account,$amount)
 		$nodes = $rootElem->getElementsByTagName("Error");
 		if($nodes->length)
 		{
-			logMsg("Withdraw failed: \r\n $content");
-			return(false);
+			logMsg("Withdraw failed: $account , $amount\r\n $content");
+			
+			$nodes = $nodes->getElementsByTagName("Code");
+			if($nodes->length) 
+			{
+				$errorCode=$nodes->item(0)->nodeValue;
+				if($errorCode=="301") return(1);
+				if($errorCode=="402") return(2);
+				
+				
+				return(3);
+			}
 		}
 	}
 			
-	return(true);
+	return(0);
 }
 
 

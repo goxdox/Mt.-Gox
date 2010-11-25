@@ -51,7 +51,9 @@ function withdrawLR($userID)
 					$time=time();
 					$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($userID,-$amount,5,'$email',$btcHeld,$usdHeld,$time)";
 					if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
-					if(!LRWithdraw($account,$payment))  throw new GoxException("Problem Withdrawing. Please email: support@mtgox.com");
+					$LRRet=LRWithdraw($account,$payment);
+					if($LRRet==1)  throw new GoxException("Problem Withdrawing. Please email: support@mtgox.com");
+					if($LRRet==2)  throw new GoxException("Problem Withdrawing. Please email: support@mtgox.com");
 					
 					mysql_query('commit');
 					$result['status'] = "Your funds are on their way...";

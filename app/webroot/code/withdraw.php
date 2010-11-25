@@ -164,8 +164,10 @@ function withdrawLR($userID)
 						$time=time();
 						$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($userID,-$amount,5,'$email',$btcHeld,$usdHeld,$time)";
 						if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
-						if(!LRWithdraw($account,$payment))  
-							throw new GoxException("Withdraw via Liberty Reserve is currently offline. Please try again tomorrow. Sorry for the inconvenience.");
+						$LRRet=LRWithdraw($account,$payment);
+						if($LRRet==1) throw new GoxException("Invalid Liberty Reserve Address: '$account'");
+						if($LRRet==2) throw new GoxException("Withdraw via Liberty Reserve is currently offline. Please try again tomorrow. Sorry for the inconvenience.");
+						if($LRRet==3) throw new GoxException("Problem Withdrawing. Please email: support@mtgox.com");
 						
 						mysql_query('commit');
 						$result['status'] = "Your funds are on their way...";
