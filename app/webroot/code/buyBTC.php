@@ -47,6 +47,7 @@ if($uid)
 	if(isset($_POST['dark'])) 
 	{
 		$darkStatus=(int)$_POST['dark'];
+		logMsg("buy $darkStatus $uid");
 		if($darkStatus && ($amount*$price<1000*BASIS)) 
 		{
 			$result['error'] = "Order must be for greater than $1000 to be listed in the Dark Pool.";
