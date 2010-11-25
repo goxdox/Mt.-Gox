@@ -264,7 +264,7 @@ function httpPostAsync($url, $params=array())
     }
     if(isset($post_params)) $post_string = implode('&', $post_params);
     else $post_string='';
-
+logMsg("httpPostAsync $post_string");
     $parts=parse_url($url);
 
     $fp = fsockopen($parts['host'],
