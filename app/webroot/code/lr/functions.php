@@ -151,15 +151,15 @@ function LRWithdraw($account,$amount)
 		
 		$counter = 0;
 		
-		$nodes = $rootElem->getElementsByTagName("Error");
-		if($nodes->length)
+		$errors = $rootElem->getElementsByTagName("Error");
+		if($errors->length)
 		{
 			logMsg("Withdraw failed: $account , $amount\r\n $content");
 			
-			$nodes = $nodes->getElementsByTagName("Code");
-			if($nodes->length) 
+			$codes = $errors->item(0)->getElementsByTagName("Code");
+			if($codes->length) 
 			{
-				$errorCode=$nodes->item(0)->nodeValue;
+				$errorCode=$codes->item(0)->nodeValue;
 				if($errorCode=="301") return(1);
 				if($errorCode=="402") return(2);
 				
