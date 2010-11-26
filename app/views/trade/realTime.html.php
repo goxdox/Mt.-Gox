@@ -1,4 +1,5 @@
 <script type="text/javascript" language="javascript" src="/js/jquery.ui.js"></script>
+<script type="text/javascript" src="/js/protovis.js"></script>
 <script>
 
 $(document).ready(function(){
@@ -11,27 +12,39 @@ $(document).ready(function(){
 	    var ogBack  = "#FFFFFF"; //this.css("background-color");
 	    this.stop().css("background-color", "#FF0000").css("color", "#FF0000").animate({color: ogColor, backgroundColor: ogBack}, 1500);
 	};
+	/* TEMP
 
 	if( typeof(WebSocket) != "function" ) 
 	{
 		window.location ="/support/noWebSocket";
 	}else
 	{
-		var ws = new WebSocket("ws://mtgox.com:8080/connect");
-	
-		ws.onopen = function() {
-			//alert("sending");
-		    ws.send("subscribe");
-		};
-		ws.onmessage = function(event) {
-			//alert(event.data);
-			
-			var data = eval('(' + event.data + ')');
-		    onServer(data);
-		};
+		connect();
 	}
+	*/
 	
 });
+
+function connect()
+{
+	/* TEMP
+	var ws = new WebSocket("ws://mtgox.com:8080/connect");
+	
+	ws.onopen = function() {
+		//alert("sending");
+	    ws.send("subscribe");
+	};
+	ws.onmessage = function(event) {
+		//alert(event.data);
+		
+		var data = eval('(' + event.data + ')');
+	    onServer(data);
+	};
+	ws.onclose = function() {
+		$('#error').html("Disconnected. Click <a onclick='connect()'>here to reconnect</a>.");
+	};
+	*/
+}
 
 var gLastData={ "ticker": {"last": 0, "buy": 0, "sell": 0}, 
 				"depth": {"bid1000" : 0, "ask1000" : 0}, "volume" : 0,
@@ -114,6 +127,8 @@ function onServer(data)
 </script>
 
 <div id="ticker">Use Mt Gox to send or recieve money for free! <a href="/">learn more</a></div>
+<div id="status"></div>
+<div id="error"></div>
 <hr>
 <table width="100%"  >
 	<tr  align="center">
@@ -138,4 +153,7 @@ function onServer(data)
 </div>
 <p>
 <p>
+<script type="text/javascript" src="/js/chart.js"> </script>
 <audio id="sound" src="/wav/notify.mp3" preload="auto">
+
+</div>
