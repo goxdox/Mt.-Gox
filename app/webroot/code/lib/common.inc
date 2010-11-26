@@ -462,7 +462,7 @@ function checkBidOrders($uid)
 
 function findSeller($buyerID,$amount,$buyPrice,$time,$showResults,$darkStatus)
 {
-	if($amount>0)
+	if($amount>5*BASIS)
 	{
 		global $result;
 		global $lastPrice;
@@ -525,63 +525,65 @@ function findSeller($buyerID,$amount,$buyPrice,$time,$showResults,$darkStatus)
 // throws GoxException
 function findBuyer($uid,$amount,$sellPrice,$time,$showResults,$darkStatus)
 {
-	global $result;
-	global $lastPrice;
-	
-	$buyPrice=$sellPrice*SPREAD;
-	
-	// TODO: this needs to also sort by time in cases of ties
-	if($darkStatus==2) $sql="SELECT * from Bids where Status=1 and (darkStatus>0 or amount>=$amount) and round(Price,6)>=$buyPrice order by Price desc";
-	else $sql="SELECT * from Bids where Status=1 and round(Price,6)>=$buyPrice order by Price desc";
-	if(!$data=mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
-
-	$tradeCount=0;
-	
-	while($row=mysql_fetch_array($data))
+	if($amount>5*BASIS)
 	{
-		$bidAmount=$row['Amount'];
-		$buyerID=$row['UserID'];
-		$bidID=$row['OrderID'];
-		$bidPrice=$row['Price'];
+		global $result;
+		global $lastPrice;
 		
-		if($buyerID == $uid )
+		$buyPrice=$sellPrice*SPREAD;
+		
+		// TODO: this needs to also sort by time in cases of ties
+		if($darkStatus==2) $sql="SELECT * from Bids where Status=1 and (darkStatus>0 or amount>=$amount) and round(Price,6)>=$buyPrice order by Price desc";
+		else $sql="SELECT * from Bids where Status=1 and round(Price,6)>=$buyPrice order by Price desc";
+		if(!$data=mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
+	
+		$tradeCount=0;
+		
+		while($row=mysql_fetch_array($data))
 		{
-			$result['status']="<br>Trying to buy from yourself?";
-			return($amount);
+			$bidAmount=$row['Amount'];
+			$buyerID=$row['UserID'];
+			$bidID=$row['OrderID'];
+			$bidPrice=$row['Price'];
+			
+			if($buyerID == $uid )
+			{
+				$result['status']="<br>Trying to buy from yourself?";
+				return($amount);
+			}
+			
+			$lastPrice=$bidPrice/HALF_SPREAD;
+			
+			
+			if($bidAmount>$amount)
+			{ // this bid covers the sell
+				$sql="UPDATE Bids set Amount=Amount-$amount where OrderID=$bidID";
+				if(!mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
+				$tradeAmount=$amount;
+			}else
+			{ // this sale covers the bid
+				$sql="DELETE FROM Bids where OrderID=$bidID";
+				if(!mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
+				$tradeAmount=$bidAmount;
+			}
+			
+			recordTrade($buyerID,$uid,$tradeAmount,$lastPrice,$time);
+			$pTradeAmount=round($tradeAmount/BASIS,2);
+			tradeNotifyUser($buyerID,"Bought",$pTradeAmount,$lastPrice*HALF_SPREAD);
+			if(!$showResults) tradeNotifyUser($sellerID,"Sold",$pTradeAmount,$lastPrice/HALF_SPREAD);
+					 
+						
+			if($showResults) $result['trades'][$tradeCount]="Sold $pTradeAmount BTC for $lastPrice.";
+			$tradeCount++;
+			
+			$amount=$amount-$bidAmount;
+			checkAskOrders($buyerID);
+			if($amount<=0) return(0);
+			
 		}
 		
-		$lastPrice=$bidPrice/HALF_SPREAD;
-		
-		
-		if($bidAmount>$amount)
-		{ // this bid covers the sell
-			$sql="UPDATE Bids set Amount=Amount-$amount where OrderID=$bidID";
-			if(!mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
-			$tradeAmount=$amount;
-		}else
-		{ // this sale covers the bid
-			$sql="DELETE FROM Bids where OrderID=$bidID";
-			if(!mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
-			$tradeAmount=$bidAmount;
-		}
-		
-		recordTrade($buyerID,$uid,$tradeAmount,$lastPrice,$time);
-		$pTradeAmount=round($tradeAmount/BASIS,2);
-		tradeNotifyUser($buyerID,"Bought",$pTradeAmount,$lastPrice*HALF_SPREAD);
-		if(!$showResults) tradeNotifyUser($sellerID,"Sold",$pTradeAmount,$lastPrice/HALF_SPREAD);
-				 
-					
-		if($showResults) $result['trades'][$tradeCount]="Sold $pTradeAmount BTC for $lastPrice.";
-		$tradeCount++;
-		
-		$amount=$amount-$bidAmount;
-		checkAskOrders($buyerID);
-		if($amount<=0) return(0);
-		
+		addOrder('Asks',$uid,$amount,$sellPrice,0,$darkStatus);
 	}
-	
-	addOrder('Asks',$uid,$amount,$sellPrice,0,$darkStatus);
-	
 	return($amount);	
 }
 
