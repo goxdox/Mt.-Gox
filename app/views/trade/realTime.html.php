@@ -39,7 +39,7 @@ function connect()
 	    ws.send("subscribe");
 	};
 	ws.onmessage = function(event) {
-		//alert(event.data);
+		//$("#status").text(event.data);
 		
 		var data = eval('(' + event.data + ')');
 	    onServer(data);
@@ -90,6 +90,7 @@ function onServer(data)
 	}
 	if(data.plot)
 	{
+		
 		updateHistory(data);
 	}
 	
