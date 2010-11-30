@@ -1,6 +1,7 @@
 import Connection
 import MySQLdb
 import json
+from time import time
 
 """
 SubscribePool is a list of all the subscribed WebSockets
@@ -13,7 +14,10 @@ class SubscribePool():
     
     def __init__(self):
         self.mData['ticker']={}
-        self.mData['depth']={}
+        self.mData['asks']={}
+        self.mData['bids']={}
+        self.mData['plot']={}
+        self.mData['date']=0
         
         try:
             self.mDatabase = MySQLdb.connect("localhost", "land", "-island-", "btcx")
@@ -55,7 +59,7 @@ class SubscribePool():
         return round(totalPrice/1000000,4)
    
     # see what the avergae price you would get for filling 1000BTC at market
-    def calcDepth(self):
+    def calc1000Depth(self):
         try:
             ask=self.getDepth("SELECT amount,price from Asks where status=1 and darkstatus=0 order by price","sell")
             bid=self.getDepth("SELECT amount,price from Bids where status=1 and darkstatus=0 order by price desc","buy")
@@ -68,32 +72,64 @@ class SubscribePool():
     def update1000Depth(self):
         beforeAsk=self.mData['depth']['ask1000']
         beforeBid=self.mData['depth']['bid1000']
-        self.calcDepth();
+        self.calc1000Depth();
         
         if (((beforeAsk-self.mData['depth']['ask1000'])>.00001) or ((beforeBid-self.mData['depth']['bid1000'])>.00001)) :       
             for connection in self.mList:
                 connection.write_message(json.dumps(self.mData))
                 
-    def updateDepth(self):
-        self.mData['depth']={}
-        sql="SELECT amount,price From Asks where status=1 and darkStatus=0 order by Price";
-        self.mCursor.execute(sql)
-        rows = self.mCursor.fetchall()
-        
-        index=0
-        for row in rows:
-            self.mData['depth']['asks'][index]=row
+    def calcDepth(self):
+        self.mData['asks']={}
+        self.mData['bids']={}
+        try:
+            sql="SELECT amount,price From Asks where status=1 and darkStatus=0 order by Price";
+            self.mCursor.execute(sql)
+            rows = self.mCursor.fetchall()
             
-        sql="SELECT amount,price From Bids where status=1 and darkStatus=0 order by Price desc";
-        self.mCursor.execute(sql)
-        rows = self.mCursor.fetchall()
-        
-        index=0
-        for row in rows:
-            self.mData['depth']['bids'][index]=row
+            index=0
+            for row in rows:
+                self.mData['asks'][index]=row
+                index =index+1
+                
+            sql="SELECT amount,price From Bids where status=1 and darkStatus=0 order by Price desc";
+            self.mCursor.execute(sql)
+            rows = self.mCursor.fetchall()
+            
+            index=0
+            for row in rows:
+                self.mData['bids'][index]=row
+                index =index+1
+                
+        except MySQLdb.Error, e:
+             print "Error %d: %s" % (e.args[0], e.args[1])    
+                
+    def updateDepth(self):
+        self.calcDepth()
             
         for connection in self.mList:
-            connection.write_message(json.dumps(self.mData['depth']))
+            connection.write_message(json.dumps(self.mData))
+            
+    def addPlot(self):
+        try:
+            self.mData['plot']={}
+            
+            startTime=int(time()-24*60*60)
+                
+            self.mData['date']=int(time())
+                
+            sql="SELECT price,amount,date From Trades where Date>%d order by Date" % (startTime);
+            self.mCursor.execute(sql)
+            rows = self.mCursor.fetchall()
+            
+            index=0
+            for row in rows:
+                self.mData['plot'][index]={row['price'],0,0,0, round(row['amount']/1000,0), row['date'] }
+                index =index+1
+                      
+        except MySQLdb.Error, e:
+             print "Error %d: %s" % (e.args[0], e.args[1])
+        
+
             
              
     # send a market update to all the subscribed connections    
@@ -110,6 +146,7 @@ class SubscribePool():
             self.mData['ticker']['last']=round( row['LastPrice'],4)
             
             self.calcDepth();
+            self.addPlot();
             
             
             for connection in self.mList:
@@ -118,7 +155,6 @@ class SubscribePool():
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])    
            
-            
 
 thePool = SubscribePool()
         

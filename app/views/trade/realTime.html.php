@@ -32,7 +32,7 @@ $(document).ready(function(){
 function connect()
 {
 	
-	var ws = new WebSocket("ws://mtgox.com:8080/connect");
+	var ws = new WebSocket("ws://127.0.0.1:8080/connect");
 	
 	ws.onopen = function() {
 		//alert("sending");
