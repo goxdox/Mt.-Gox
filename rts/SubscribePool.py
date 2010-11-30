@@ -79,27 +79,21 @@ class SubscribePool():
                 connection.write_message(json.dumps(self.mData))
                 
     def calcDepth(self):
-        self.mData['asks']={}
-        self.mData['bids']={}
+        self.mData['asks']=[]
+        self.mData['bids']=[]
         try:
             sql="SELECT amount,price From Asks where status=1 and darkStatus=0 order by Price";
             self.mCursor.execute(sql)
             rows = self.mCursor.fetchall()
-            
-            index=0
             for row in rows:
-                self.mData['asks'][index]=row
-                index =index+1
+                self.mData['asks'].append( (row['price'],row['amount']) )
                 
             sql="SELECT amount,price From Bids where status=1 and darkStatus=0 order by Price desc";
             self.mCursor.execute(sql)
-            rows = self.mCursor.fetchall()
-            
-            index=0
+            rows = self.mCursor.fetchall() 
             for row in rows:
-                self.mData['bids'][index]=row
-                index =index+1
-                
+                self.mData['bids'].append( (row['price'],row['amount']) )
+                   
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])    
                 
@@ -120,12 +114,10 @@ class SubscribePool():
             sql="SELECT price,amount,date From Trades where Date>%d order by Date" % (startTime);
             self.mCursor.execute(sql)
             rows = self.mCursor.fetchall()
-            
-            index=0
+           
             for row in rows:
                 self.mData['plot'].append( (row['price'],0,0,0, round(row['amount']/1000,0), row['date'] ) )
-                index =index+1
-                      
+               
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])
         
