@@ -11,6 +11,7 @@ $(document).ready(function(){
 
 	fetchPrice();
 	gMegaChart.init();
+	vis.render();
 });
 
 function fetchPrice()
@@ -43,6 +44,7 @@ function changeOptions()
 	gMegaChart.setShowPrice( $("#showPrice").attr('checked') );
 	gMegaChart.setShowCandles( $("#showCandles").attr('checked') );
 
+	
 	vis.render();
 }
 

@@ -24,6 +24,7 @@ $(document).ready(function(){
 	{
 		connect();
 		gMegaChart.init();
+		vis.render();
 	}
 	
 	
@@ -109,9 +110,19 @@ function onServer(data)
 	{
 		//alert("beep");
 		document.getElementById("sound").play();
-	}
+	}	
+}
+
+function changeOptions()
+{
+	gMegaChart.setShowVolume( $("#showVolume").attr('checked') );
+	gMegaChart.setShowDepth( $("#showDepth").attr('checked') );
+	gMegaChart.setShowOrders( $("#showOrders").attr('checked') );
+	gMegaChart.setShowPrice( $("#showPrice").attr('checked') );
+	gMegaChart.setShowCandles( $("#showCandles").attr('checked') );
 
 	
+	vis.render();
 }
 
 </script>
