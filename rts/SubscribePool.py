@@ -123,7 +123,7 @@ class SubscribePool():
             
             index=0
             for row in rows:
-                self.mData['plot'][index]={row['price'],0,0,0, round(row['amount']/1000,0), row['date'] }
+                self.mData['plot'][index]={0:row['price'],1:0,2:0,3:0, 4:round(row['amount']/1000,0), 5:row['date'] }
                 index =index+1
                       
         except MySQLdb.Error, e:
