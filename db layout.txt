@@ -70,6 +70,7 @@ CREATE TABLE PasswordResets (ResetID varchar(10), UserID INT UNSIGNED, Username 
 
 #Reason: 0- ? 1-Trade Sell, 2-Trade Buy, 3-Add BTC by sending, 4-Withdraw BTC, 5- Withdraw USD, 
 #  6- Add by Paypal, 7- Payment Process, 8-Fraud Claim, 9- Manual, 10- Sending money to other users, 11- Add by LR
+# 12 - Fund Margin account
 CREATE TABLE Activity (actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
 	deltaBTC INT default 0, deltaUSD INT default 0, 
 	type TINYINT, typeID INT UNSIGNED default 0, typeData VARCHAR(40), 
@@ -78,7 +79,7 @@ CREATE TABLE Activity (actID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT
 CREATE TABLE ErrorLog (ErrorType varchar(10), Msg TEXT, Date INT UNSIGNED);
 
 
-CREATE TABLE MarginAccounts (userID INT UNSIGNED, usd INT, Date INT UNSIGNED) ENGINE = INNODB;
+#CREATE TABLE MarginAccounts (userID INT UNSIGNED, usd INT, Date INT UNSIGNED) ENGINE = INNODB;
 
 #status: 1-ok, 2-Not enough funds
 CREATE TABLE MarginOrders (orderID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
@@ -93,12 +94,6 @@ CREATE TABLE MarginPosition (posID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, user
 CREATE TABLE MarginTrade (tradeID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userID INT UNSIGNED, 
 	type TINYINT, amount INT, startPrice FLOAT, endPrice FLOAT, status TINYINT,
 	dateEntered INT UNSIGNED, dateClosed INT UNSIGNED) ENGINE = INNODB;
-	
-
-#Status: 0- ? 1-Take Open orders 2-Dark Only
-CREATE TABLE DarkAsks (OrderID  INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,UserID INT UNSIGNED, 
-	Amount INT, Price Float, Status TINYINT, Date INT UNSIGNED) ENGINE = INNODB;
-	
 	
 
 	

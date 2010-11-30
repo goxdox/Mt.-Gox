@@ -23,13 +23,22 @@ class TradeController extends \lithium\action\Controller
 	 public function realTime()
 	 {
 	 	$this->_render['layout'] = 'clean';
+	 	$title='Real Time Mega Chart';
+	  	return compact('title');
+	 }
+	 
+	public function dashboard()
+	 {
+	 	$this->_render['layout'] = 'clean';
 	 	$title='Real Time Dashboard';
 	  	return compact('title');
 	 }
 	 
-	 public function test()
+	 public function megaChart()
 	 {
 	 	$this->_render['layout'] = 'clean';
+	 	$title='Mega Chart';
+	  	return compact('title');
 	 }
 }
 

@@ -231,8 +231,8 @@ function updateTicker($lastPrice)
 	global $result;
 	$pLastPrice=$lastPrice*BASIS;
 	
-	$sell=getSingleDBValue("SELECT min(Price) from Asks where status=1")*SPREAD;
-	$buy=getSingleDBValue("SELECT max(Price) from Bids where status=1")/SPREAD;
+	$sell=getSingleDBValue("SELECT min(Price) from Asks where status=1 and darkstatus=0")*SPREAD;
+	$buy=getSingleDBValue("SELECT max(Price) from Bids where status=1 and darkstatus=0")/SPREAD;
 	$pSell=round( $sell , ROUNDING);
 	$pBuy=round( $buy, ROUNDING);
 	if($buy>$sell)

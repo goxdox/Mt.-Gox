@@ -1,8 +1,5 @@
-<link rel="stylesheet" href="/css/ui-lightness/jquery.ui.css" type="text/css" />
 <script type="text/javascript" language="javascript" src="/js/jquery.ui.js"></script>
 <script type="text/javascript" src="/js/protovis.js"></script>
-<script type="text/javascript" src="/js/date.format.js"></script>
-
 <script>
 
 $(document).ready(function(){
@@ -23,7 +20,6 @@ $(document).ready(function(){
 	}else
 	{
 		connect();
-		gMegaChart.init();
 	}
 	
 	
@@ -51,6 +47,7 @@ function connect()
 }
 
 var gLastData={ "ticker": {"last": 0, "buy": 0, "sell": 0}, 
+				"depth": {"bid1000" : 0, "ask1000" : 0}, "volume" : 0,
 				"usds" : 0, "btcs" : 0 };
 
 function onServer(data)
@@ -68,7 +65,6 @@ function onServer(data)
 			$('#lastCell').text(data.ticker.last);
 			//$('#lastCell').animateHighlight("#FF0000", 1000);
 			$("#lastCell").flash();
-			if($('#beepTrade').attr('checked')) beep=true;
 			
 		}
 		if(data.ticker.buy != gLastData.ticker.buy)
@@ -83,16 +79,31 @@ function onServer(data)
 		gLastData.ticker=data.ticker;
 		
 	}
-	if(data.asks && data.bids)
+	if(data.depth)
 	{
-		updateDepth(data.asks,data.bids);
-		if($('#beepDepth').attr('checked')) beep=true;
+		if(data.depth.bid1000 != gLastData.depth.bid1000)
+		{
+			$('#bid1000Cell').text(data.depth.bid1000+" for 1000 BTC").flash();
+			if($('#beepDepth').attr('checked')) beep=true;
+		}
+		if(data.depth.ask1000 != gLastData.depth.ask1000)
+		{
+			$('#ask1000Cell').text(data.depth.ask1000+" for 1000 BTC").flash();
+			if($('#beepDepth').attr('checked')) beep=true;
+		}
+		
+
+		gLastData.depth=data.depth;
 	}
-	if(data.plot)
+	if(data.volume)
 	{
-		updateHistory(data);
+		if(gLastData.volume != data.volume)
+		{
+			$('#volCell').text(data.volume+" BTC").flash();
+			if($('#beepTrade').attr('checked')) beep=true;
+			gLastData.volume=data.volume;
+		}
 	}
-	
 	if(data.usds) 
 	{
 		$('.usds').text(data.usds);
@@ -118,30 +129,22 @@ function onServer(data)
 <div id="ticker">Use Mt Gox to send or recieve money for free! <a href="/">learn more</a></div>
 <div id="status"></div>
 <div id="error"></div>
-
-<div id="page">
-<h1>Real Time Mega Chart!</h1>
-<table width="100%" ><tr><td>
-<span class="spacer"></span>
-<input id="showVolume" type="checkbox" onchange="changeOptions()" checked /> Show Volume
-<span class="spacer"></span>
-<input id="showDepth" type="checkbox" onchange="changeOptions()" checked /> Show Depth
-<span class="spacer"></span>
-<input id="showOrders" type="checkbox" onchange="changeOptions()" checked /> Show Orders
-<span class="spacer"></span>
-<input id="showPrice" type="checkbox" onchange="changeOptions()" checked /> Show Price line
-<span class="spacer"></span>
-<input id="showCandles" type="checkbox" onchange="changeOptions()"  /> Show Candles
-</td></tr></table>
-
-<table width="100%" class="megaChart_table" >
-<tr><td>.<div id="megaChart" class="megaChart">
-<script type="text/javascript" src="/js/chart.js"> </script>
-</div></td>
-<td style="text-align: center" ><span id="highPriceMC">1</span><p>
-	<div id="priceSlider" class="center"></div><br><span id="lowPriceMC">0</span></td></tr>
+<hr>
+<table width="100%"  >
+	<tr  align="center">
+		<td width="33%"><h2 style="margin-top: 0px;">Bid</h2><div class="bigText" id="bidCell"></div></td>
+		<td  width="33%"><h2 style="margin-top: 0px;">Last</h2><div class="bigText" id="lastCell"></div></td>
+		<td  width="33%"><h2 style="margin-top: 0px;">Ask</h2><div class="bigText" id="askCell"></div></td>
+	</tr>
+	<tr  align="center">
+		<td  width="33%"><p><div id="bid1000Cell"></div></td>
+		<td width="33%"><p><div id="volCell"></div></td>
+		<td width="33%"><p><div id="ask1000Cell"></div></td>
+	</tr>
 </table>
-
+<hr>
+<p>
+<div id="page">
 <table>
 	<tr><td><input type="checkbox" id="beepMoney" /></td><td>Beep on Balance Change</td></tr>
 	<tr><td><input type="checkbox" id="beepTrade" /></td><td>Beep on Trade</td></tr>
@@ -150,7 +153,7 @@ function onServer(data)
 </div>
 <p>
 <p>
-
+<script type="text/javascript" src="/js/chart.js"> </script>
 <audio id="sound" src="/wav/notify.mp3" preload="auto">
 
 </div>

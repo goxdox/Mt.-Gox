@@ -261,7 +261,12 @@ function onRecent(result)
 <fieldset>
  <legend>Data</legend>
 <table class="btcx_table" >
-<tr><td><a onClick="getRecent()">Last 48 Hours</a></td><td><a onClick="getHistory()">All time</a></td><td><a onClick="getDepth()">Depth of Market</a></td></tr>
+<tr>
+	<td><a onClick="getRecent()">Last 48 Hours</a></td>
+	<td><a onClick="getHistory()">All time</a></td>
+	<td><a onClick="getDepth()">Depth of Market</a></td>
+	<td><a href="/trade/megaChart">Mega Chart!</a></td>
+</tr>
 </table>
 <div id="plot" style="width:600px;height:400px;"></div>
 <div id="volume"><input type="checkbox" id="volCheck" onchange="onVolume()" /> Show Volume Data</div>

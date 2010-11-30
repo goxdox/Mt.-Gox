@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/css/ui-lightness/jquery.ui.css" type="text/css" />
 <script type="text/javascript" language="javascript" src="/js/jquery.ui.js"></script>
 <script type="text/javascript" src="/js/protovis.js"></script>
 <script type="text/javascript" src="/js/date.format.js"></script>
@@ -9,7 +10,7 @@ $(document).ready(function(){
 	$.post("/code/data/getDepth.php", { }, onDepth , "json" );
 
 	fetchPrice();
-	
+	gMegaChart.init();
 });
 
 function fetchPrice()
@@ -50,7 +51,7 @@ function changeOptions()
 <div id="ticker">Use Mt Gox to send or recieve money for free! <a href="/">learn more</a></div>
 <div id="status"></div>
 <div id="error"></div>
-<hr>
+
 <div id="page">
 <h1>Mega Chart!</h1>
 <table width="100%" ><tr><td>
@@ -76,7 +77,14 @@ function changeOptions()
 <span class="spacer"></span>
 <input id="showCandles" type="checkbox" onchange="changeOptions()" checked /> Show Candles
 </td></tr></table>
-<div id="megaChart" class="megaChart" >.
+
+<table width="100%" class="megaChart_table" >
+<tr><td>.<div id="megaChart" class="megaChart">
 <script type="text/javascript" src="/js/chart.js"> </script>
-</div>
+</div></td>
+<td style="text-align: center" ><span id="highPriceMC">1</span><p>
+	<div id="priceSlider" class="center"></div><br><span id="lowPriceMC">0</span></td></tr>
+</table>
+
+
 </div>

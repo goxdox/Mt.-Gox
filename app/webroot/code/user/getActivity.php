@@ -111,6 +111,7 @@ function getTypeStr($type)
 		case 9: return('Manual');
 		case 10: return('Fund Transfer');
 		case 11: return('Add LR');
+		case 12: return('Margin Transfer');
 	}
 	return('????');
 }

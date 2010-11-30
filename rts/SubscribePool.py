@@ -57,15 +57,15 @@ class SubscribePool():
     # see what the avergae price you would get for filling 1000BTC at market
     def calcDepth(self):
         try:
-            ask=self.getDepth("SELECT amount,price from Asks where status=1 order by price","sell")
-            bid=self.getDepth("SELECT amount,price from Bids where status=1 order by price desc","buy")
+            ask=self.getDepth("SELECT amount,price from Asks where status=1 and darkstatus=0 order by price","sell")
+            bid=self.getDepth("SELECT amount,price from Bids where status=1 and darkstatus=0 order by price desc","buy")
             self.mData['depth']['ask1000']=ask
             self.mData['depth']['bid1000']=bid
             #print "Depth %f(%f)  :  %f(%f)" % (self.mData['depth']['ask1000'],ask, self.mData['depth']['bid1000'],bid)
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])
              
-    def updateDepth(self):
+    def update1000Depth(self):
         beforeAsk=self.mData['depth']['ask1000']
         beforeBid=self.mData['depth']['bid1000']
         self.calcDepth();
@@ -73,6 +73,27 @@ class SubscribePool():
         if (((beforeAsk-self.mData['depth']['ask1000'])>.00001) or ((beforeBid-self.mData['depth']['bid1000'])>.00001)) :       
             for connection in self.mList:
                 connection.write_message(json.dumps(self.mData))
+                
+    def updateDepth(self):
+        self.mData['depth']={}
+        sql="SELECT amount,price From Asks where status=1 and darkStatus=0 order by Price";
+        self.mCursor.execute(sql)
+        rows = self.mCursor.fetchall()
+        
+        index=0
+        for row in rows:
+            self.mData['depth']['asks'][index]=row
+            
+        sql="SELECT amount,price From Bids where status=1 and darkStatus=0 order by Price desc";
+        self.mCursor.execute(sql)
+        rows = self.mCursor.fetchall()
+        
+        index=0
+        for row in rows:
+            self.mData['depth']['bids'][index]=row
+            
+        for connection in self.mList:
+            connection.write_message(json.dumps(self.mData['depth']))
             
              
     # send a market update to all the subscribed connections    

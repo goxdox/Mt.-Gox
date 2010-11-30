@@ -70,6 +70,7 @@ function onBTC()
 <div id="status"></div>
 <div id="error"></div>
 In order to trade on the exchange you must add either US Dollars (USD) or Bitcoins (BTC). You can redeem your funds at anytime.
+<p>
 <hr>
 
 <fieldset>
@@ -96,9 +97,6 @@ In order to trade on the exchange you must add either US Dollars (USD) or Bitcoi
 </fieldset>
 
 
-
-<hr>
-	
 <form id="btcForm" onsubmit="return onBTC()" >
 <fieldset>
  <legend>Add Bitcoins</legend>
@@ -109,6 +107,13 @@ In order to trade on the exchange you must add either US Dollars (USD) or Bitcoi
 </table>
 </fieldset>
 </form>
+
+
+<fieldset>
+ <legend>Add Euros</legend>
+This process is done by bank transfer with minimal fees but is still manual. Send us an email.
+</fieldset>
+
 
 
 

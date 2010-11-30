@@ -189,3 +189,7 @@ Alter table Users add column TradeFee float default 0.0065 after paypalTrust;
 
 alter table Asks add column DarkStatus TINYINT default 0 after Status;
 alter table Bids add column DarkStatus TINYINT default 0 after Status;
+
+###
+Alter table Users add column marginBalance INT default 0 after BTC;
+

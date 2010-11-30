@@ -39,8 +39,6 @@ function MegaChart()
 	var mMouseX=0;
 	var mMouseY=0;
 	var mMaxDepth=0;
-	var mMaxPrice=1;
-	var mMinPrice=0;
 	
 	
 	var mDepthMode=0;
@@ -50,6 +48,8 @@ function MegaChart()
 	var mShowOrders=true;
 	var mShowPrice=true;
 	var mShowCandles=true;
+	
+	var mHoldPriceRange=false;
 	
 	// options
 	this.setDepthMode=function(x){ mDepthMode=x; }
@@ -69,11 +69,8 @@ function MegaChart()
 	this.setMouseX = function(x){ mMouseX=x; }
 	this.setMouseY = function(x){ mMouseY=x; }
 	this.setMaxDepth = function(x){ mMaxDepth=x; }
-	this.setMinPrice = function(x){ mMinPrice=x; }
-	this.setMaxPrice = function(x){ mMaxPrice=x; }
+
 	
-	this.getMinPrice = function(){ return(mMinPrice); }
-	this.getMaxPrice = function(){ return(mMaxPrice); }
 	this.getMouseX = function(){ return(mMouseX); }
 	this.getMouseY = function(){ return(mMouseY); }
 	this.getMaxDepth = function(){ return(mMaxDepth); }
@@ -134,12 +131,49 @@ function MegaChart()
 					" l:"+i4_round(gPlot[plotIndex][2],3)+
 					" c:"+i4_round(gPlot[plotIndex][3],3));
 	}
+	
+	this.setPriceRange = function(low,high)
+	{
+		$("#highPriceMC").text(high);
+		$("#lowPriceMC").text(low);
+		focusY.domain(high,low).nice();
+	}
+	
+	this.resetPriceRange = function(low,high)
+	{
+		if(!mHoldPriceRange)
+		{
+			$( "#priceSlider" ).slider( "values" , 0 , [low*100] );
+			$( "#priceSlider" ).slider( "values" , 1 , [high*100] );
+			
+			gMegaChart.setPriceRange(low,high);
+		}
+	}
+	
+	this.init = function()
+	{
+		$( "#priceSlider" ).slider({
+			orientation: "vertical",
+			range: true,
+			values: [ 0, 100 ],
+			slide: function( event, ui ) 
+			{
+				gMegaChart.setPriceRange(ui.values[ 0 ]/100, ui.values[ 1 ]/100 );
+				mHoldPriceRange=true;
+				vis.render();
+				//alert("hi");
+			}
+		});
+		$( "#priceSlider" ).slider( "values" , 0 , [0] );
+		$( "#priceSlider" ).slider( "values" , 1 , [.5] );
+	}
 }
 
 var gMegaChart=new MegaChart();
 
+
 /* Sizing and scales. */
-var w = $("#megaChart").width()-30-5,
+var w = $("#megaChart").width(),
     h1 = $("#megaChart").height()-20-5-60,    
     h2 = 30,
     i = {x: w-300, dx:300},
@@ -174,7 +208,7 @@ var focus=vis.add(pv.Panel)
 		 var max=pv.max(dd,f5);
 		 var min=pv.min(dd,f5);
 		 if(max==min) max=min+.01;
-		 focusY.domain(max , min ).nice();
+		 gMegaChart.resetPriceRange(min,max);
 		 //if(dd.length) $('#status').text(""+dd[0][1]+" "+dd.length+" "+dd[dd.length-1][1]+" "+max+" "+min);
 		 return dd;
 	})
@@ -374,7 +408,7 @@ function updateOptions()
 
 function updateHistory(result)
 {
-	/*
+/*	
 	var result={"period":86400,"date":1246838400,"plot":[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],
 	                                                     [0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],
 	                                                     [0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],
@@ -385,10 +419,10 @@ function updateHistory(result)
 	                                                     [0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],
 	                                                     [0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0.0495,0.0495,0.0495,0.0495,20],[0.0594,0.0859,0.0594,0.0858,75],[0.0909,0.0931,0.0772,0.0808,574],[0.0818,0.0818,0.0743,0.0747,262],[0.0742,0.0792,0.0663,0.0792,575],[0.0792,0.0818,0.0505,0.0574,2160],[0.0505,0.0677,0.0505,0.0626,2403],[0.0616,0.0616,0.0505,0.0545,496],[0.0554,0.0594,0.0505,0.0505,1551],[0.05,0.056,0.05,0.056,877],[0.053,0.0605,0.053,0.06,3374],[0.06,0.062,0.054,0.0589,4390],[0.0597,0.0699,0.0571,0.0699,8058],[0.0698,0.0698,0.0582,0.0627,3021],[0.065,0.0689,0.056,0.0679,4022],[0.061,0.065,0.06,0.0611,2601],[0.0627,0.0633,0.06,0.06,3599],[0.06,0.065,0.059,0.06,9821],[0.0623,0.0623,0.057,0.057,3494],[0.0581,0.061,0.058,0.061,5034],[0.062,0.0624,0.0607,0.0623,1395],[0.0608,0.0622,0.059,0.059,2619],[0.059,0.061,0.059,0.0609,2201],[0.0609,0.0735,0.0593,0.071,13631],[0.068,0.0709,0.0665,0.07,1310],[0.06,0.0754,0.06,0.067,14061],[0.068,0.07,0.0614,0.07,2062],[0.0665,0.068,0.0645,0.0645,3592],[0.0655,0.0695,0.0645,0.067,4404],[0.067,0.067,0.065,0.0653,4463],[0.0632,0.0679,0.062,0.0655,10731],[0.0655,0.0769,0.0624,0.07,13186],[0.07,0.0733,0.067,0.068,2954],[0.0679,0.0679,0.0667,0.0667,741],[0.0667,0.0667,0.065,0.0655,4200],[0.0655,0.0669,0.0644,0.0664,10444],[0.065,0.0664,0.0612,0.066,18649],[0.066,0.0669,0.063,0.0649,4297],[0.0649,0.0665,0.0649,0.065,6712],[0.065,0.0665,0.0641,0.0648,4229],[0.0648,0.0658,0.064,0.064,3870],[0.064,0.065,0.063,0.065,9010],[0.065,0.065,0.0641,0.0641,6174],[0.0647,0.0648,0.064,0.064,3173],[0.0646,0.069,0.0321,0.065,34193],[0.0641,0.0649,0.06,0.06,14887],[0.062,0.0629,0.0596,0.0629,7165],[0.061,0.0634,0.0601,0.0634,8151],[0.061,0.063,0.0608,0.0608,892],[0.0612,0.0624,0.0612,0.0624,3301],[0.0625,0.064,0.0605,0.0616,8459],[0.0627,0.0627,0.0616,0.0616,910],[0.0616,0.062,0.0603,0.061,3457],[0.061,0.062,0.061,0.062,2345],[0.0611,0.0624,0.0611,0.0611,1734],[0.061,0.0618,0.0601,0.0618,4940],[0.0619,0.065,0.0619,0.0637,7749],[0.0621,0.0621,0.0615,0.0615,794],[0.062,0.064,0.0607,0.0622,10076],[0.062,0.175,0.061,0.062,14015],[0.0625,0.0625,0.0604,0.0604,3652],[0.0618,0.0619,0.0618,0.0618,730],[0.0609,0.0609,0.059,0.059,7262],[0.059,0.061,0.0576,0.061,7093],[0.0609,0.0627,0.06,0.0627,12852],[0.0621,0.0634,0.062,0.0621,14308],[0.0631,0.0633,0.0623,0.0627,5736],[0.0624,0.0624,0.0615,0.0622,11560],[0.0621,0.063,0.0615,0.0623,15505],[0.0621,0.0624,0.0621,0.0622,684],[0.0622,0.0624,0.0617,0.062,2153],[0.062,0.0623,0.0619,0.062,12058],[0.0621,0.0623,0.0619,0.0622,10752],[0.062,0.0627,0.0617,0.0619,7086],[0.062,0.062,0.0615,0.0618,23476],[0.0617,0.0619,0.0615,0.0619,7917],[0.0619,0.062,0.0619,0.062,1717],[0.0619,0.0619,0.0613,0.0614,13060],[0.0614,0.0614,0.061,0.0611,7173],[0.0611,0.062,0.0608,0.0613,33995],[0.0613,0.063,0.0609,0.0614,27527],[0.0615,0.0635,0.0612,0.0628,33433],[0.0631,0.067,0.0628,0.067,43693],[0.067,0.088,0.01,0.0868,139287],[0.0841,0.12,0.068,0.0938,187847],[0.093,0.1301,0.08,0.0965,50684],[0.091,0.103,0.091,0.095,14093],[0.094,0.099,0.082,0.0949,25661],[0.092,0.105,0.092,0.105,47557],[0.1045,0.1045,0.065,0.102,37217],[0.1,0.119,0.092,0.105,24643],[0.1,0.103,0.1,0.101,6285],[0.102,0.1045,0.1,0.102,18222],[0.103,0.103,0.097,0.1024,25665],[0.1,0.1019,0.097,0.097,6235],[0.1,0.103,0.094,0.099,31855],[0.0972,0.109,0.097,0.107,44867],[0.1015,0.109,0.1015,0.1025,34604],[0.108,0.109,0.1045,0.1055,4423],[0.108,0.19,0.108,0.115,13800],[0.0901,0.19,0.0901,0.132,30300],[0.133,0.18,0.133,0.1503,19219],[0.151,0.19,0.151,0.1877,65606],[0.1845,0.191,0.1731,0.1731,21525],[0.1799,0.19,0.173,0.19,28687],[0.1876,0.199,0.1875,0.1989,26709],[0.194,0.1989,0.171,0.1925,40338],[0.1925,0.1955,0.172,0.1955,21259],[0.192,0.195,0.1905,0.1938,5853],[0.1938,0.275,0.125,0.1931,61473],[0.1988,0.236,0.1934,0.23,29698],[0.2101,0.2639,0.2101,0.26,36622],[0.262,0.5,0.2402,0.39,32756],[0.47,0.47,0.286,0.34,77219],[0.3459,0.37,0.2261,0.243,118204],[0.251,0.323,0.199,0.2163,47983],[0.2101,0.24,0.14,0.2362,30387],[0.2299,0.24,0.21,0.2231,5032],[0.2289,0.29,0.223,0.2682,40720],[0.2799,0.3,0.2683,0.276,21916],[0.276,0.299,0.2702,0.279,16844],
 	                                                     [0.279,0.2828,0.2682,0.2682,8508],[0.2683,0.275,0.223,0.223,33931],[0.223,0.29,0.2116,0.2299,32872]]};
-	                                                 */
+	*/                                                 
 	var maxVolume=0;
-	gMegaChart.setMinPrice(1000);
-	gMegaChart.setMaxPrice(0);
+	var minPrice=1000;
+	var maxPrice=0;
 	gPlot=result.plot;
 	//var dateStr="";
 	if(result.period)
@@ -397,8 +431,8 @@ function updateHistory(result)
 		{
 			gPlot[n][5]=result.date-((gPlot.length-n)*result.period);
 			//dateStr += ", "+gPlot[n][5];
-			if(gPlot[n][1]>gMegaChart.getMaxPrice()) gMegaChart.setMaxPrice(gPlot[n][1]);
-			if(gPlot[n][3]>0 && gPlot[n][2]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(gPlot[n][2]);
+			if(gPlot[n][1]>maxPrice)maxPrice=gPlot[n][1];
+			if(gPlot[n][3]>0 && gPlot[n][2]<minPrice) minPrice=gPlot[n][2];
 			if(gPlot[n][4]>maxVolume) maxVolume=gPlot[n][4];
 		}
 		//$('#error').text(dateStr);
@@ -410,8 +444,8 @@ function updateHistory(result)
 		
 		for(var n=0; n<gPlot.length; n++)
 		{
-			if(gPlot[n][0]>gMegaChart.getMaxPrice()) gMegaChart.setMaxPrice(gPlot[n][0]);
-			if(gPlot[n][0]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(gPlot[n][0]);
+			if(gPlot[n][0]>maxPrice) maxPrice=gPlot[n][0];
+			if(gPlot[n][0]<minPrice) minPrice=gPlot[n][0];
 			if(gPlot[n][4]>maxVolume) maxVolume=gPlot[n][4];
 		}
 		
@@ -421,9 +455,9 @@ function updateHistory(result)
 		
 	}
 	
+	gMegaChart.resetPriceRange(minPrice,maxPrice);
 	
-	focusY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
-	contextY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
+	contextY.domain(maxPrice,minPrice).nice();
 	//$('#error').text(result.date-gPlot.length*result.period+" "+result.date+" "+gMegaChart.getMaxPrice()+" "+gMegaChart.getMinPrice()+" "+focusY(.3));
 	volumeAxis.domain(0,maxVolume);
 	
@@ -434,8 +468,8 @@ function updateHistory(result)
 
 function updateDepth(asks,bids)
 {
-	gMegaChart.setMinPrice(1000);
-	gMegaChart.setMaxPrice(0);
+	var minPrice=1000;
+	var maxPrice=0;
 	
 	gAsks=[];//[asks[0][0],0];
 	var total=0;
@@ -443,9 +477,9 @@ function updateDepth(asks,bids)
 	{
 		total+=asks[n][1];
 		gAsks.push([asks[n][0],total]);
-		if(asks[n][0]>gMegaChart.getMaxPrice()) gMegaChart.setMaxPrice(asks[n][0]);
+		if(asks[n][0]>maxPrice) maxPrice=asks[n][0];
 	}
-	gAsks.push([gMegaChart.getMaxPrice(),total]);
+	gAsks.push([maxPrice,total]);
 	gMegaChart.setMaxDepth(total);
 	
 	
@@ -455,14 +489,14 @@ function updateDepth(asks,bids)
 	{
 		total+=bids[n][1];
 		gBids.push([bids[n][0],total]);
-		if(bids[n][0]<gMegaChart.getMinPrice()) gMegaChart.setMinPrice(bids[n][0]);
+		if(bids[n][0]<minPrice) minPrice=bids[n][0];
 	}
-	gBids.push([gMegaChart.getMinPrice(),total]);
+	gBids.push([minPrice,total]);
 	if(total>gMegaChart.getMaxDepth()) gMegaChart.setMaxDepth(total);
 	gBids.reverse();
 	
 	depthAxis.domain(0,gMegaChart.getMaxDepth());
-	focusY.domain(gMegaChart.getMaxPrice(),gMegaChart.getMinPrice()).nice();
+	gMegaChart.resetPriceRange(minPrice,maxPrice);
 	
 	//alert( "("+depthAxis(gAsks[0][1])+","+y(gAsks[0][0])+")");
 	vis.render();
