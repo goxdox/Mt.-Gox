@@ -173,7 +173,7 @@ var gMegaChart=new MegaChart();
 
 
 /* Sizing and scales. */
-var w = $("#megaChart").width(),
+var w = $("#megaChart").width()-35,
     h1 = $("#megaChart").height()-20-5-60,    
     h2 = 30,
     i = {x: w-300, dx:300},
@@ -183,9 +183,11 @@ var w = $("#megaChart").width(),
     volumeAxis=pv.Scale.linear(0, 1000).range(0, h1/3),
     depthAxis=pv.Scale.linear(0, 1000).range(0, w/2),
     contextY=pv.Scale.linear(0, 1).range(0, h2),
-    contextX=pv.Scale.linear(0, 50).range(0, w),
-    focusX = pv.Scale.linear(0, 50).range(0, w),
+    contextX=pv.Scale.linear(0, 50).range(-15, w-58),
+    focusX = pv.Scale.linear(0, 50).range(-15, w-58),
     focusY = pv.Scale.linear(0, 1).range(0, h1);
+
+
 
 /* The root panel. */
 var vis = new pv.Panel()
