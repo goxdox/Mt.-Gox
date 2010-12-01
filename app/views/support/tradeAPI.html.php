@@ -18,7 +18,7 @@ The following take your Mt Gox username and password as parameters. They must be
 <tr><td>Place an order to Sell BTC</td><td><b>https://mtgox.com/code/sellBTC.php?name=blah&pass=blah&amount=#&price=#</b><br>returns a list of your open orders</td></tr>
 <tr><td>Fetch a list of your open Orders</td><td><b>https://mtgox.com/code/getOrders.php?name=blah&pass=blah</b><br>oid: Order ID<br>type: 1 for sell order or 2 for buy order<br>status: 1 for active, 2 for not enough funds</td></tr>
 <tr><td>Cancel an order</td><td><b>https://mtgox.com/code/sellBTC.php?name=blah&pass=blah&oid=#&type=#</b><br>oid: Order ID<br>type: 1 for sell order or 2 for buy order</td></tr>
-<tr><td>Send BTC</td><td><b>https://mtgox.com/code/withdraw.php?name=blah&pass=blah&btca=bitcoin_address_to_send_to&amount=#</b></td></tr>
+<tr><td>Send BTC</td><td><b>https://mtgox.com/code/withdraw.php?name=blah&pass=blah&group1=BTC&btca=bitcoin_address_to_send_to&amount=#</b></td></tr>
 </table>
 <p>
 That's it. Now write a bot!

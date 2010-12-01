@@ -2,11 +2,18 @@ import Connection
 import MySQLdb
 import json
 from time import time
+from decimal import *
 
 """
 SubscribePool is a list of all the subscribed WebSockets
 
 """
+
+class DecimalEncoder(json.JSONEncoder):
+    def _iterencode(self, o, markers=None):
+        if isinstance(o, Decimal):
+            return (str(o) for o in [o])
+        return super(DecimalEncoder, self)._iterencode(o, markers)
 
 class SubscribePool():
     mList = [] 
@@ -19,6 +26,7 @@ class SubscribePool():
         self.mData['plot']={}
         self.mData['date']=0
         self.mData['now']=0
+        getcontext().prec = 4
         
         try:
             self.mDatabase = MySQLdb.connect("localhost", "land", "-island-", "btcx")
@@ -36,10 +44,13 @@ class SubscribePool():
         print "# connections: %d" % (len(self.mList))
         
     def remove(self,connection):
-        self.mList.remove(connection)
+        try:
+            self.mList.remove(connection)
+        except ValueError, e:
+            print "Connection not in list"
         
     def sendData(self,connection):
-        connection.write_message(json.dumps(self.mData))
+        connection.write_message(json.dumps(self.mData,cls=DecimalEncoder))
     
     def getDepth(self,sql,ticker):
         self.mCursor.execute(sql)
@@ -79,23 +90,24 @@ class SubscribePool():
         
         if (((beforeAsk-self.mData['depth']['ask1000'])>.00001) or ((beforeBid-self.mData['depth']['bid1000'])>.00001)) :       
             for connection in self.mList:
-                connection.write_message(json.dumps(self.mData))
+                connection.write_message(json.dumps(self.mData,cls=DecimalEncoder))
                 
     def calcDepth(self):
         self.mData['asks']=[]
         self.mData['bids']=[]
         try:
+            
             sql="SELECT amount,price From Asks where status=1 and darkStatus=0 order by Price";
             self.mCursor.execute(sql)
             rows = self.mCursor.fetchall()
             for row in rows:
-                self.mData['asks'].append( (round(row['price'],4),int(row['amount']/1000)) )
+                self.mData['asks'].append( (Decimal(str(row['price'])),int(row['amount']/1000)) )
                 
             sql="SELECT amount,price From Bids where status=1 and darkStatus=0 order by Price desc";
             self.mCursor.execute(sql)
             rows = self.mCursor.fetchall() 
             for row in rows:
-                self.mData['bids'].append( (round(row['price'],4),int(row['amount']/1000)) )
+                self.mData['bids'].append( ( Decimal(str(row['price'])),int(row['amount']/1000)) )
                    
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])    
@@ -104,7 +116,7 @@ class SubscribePool():
         self.calcDepth()
         self.mData['now']=int(time())    
         for connection in self.mList:
-            connection.write_message(json.dumps(self.mData))
+            connection.write_message(json.dumps(self.mData,cls=DecimalEncoder))
             
     def addPlot(self):
         try:
@@ -119,7 +131,7 @@ class SubscribePool():
             rows = self.mCursor.fetchall()
            
             for row in rows:
-                self.mData['plot'].append( ( round(row['price'],4),0,0,0, int(row['amount']/1000), row['date'] ) )
+                self.mData['plot'].append( ( Decimal(str(row['price'])),0,0,0, int(row['amount']/1000), row['date'] ) )
                
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])
@@ -133,19 +145,19 @@ class SubscribePool():
             self.mCursor.execute("SELECT * from Ticker")
             row = self.mCursor.fetchone()
             
-            self.mData['ticker']['high']=round( row['High'],4)
-            self.mData['ticker']['low']=round( row['Low'],4)
-            self.mData['ticker']['vol']=round( row['Volume']/1000,0)
-            self.mData['ticker']['buy']=round( row['HighBuy'],4)
-            self.mData['ticker']['sell']=round( row['LowSell'],4)
-            self.mData['ticker']['last']=round( row['LastPrice'],4)
+            self.mData['ticker']['high']=Decimal(str( row['High']))
+            self.mData['ticker']['low']=Decimal(str( row['Low']))
+            self.mData['ticker']['vol']=int( row['Volume']/1000)
+            self.mData['ticker']['buy']=Decimal(str( row['HighBuy']))
+            self.mData['ticker']['sell']=Decimal(str( row['LowSell']))
+            self.mData['ticker']['last']=Decimal(str( row['LastPrice']))
             
             self.calcDepth();
             self.addPlot();
             
             self.mData['now']=int(time())
             for connection in self.mList:
-                connection.write_message(json.dumps(self.mData))
+                connection.write_message(json.dumps(self.mData,cls=DecimalEncoder))
         
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])    
