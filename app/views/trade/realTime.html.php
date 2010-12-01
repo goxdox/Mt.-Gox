@@ -41,7 +41,7 @@ function connect()
 	    ws.send("subscribe");
 	};
 	ws.onmessage = function(event) {
-		$("#status").text(event.data);
+		//$("#status").text(event.data);
 		
 		var data = eval('(' + event.data + ')');
 	    onServer(data);
