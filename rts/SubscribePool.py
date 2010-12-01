@@ -86,13 +86,13 @@ class SubscribePool():
             self.mCursor.execute(sql)
             rows = self.mCursor.fetchall()
             for row in rows:
-                self.mData['asks'].append( (row['price'],row['amount']) )
+                self.mData['asks'].append( (row['price'],int(row['amount']/1000)) )
                 
             sql="SELECT amount,price From Bids where status=1 and darkStatus=0 order by Price desc";
             self.mCursor.execute(sql)
             rows = self.mCursor.fetchall() 
             for row in rows:
-                self.mData['bids'].append( (row['price'],row['amount']) )
+                self.mData['bids'].append( (row['price'],int(row['amount']/1000)) )
                    
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])    
@@ -116,7 +116,7 @@ class SubscribePool():
             rows = self.mCursor.fetchall()
            
             for row in rows:
-                self.mData['plot'].append( (row['price'],0,0,0, round(row['amount']/1000,0), row['date'] ) )
+                self.mData['plot'].append( (row['price'],0,0,0, int(row['amount']/1000), row['date'] ) )
                
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])

@@ -49,8 +49,6 @@ function withdrawBTC($userID)
 		$amount=BASIS*(float)$_POST['amount'];
 		$btca=mysql_real_escape_string($_POST['btca']);
 		
-		db_connect();
-		
 		$sql="SELECT SUM(deltaBTC) from Activity where userid=$userID and (type=3 or type=4 or type=10 or type=7)";
 		$addedBTC=getSingleDBValue($sql);
 		if($addedBTC>=$amount) $left=$amount;
@@ -117,8 +115,6 @@ function withdrawLR($userID)
 		$account=$_POST['account'];
 		$amount=BASIS*(float)$_POST['amount'];
 		$email=mysql_real_escape_string($_POST['account']);
-		
-		db_connect();
 	
 		$left=amountLeftToday($userID,false);
 		
@@ -196,7 +192,6 @@ function withdrawPaypal()
 		$amount=BASIS*(float)$_POST['amount'];
 		$email=mysql_real_escape_string($_POST['email']);
 		
-		db_connect();
 		mysql_query("BEGIN");
 		try
 		{
@@ -245,6 +240,8 @@ function withdrawPaypal()
 		}
 	}else $result['error'] = "Must enter in a Bitcoin Address.";
 }
+
+db_connect();
 
 if(!isset($_SESSION['UserID']))
 {
