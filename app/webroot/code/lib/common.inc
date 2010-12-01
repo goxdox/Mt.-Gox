@@ -471,7 +471,9 @@ function findSeller($buyerID,$amount,$buyPrice,$time,$showResults,$darkStatus)
 		
 		// TODO: this needs to also sort by time in cases of ties
 		if($darkStatus==2) $sql="SELECT * from Asks where Status=1 and (darkStatus>0 or amount>=$amount) and round(Price,6)<=$sellPrice order by Price";
-		else $sql="SELECT * from Asks where Status=1 and round(Price,6)<=$sellPrice order by Price";
+		else if($darkStatus==1) $sql="SELECT * from Asks where Status=1 and round(Price,6)<=$sellPrice order by Price";
+		else $sql="SELECT * from Asks where Status=1 and darkStatus!=2 and round(Price,6)<=$sellPrice order by Price";
+		
 		$data=mysql_query($sql);
 		if($data)
 		{
@@ -534,7 +536,9 @@ function findBuyer($uid,$amount,$sellPrice,$time,$showResults,$darkStatus)
 		
 		// TODO: this needs to also sort by time in cases of ties
 		if($darkStatus==2) $sql="SELECT * from Bids where Status=1 and (darkStatus>0 or amount>=$amount) and round(Price,6)>=$buyPrice order by Price desc";
-		else $sql="SELECT * from Bids where Status=1 and round(Price,6)>=$buyPrice order by Price desc";
+		else if($darkStatus==1) $sql="SELECT * from Bids where Status=1 and round(Price,6)>=$buyPrice order by Price desc";
+		else $sql="SELECT * from Bids where Status=1 and darkStatus!=2 and round(Price,6)>=$buyPrice order by Price desc";
+		
 		if(!$data=mysql_query($sql)) throw new GoxException("SQL Error.",$sql);
 	
 		$tradeCount=0;
