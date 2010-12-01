@@ -32,7 +32,7 @@ function onHistory(result)
 {
 	if(result.plot)
 	{
-		updateHistory(result);
+		gMegaChart.updateHistory(result);
 	}
 }
 

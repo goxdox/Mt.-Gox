@@ -22,6 +22,7 @@ $(document).ready(function(){
 		window.location ="/trade/megaChart";
 	}else
 	{
+		gMegaChart.setShowCandles(false);
 		connect();
 		gMegaChart.init();
 		vis.render();
@@ -33,7 +34,7 @@ $(document).ready(function(){
 function connect()
 {
 	
-	var ws = new WebSocket("ws://mtgox.com:8080/connect");
+	var ws = new WebSocket("ws://127.0.0.1:8080/connect");
 	
 	ws.onopen = function() {
 		//alert("sending");
@@ -90,9 +91,8 @@ function onServer(data)
 		if($('#beepDepth').attr('checked')) beep=true;
 	}
 	if(data.plot)
-	{
-		
-		updateHistory(data);
+	{	
+		gMegaChart.updateHistory(data);
 	}
 	
 	if(data.usds) 
