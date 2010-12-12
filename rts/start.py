@@ -15,6 +15,7 @@ application = tornado.web.Application([
     (r"/connect", Connection.Connection),
     (r"/php/trade", PhpMsgs.PhpTradeHandler),
     (r"/php/order", PhpMsgs.PhpOrderHandler),
+    (r"/php/user/([0-9]+)", PhpMsgs.PhpUserHandler),
 
 ])
 

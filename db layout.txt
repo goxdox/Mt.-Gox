@@ -99,6 +99,11 @@ CREATE TABLE MarginTrade (tradeID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, userI
 	
 CREATE TABLE Options (name INT, value INT);
 
+#status 1-ok, 2- user cancled
+CREATE TABLE PreAuth (AuthID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, UserID INT UNSIGNED, MerchID INT UNSIGNED, 
+	token varchar(10), Amount INT, AmountLeft INT, ReloadTime INT, NextReloadDate INT UNSIGNED, 
+	status TINYINT, Date INT UNSIGNED) ENGINE = INNODB; 
+
 
 
 

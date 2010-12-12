@@ -135,6 +135,44 @@ function MegaChart()
 					" c:"+i4_round(gPlot[plotIndex][3],3));
 	}
 	
+	this.getOrderColor=function(order)
+	{
+		//alert(order);
+		var alpha=1;
+		var red=0;
+		var green=0;
+		var blue=0;
+		if(order.status==2) alpha=.5;
+		
+		if(order.type==2)
+		{
+			red=255;
+			
+		}else 
+		{
+			blue=255;
+		}
+		
+		if(order.dark==1) 
+		{
+			red -= 50;
+			green -= 50;
+			blue -= 50;
+		}else if(order.dark==2)
+		{
+			red -= 100;
+			green -= 100;
+			blue -= 100;
+		}
+		
+		if(red<0) red=0;
+		if(green<0) green=0;
+		if(blue<0) blue=0;
+		
+		
+		return("rgba("+red+','+green+','+blue+','+alpha+")")
+	}
+	
 	this.setPriceRange = function(low,high)
 	{
 		$("#highPriceMC").text(high);
@@ -168,6 +206,13 @@ function MegaChart()
 			{ // reltime so just move the end point over
 			}
 		}
+	}
+	
+	this.updateOrders= function(result)
+	{
+		//alert("orders "+result[0].price);
+		gOrders=result;
+		vis.render();
 	}
 	
 	this.updateHistory= function(result)
@@ -262,6 +307,7 @@ var w = $("#megaChart").width()-35,
     gAsks=[],
     gBids=[],
     gPlot=[],
+    gOrders=[],
     volumeAxis=pv.Scale.linear(0, 1000).range(0, h1/3),
     depthAxis=pv.Scale.linear(0, 1000).range(0, w/2),
     contextY=pv.Scale.linear(0, 1).range(0, h2),
@@ -395,6 +441,16 @@ focus.add(pv.Line)
 .top(function(d){ return focusY(d[0]); })
 .strokeStyle("steelblue")
 .lineWidth(2);
+
+//order balls
+focus.add(pv.Dot)
+.visible(gMegaChart.getShowOrders)
+//.overflow("hidden")
+.data(function() {return(gOrders);})
+.left(w-50)
+.top(function(d){ return focusY(d.price); })
+.strokeStyle(gMegaChart.getOrderColor)
+.fillStyle(gMegaChart.getOrderColor);
 
 //volume bars
 focus.add(pv.Rule)

@@ -1,6 +1,7 @@
 import Connection
 import MySQLdb
 import json
+import threading
 from time import time
 from decimal import *
 
@@ -18,6 +19,7 @@ class DecimalEncoder(json.JSONEncoder):
 class SubscribePool():
     mList = [] 
     mData = {}
+   
     
     def __init__(self):
         self.mData['ticker']={}
@@ -28,6 +30,8 @@ class SubscribePool():
         self.mData['now']=0
         getcontext().prec = 4
         
+        #self.mTimer = threading.Timer(60,self.timer)
+        #self.mTimer.start()
         try:
             self.mDatabase = MySQLdb.connect("localhost", "land", "-island-", "btcx")
             self.mDatabase.autocommit(True)
@@ -36,12 +40,20 @@ class SubscribePool():
         except MySQLdb.Error, e:
              print "Error %d: %s" % (e.args[0], e.args[1])
              sys.exit(1)
-        
+    """      
+    def timer(self):
+        print('stay')
+        for connection in self.mList:
+            connection.write_message('.')
+        self.mTimer.start()
+    """   
     def add(self,connection):
         self.mData['now']=int(time())
         self.mList.append(connection)
         self.sendData(connection)
-        print "# connections: %d" % (len(self.mList))
+        if connection.mUserID:
+            self.updateUser(connection.mUserID)
+        print "Adding %d (%d)" % (connection.mUserID,len(self.mList))
         
     def remove(self,connection):
         try:
@@ -137,7 +149,83 @@ class SubscribePool():
              print "Error %d: %s" % (e.args[0], e.args[1])
         
 
+    def getUserID(self,seshID):
+        if seshID:
+            try:
+                sql="SELECT SessionData from sessions.Sessions where uniqueID='%s'" % (seshID)
+                self.mCursor.execute(sql)
+                row = self.mCursor.fetchone()
+                if row:
+                    seshStr=row['SessionData']
+                    #print seshStr
+                    index=seshStr.find('UserID')
+                    if index>=0 :
+                        # UserID|s:1:"1";
+                        endIndex=seshStr.find(';',index)
+                        startIndex=seshStr.find('"',index)
+                        userID=seshStr[startIndex+1:endIndex-1]
+                        return(int(userID))
+                    
+            except MySQLdb.Error, e:
+                print "Error %d: %s" % (e.args[0], e.args[1])
+        return 0
+                
+      
+    def updateUser(self,userID):
+        print "update User %d" % userID
+        for connection in self.mList:
+            if connection.mUserID==userID:
+                try:
+                    data={}
+                    data['orders']=[]
+                    
+                    
+                    sql="SELECT * from Asks where userid=%d" % userID
+                    self.mCursor.execute(sql)
+                    rows = self.mCursor.fetchall()
+                    for row in rows:
+                        id=row['OrderID']
+                        amount=Decimal(row['Amount'])/1000
+                        price=Decimal(str(row['Price']))
+                        status=row['Status']
+                        darkStatus=row['DarkStatus']
+                        date=row['Date']
+
+                        order={'oid' : id, 'type' : 1, 'amount' : amount, 'price' : price, 'status' : status, 'dark' : darkStatus, 'date' : date}
             
+                        data['orders'].append( order )
+                        
+                    sql="SELECT * from Bids where userid=%d" % userID
+                    self.mCursor.execute(sql)
+                    rows = self.mCursor.fetchall()
+                    for row in rows:
+                        id=row['OrderID']
+                        amount=Decimal(row['Amount'])/1000
+                        price=Decimal(str(row['Price']))
+                        status=row['Status']
+                        darkStatus=row['DarkStatus']
+                        date=row['Date']
+
+                        order={'oid' : id, 'type' : 2, 'amount' : amount, 'price' : price, 'status' : status, 'dark' : darkStatus, 'date' : date}
+            
+                        data['orders'].append( order )
+                    
+                    sql="SELECT usd,btc from Users where userid=%d" % userID
+                    self.mCursor.execute(sql)
+                    row = self.mCursor.fetchone()
+                    
+                    btc=Decimal(row['btc'])/1000
+                    usd=Decimal(row['usd'])/1000
+                    if usd<0: usd=0
+                    if btc<0: btc=0
+                    
+                    data['usds']= usd
+                    data['btcs']= btc
+                    
+                    connection.write_message(json.dumps(data,cls=DecimalEncoder))
+                    
+                except MySQLdb.Error, e:
+                    print "Error %d: %s" % (e.args[0], e.args[1])    
              
     # send a market update to all the subscribed connections    
     def updateTrade(self):

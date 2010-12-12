@@ -94,15 +94,34 @@ function notifyNew($email,$note,$merchName,$currency,$pAmount,$token)
 
 
 /////////////////////////////////////////////////////////////////
-if(isset($_SESSION['UserID']))
+db_connect();
+
+if(!isset($_SESSION['UserID']))
+{
+	if(isset($_POST['name']) && isset($_POST['pass']))
+	{
+		$name=mysql_real_escape_string($_POST['name']);
+		$pass=mysql_real_escape_string($_POST['pass']);
+		
+		// check these against the db
+		$md5pass=md5($pass);
+		$clean_name=strtolower($name);
+		$sql = "select userid from Users where CleanName='$clean_name' and password='$md5pass'";
+		$merchID=getSingleDBValue($sql);
+	}else $merchID=0;
+}else
 {
 	$merchID=(int)($_SESSION['UserID']);
-	
+}
+
+
+if($merchID)
+{
 	if( (isset($_POST['currency'])) &&
 		(isset($_POST['email'])) &&
 		(isset($_POST['amount']) && $_POST['amount']>0) )
 	{
-		db_connect();
+		
 		$time=time();
 		
 		$currency=$_POST['currency'];

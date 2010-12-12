@@ -4,10 +4,10 @@
 <script type="text/javascript" src="/js/date.format.js"></script>
 
 <script>
+var gSeshID='<?= $seshID ?>';
 
 $(document).ready(function(){
-
-
+	
 	$.fn.flash = function() {
 	    var highlightBg = "#FFFF9C";
 	    var ogColor = "#000000";
@@ -33,23 +33,29 @@ $(document).ready(function(){
 
 function connect()
 {
-	
-	var ws = new WebSocket("ws://mtgox.com:8080/connect");
+	$('#error').text("");
+	var ws = new WebSocket("ws://127.0.0.1:8080/connect");
+	//var ws = new WebSocket("ws://mtgox.com:8080/connect");
 	
 	ws.onopen = function() {
 		//alert("sending");
-	    ws.send("subscribe");
+		if(gSeshID) ws.send("subscribe "+gSeshID);
+		else ws.send("subscribe");
 	};
 	ws.onmessage = function(event) {
 		//$("#status").text(event.data);
-		
-		var data = eval('(' + event.data + ')');
-	    onServer(data);
+		if(event.data != "." )
+		{
+			var data = eval('(' + event.data + ')');
+	    	onServer(data);
+		}
 	};
 	ws.onclose = function() {
 		$('#error').html("Disconnected. Click <a onclick='connect()'>here to reconnect</a>.");
 	};
-	
+
+	window.setInterval(function(){ ws.send('.') }, 60000);
+	//if(gSeshID) window.setInterval(function(){ ws.send('seshID '+gSeshID) }, (1000*60*10) ); // every ten min
 }
 
 var gLastData={ "ticker": {"last": 0, "buy": 0, "sell": 0}, 
@@ -93,6 +99,12 @@ function onServer(data)
 	if(data.plot)
 	{	
 		gMegaChart.updateHistory(data);
+	}
+
+	if(data.orders)
+	{
+		//alert(data.orders);
+		gMegaChart.updateOrders(data.orders);
 	}
 	
 	if(data.usds) 

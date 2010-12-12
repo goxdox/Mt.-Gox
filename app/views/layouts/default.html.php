@@ -81,7 +81,6 @@ if($gUserID)
 	<script>document.write('<A href="mailto:' + 'info' + '@' + 'mt' + 'gox.com' + '">' + 'info' + '@' + 'mt' + 'gox.com' + '</a>')</script> send us mail!
 	</p>
 	
-	<a href="http://www.dragons.tl/launchpad.php?referrer=mtgox" target="_blank" ><img class="banner" src="/img/dt_banner.jpg" /></a>
 	</div>
 </div>
 <div id="ticker">Sorry, you must have Javascript enabled to use Mt. Gox</div>

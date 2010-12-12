@@ -94,7 +94,6 @@ function sess_get($unique_id)
 	//echo "<p>[$session_get_sql]</p>";
 	if ($session_get_result = mysql_query($session_get_sql, $session_db))
 	{
-	
 		$session_data_array = mysql_fetch_assoc($session_get_result);
 		
 		return $session_data_array['SessionData'];

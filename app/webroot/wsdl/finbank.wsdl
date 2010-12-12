@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wsdl:definitions targetNamespace="http://bxd.fi/CorporateFileService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://model.bxd.fi" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://bxd.fi/CorporateFileService" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<wsdl:definitions targetNamespace="http://bxd.fi/CorporateFileService" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://model.bxd.fi" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://bxd.fi/CorporateFileService" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
 	<wsdl:types>
 		<xsd:schema targetNamespace="http://model.bxd.fi" elementFormDefault="qualified" attributeFormDefault="qualified">
 			<xsd:complexType name="RequestHeader">
@@ -8,6 +8,7 @@
 					<xsd:element name="RequestId" type="xsd:string" nillable="false"/>
 					<xsd:element name="Timestamp" type="xsd:dateTime" nillable="false"/>
 					<xsd:element name="Language" type="xsd:string" nillable="true"/>
+
 					<xsd:element name="UserAgent" type="xsd:string" nillable="true"/>
 					<xsd:element name="ReceiverId" type="xsd:string" nillable="false"/>
 				</xsd:sequence>
@@ -17,6 +18,7 @@
 					<xsd:element name="SenderId" type="xsd:string" nillable="false"/>
 					<xsd:element name="RequestId" type="xsd:string" nillable="false"/>
 					<xsd:element name="Timestamp" type="xsd:dateTime" nillable="false"/>
+
 					<xsd:element name="ResponseCode" type="xsd:string" nillable="true"/>
 					<xsd:element name="ResponseText" type="xsd:string" nillable="true"/>
 					<xsd:element name="ReceiverId" type="xsd:string" nillable="false"/>
@@ -26,6 +28,7 @@
 				<xsd:sequence>
 					<xsd:element name="RequestHeader" type="ns1:RequestHeader" nillable="false"/>
 					<xsd:element name="ApplicationRequest" type="xsd:base64Binary" nillable="false"/>
+
 				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:complexType name="UploadFileResponse">
@@ -35,6 +38,7 @@
 				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:complexType name="DownloadFileListRequest">
+
 				<xsd:sequence>
 					<xsd:element name="RequestHeader" type="ns1:RequestHeader" nillable="false"/>
 					<xsd:element name="ApplicationRequest" type="xsd:base64Binary" nillable="false"/>
@@ -44,6 +48,7 @@
 				<xsd:sequence>
 					<xsd:element name="ResponseHeader" type="ns1:ResponseHeader" nillable="false"/>
 					<xsd:element name="ApplicationResponse" type="xsd:base64Binary" nillable="false"/>
+
 				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:complexType name="DownloadFileRequest">
@@ -53,6 +58,7 @@
 				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:complexType name="DownloadFileResponse">
+
 				<xsd:sequence>
 					<xsd:element name="ResponseHeader" type="ns1:ResponseHeader" nillable="false"/>
 					<xsd:element name="ApplicationResponse" type="xsd:base64Binary" nillable="false"/>
@@ -62,6 +68,7 @@
 				<xsd:sequence>
 					<xsd:element name="RequestHeader" type="ns1:RequestHeader" nillable="false"/>
 					<xsd:element name="ApplicationRequest" type="xsd:base64Binary" nillable="false"/>
+
 				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:complexType name="DeleteFileResponse">
@@ -80,6 +87,7 @@
 				<xsd:sequence>
 					<xsd:element name="ResponseHeader" type="ns1:ResponseHeader" nillable="false"/>
 					<xsd:element name="ApplicationResponse" type="xsd:base64Binary" nillable="false"/>
+
 				</xsd:sequence>
 			</xsd:complexType>
 			<xsd:complexType name="FileServiceFaultDetail">
@@ -89,6 +97,7 @@
 				</xsd:sequence>
 			</xsd:complexType>
 		</xsd:schema>
+
 		<xsd:schema targetNamespace="http://bxd.fi/CorporateFileService" elementFormDefault="qualified" attributeFormDefault="qualified">
 			<xsd:element name="uploadFilein" type="ns1:UploadFileRequest"/>
 			<xsd:element name="uploadFileout" type="ns1:UploadFileResponse"/>
@@ -98,6 +107,7 @@
 			<xsd:element name="downloadFileout" type="ns1:DownloadFileResponse"/>
 			<xsd:element name="deleteFilein" type="ns1:DeleteFileRequest"/>
 			<xsd:element name="deleteFileout" type="ns1:DeleteFileResponse"/>
+
 			<xsd:element name="getUserInfoin" type="ns1:GetUserInfoRequest"/>
 			<xsd:element name="getUserInfoout" type="ns1:GetUserInfoResponse"/>
 			<xsd:element name="FileServiceFaultElement" type="ns1:FileServiceFaultDetail"/>
@@ -107,6 +117,7 @@
 		<wsdl:part name="FileServiceFault" element="tns:FileServiceFaultElement"/>
 	</wsdl:message>
 	<wsdl:message name="uploadFileResponse">
+
 		<wsdl:part element="tns:uploadFileout" name="uploadFileout"/>
 	</wsdl:message>
 	<wsdl:message name="uploadFileRequest">
@@ -116,6 +127,7 @@
 		<wsdl:part element="tns:downloadFileListout" name="downloadFileListout"/>
 	</wsdl:message>
 	<wsdl:message name="downloadFileListRequest">
+
 		<wsdl:part element="tns:downloadFileListin" name="downloadFileListin"/>
 	</wsdl:message>
 	<wsdl:message name="downloadFileResponse">
@@ -125,6 +137,7 @@
 		<wsdl:part element="tns:downloadFilein" name="downloadFilein"/>
 	</wsdl:message>
 	<wsdl:message name="deleteFileResponse">
+
 		<wsdl:part element="tns:deleteFileout" name="deleteFileout"/>
 	</wsdl:message>
 	<wsdl:message name="deleteFileRequest">
@@ -134,6 +147,7 @@
 		<wsdl:part element="tns:getUserInfoin" name="getUserInfoin"/>
 	</wsdl:message>
 	<wsdl:message name="getUserInfoResponse">
+
 		<wsdl:part element="tns:getUserInfoout" name="getUserInfoout"/>
 	</wsdl:message>
 	<wsdl:portType name="CorporateFileServicePortType">
@@ -143,6 +157,7 @@
 			<wsdl:fault name="FileServiceFault" message="tns:FileServiceFault"/>
 		</wsdl:operation>
 		<wsdl:operation name="downloadFileList">
+
 			<wsdl:input message="tns:downloadFileListRequest" name="downloadFileListRequest"/>
 			<wsdl:output message="tns:downloadFileListResponse" name="downloadFileListResponse"/>
 			<wsdl:fault name="FileServiceFault" message="tns:FileServiceFault"/>
@@ -152,6 +167,7 @@
 			<wsdl:output message="tns:downloadFileResponse" name="downloadFileResponse"/>
 			<wsdl:fault name="FileServiceFault" message="tns:FileServiceFault"/>
 		</wsdl:operation>
+
 		<wsdl:operation name="deleteFile">
 			<wsdl:input message="tns:deleteFileRequest" name="deleteFileRequest"/>
 			<wsdl:output message="tns:deleteFileResponse" name="deleteFileResponse"/>
@@ -161,6 +177,7 @@
 			<wsdl:input message="tns:getUserInfoRequest" name="getUserInfoRequest"/>
 			<wsdl:output message="tns:getUserInfoResponse" name="getUserInfoResponse"/>
 			<wsdl:fault name="FileServiceFault" message="tns:FileServiceFault"/>
+
 		</wsdl:operation>
 	</wsdl:portType>
 	<wsdl:binding name="CorporateFileServiceHttpBinding" type="tns:CorporateFileServicePortType">
@@ -170,6 +187,7 @@
 			<wsdl:input name="uploadFileRequest">
 				<wsdlsoap:body use="literal"/>
 			</wsdl:input>
+
 			<wsdl:output name="uploadFileResponse">
 				<wsdlsoap:body use="literal"/>
 			</wsdl:output>
@@ -179,6 +197,7 @@
 		</wsdl:operation>
 		<wsdl:operation name="downloadFileList">
 			<wsdlsoap:operation soapAction=""/>
+
 			<wsdl:input name="downloadFileListRequest">
 				<wsdlsoap:body use="literal"/>
 			</wsdl:input>
@@ -188,6 +207,7 @@
 			<wsdl:fault name="FileServiceFault">
 				<wsdlsoap:fault use="literal" name="FileServiceFault"/>
 			</wsdl:fault>
+
 		</wsdl:operation>
 		<wsdl:operation name="downloadFile">
 			<wsdlsoap:operation soapAction=""/>
@@ -197,6 +217,7 @@
 			<wsdl:output name="downloadFileResponse">
 				<wsdlsoap:body use="literal"/>
 			</wsdl:output>
+
 			<wsdl:fault name="FileServiceFault">
 				<wsdlsoap:fault use="literal" name="FileServiceFault"/>
 			</wsdl:fault>
@@ -206,6 +227,7 @@
 			<wsdl:input name="deleteFileRequest">
 				<wsdlsoap:body use="literal"/>
 			</wsdl:input>
+
 			<wsdl:output name="deleteFileResponse">
 				<wsdlsoap:body use="literal"/>
 			</wsdl:output>
@@ -213,8 +235,9 @@
 				<wsdlsoap:fault use="literal" name="FileServiceFault"/>
 			</wsdl:fault>
 		</wsdl:operation>
-				<wsdl:operation name="getUserInfo">
+		<wsdl:operation name="getUserInfo">
 			<wsdlsoap:operation soapAction=""/>
+
 			<wsdl:input name="getUserInfoRequest">
 				<wsdlsoap:body use="literal"/>
 			</wsdl:input>
@@ -224,11 +247,12 @@
 			<wsdl:fault name="FileServiceFault">
 				<wsdlsoap:fault use="literal" name="FileServiceFault"/>
 			</wsdl:fault>
+
 		</wsdl:operation>
 	</wsdl:binding>
 	<wsdl:service name="CorporateFileService">
 		<wsdl:port binding="tns:CorporateFileServiceHttpBinding" name="CorporateFileServiceHttpPort">
-			<wsdlsoap:address location="http://localhost:7001/services/CorporateFileService"/>
+			<wsdlsoap:address location="https://wsk.op.fi/services/CorporateFileService"/>
 		</wsdl:port>
 	</wsdl:service>
 </wsdl:definitions>

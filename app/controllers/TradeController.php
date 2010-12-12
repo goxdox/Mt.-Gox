@@ -22,9 +22,13 @@ class TradeController extends \lithium\action\Controller
   
 	 public function realTime()
 	 {
+	 	global $gUserID;
+	 	if($gUserID) $vars['seshID']=session_id();
+	 	else $vars['seshID']=0;
+	 	
 	 	$this->_render['layout'] = 'clean';
-	 	$title='Real Time Mega Chart';
-	  	return compact('title');
+	 	$vars['title']='Real Time Mega Chart';
+	  	return $vars;
 	 }
 	 
 	public function dashboard()
