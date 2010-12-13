@@ -1,13 +1,6 @@
 <script type="text/javascript" language="javascript" src="/js/jquery.validate.js"></script>
-<script type="text/javascript" language="javascript" src="/js/date.format.js"></script>
 <script type="text/javascript" language="javascript" src="/js/trade.js"></script>
-<script type="text/javascript" language="javascript" src="/js/jquery.dataTables.min.js"></script> 
-<link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.css" />
 
-
-<h3>Welcome to the Bitcoin Exchange.</h3> 
-Buy and Sell the internet commodity known as Bitcoins!<br>
-<i style="font-size: 11px" >Mt Gox charges a small fee (0.65%) for each trade.</i>
 
 <div id="status"></div>
 <div id="error"></div>
@@ -27,7 +20,7 @@ Buy and Sell the internet commodity known as Bitcoins!<br>
 <tr><td colspan=3><input type="button" value="Sell Bitcoins" onClick="onSell()"/></td></tr>
 <tr><td colspan=3 ><i id="sellStatus">You can make a higher offer but it wont be filled until someone accepts it.</i></td></tr>
 </table>
+<i style="font-size: 11px" >Mt Gox charges a small fee (0.65%) for each trade.</i>
 </fieldset>
 </form>
-<hr>
 

@@ -1,16 +1,9 @@
 <script type="text/javascript" language="javascript" src="/js/jquery.validate.js"></script>
 <script type="text/javascript" language="javascript" src="/js/date.format.js"></script>
 <script type="text/javascript" language="javascript" src="/js/trade.js"></script>
-<script type="text/javascript" language="javascript" src="/js/jquery.dataTables.min.js"></script> 
-<link rel="stylesheet" type="text/css" href="/css/jquery.dataTables.css" />
-
-
-
 
 <div id="status"></div>
 <div id="error"></div>
-
-
 
 
 <form id="buyForm" action="" >

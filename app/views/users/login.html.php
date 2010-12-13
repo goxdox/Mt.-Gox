@@ -48,6 +48,7 @@ function onServer(data)
 <a href="/users/forgot" >Forgot your password?</a>
 <div id="status"></div>
 <div id="error"></div>
+<h2>Don't have an account yet? <a href="/users/register">Sign up!</a></h2>
 </fieldset>
 </form>
     
