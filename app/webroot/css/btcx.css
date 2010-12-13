@@ -103,7 +103,7 @@ margin-left: 242px;
 	}
 	
 .banner {  margin-top: 40px; display: block;   margin-left: auto;   margin-right: auto; }
-.center { display: block;   margin-left: auto;   margin-right: auto; }
+.center { display: block;   text-align: center; margin-left: auto;   margin-right: auto; }
 
 #error , .error  {
 background-color:#EF3B53;

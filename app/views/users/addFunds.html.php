@@ -21,8 +21,10 @@ $(document).ready(function(){
 	
 if(!userID)
 {
-	$('#error').text('Note: You must be logged in to add funds!');
+	$('#error').html('<div style="text-align: center">You must <a href="/users/login">log in</a> to add Funds.</div>');
 }
+
+showUSDMethod('lrForm');
 
 	
 });
@@ -44,7 +46,19 @@ function onServer(data)
 	}
 }
 
+function showUSDMethod(methodName)
+{
+	$("#lrForm").hide();
+	$("#ccForm").hide();
+	$("#cashForm").hide();
+	$("#otherForm").hide();
+	$("#euroForm").hide();
+	$("#paxumForm").hide();
+	$("#wireForm").hide();
 
+	$("#"+methodName).show();
+		
+}
 
 
 function onBTC()
@@ -74,17 +88,49 @@ In order to trade on the exchange you must add either US Dollars (USD) or Bitcoi
 <hr>
 
 <fieldset>
- <legend>Add $ US Dollars</legend>
-Mt Gox uses <a href="http://libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>" target="_blank">LibertyReserve.com</a> for adding and withdrawing USD. Liberty Reserve is easy to use. 
-<p>Or use <a href="http://bitcoingateway.com" target="_blank">BitcoinGateway.com</a> to add funds with a credit card. 
-<p>We can also accept wire transfers. Please send us an email if interested.
+ <legend>Add $ US Dollars</legend> 
+<table class="btcx_table">
+<tr><td>Select a Funding Method</td><td></td></tr>
+<tr><td>
+<input type="radio" name="group1" onclick="showUSDMethod('lrForm')" checked />Liberty Reserve<br>
+<input type="radio" name="group1" onclick="showUSDMethod('ccForm')" />Credit Card<br>
+<input type="radio" name="group1" onclick="showUSDMethod('cashForm')" />Cash or Check<br>
+<input type="radio" name="group1" onclick="showUSDMethod('wireForm')" />Wire or ACH<br>
+<input type="radio" name="group1" onclick="showUSDMethod('paxumForm')" />Paxum<br>
+<input type="radio" name="group1" onclick="showUSDMethod('euroForm')" />Euro Bank Transfer<br>
+<input type="radio" name="group1" onclick="showUSDMethod('otherForm')" />Other<br>
+</td><td>
+
+<div id="wireForm">
+If your bank supports sending ACH payments this is the cheapest way to fund your Mt Gox account.<p> 
+My bank charges $15 for an incoming wire from the US and $50 for an international one.<p>
+Please email me if interested in his funding method.
+</div>
+
+<div id="cashForm">
+You can mail check or cash to our official exchanger and he will send you Mt Gox credit.<p>
+<div class="center"><a href="http://bitcoinmorpheus.tumblr.com/post/2301381008/how-to-buy-bitcoin-and-mt-gox-usd-with-cash-in-the">Cash Exchanger</a></div>
+</div>
+
+<div id="otherForm">
+<a href="http://www.bitcoin.org/smf/index.php?topic=1561.0">This thread</a> has people willing to sell you Mt Gox $ in various ways. If you post there I'm sure you can get a 1:1 exchange rate from paypal or something else.
+</div>
+
 <div id="paxumForm">
+<a href="http://paxum.com" target="_blank">Paxum.com</a> is a fairly straigtforward way to fund your account. <p>
+Simply send payment to <b>paxum@mtgox.com</b> and I will credit your account.
 </div>
+
 <div id="euroForm">
+Hopefully this will be set up soon...
 </div>
+
 <div id="ccForm">
+You can use <a href="http://bitcoingateway.com" target="_blank">BitcoinGateway.com</a> to add funds with a credit card.<p>
 </div>
+
 <div id="lrForm" >
+<a href="http://libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>" target="_blank">LibertyReserve.com</a> can be used for adding and withdrawing USD. 
 <form method="post" action="https://sci.libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>">
  <input type="hidden" name="lr_acc" value="<?= $LR_ACCOUNT_NUMBER ?>">
  <input type="hidden" name="lr_store" value="<?= $LR_STORE_NAME ?>">    
@@ -97,6 +143,10 @@ Mt Gox uses <a href="http://libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>" t
 </table>
 </form>
 </div>
+
+</td></tr>
+</table>
+
 
 </fieldset>
 
