@@ -51,9 +51,8 @@ if($gUserID)
         <tr><td><a href="/users/trades">Account History</a></td></tr>
           <tr><td><a href="/users/addFunds" >Add Funds</a></td></tr>
         <tr><td><a href="/users/withdraw" >Withdraw Funds</a></td></tr>
-        <tr><td><a href="/users/sendMoney" >Send Money</a></td></tr>
         <tr><td><a href="/support">How it Works</a></td></tr>
-        <?php if($gMerchOn){ echo("<tr><td><a href='/merch'>Merchant Services</a></td></tr>"); } ?>
+        <?php if($gMerchOn){ echo("<tr><td><a href="/users/sendMoney" >Send Money</a></td></tr><tr><td><a href='/merch'>Merchant Services</a></td></tr>"); } ?>
 	</table>
 	
 

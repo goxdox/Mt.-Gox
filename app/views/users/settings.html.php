@@ -109,9 +109,11 @@ function onServer(data)
 <table class="btcx_table">
 <tr><td>Email</td><td><input type="text" name="email" id="email" class="email" value="<?=$email ?>" /></td></tr>
 <tr><td>Email Trade Notifications</td><td><?php echo($notify); ?></td></tr>
+<!--
 <tr><td>Display Merchant Services<br><a href="/merch/about">About Merchant Services</a></td><td><?php echo($merch); ?></td></tr>
 <tr class="merch" id="noteRow" ><td>Your Merchant ID</td><td><?= $gUserID ?></td></tr>
 <tr class="merch" ><td>Enable <a href="/merch/paymentAPI">Payment API</a></td><td><?php echo($payAPI); ?></td></tr>
+-->
 <tr><td colspan=2><input type="submit" value="Change" /></td></tr>
 </table>
 </fieldset>

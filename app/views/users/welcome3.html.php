@@ -54,6 +54,7 @@ function onRecent(result)
  <legend style="margin-left: 22px" >What is Mt Gox?</legend>
  <div class="info_box"><div class="info_title"><a href="/support">Bitcoin Exchange</a></div>
  	Mt Gox is an exchange. It allows you to trade US Dollars (USD) for Bitcoins (BTC) or Bitcoins for US Dollars with other Mt Gox users. You set the price you want to buy or sell your BTC for.<br><br>Fully automated, always available, 24 hours a day.</div>
+ <!--
  <div class="info_box"><div class="info_title"><a href="merch/about">Merchant Services</a></div>
  	<ul><li>Take Bitcoin or USD payments quickly and easily.</li>
  		<li>Simple secure API.</li>
@@ -61,6 +62,7 @@ function onRecent(result)
  	 <li>Instant transactions.</li></ul>
  	 <a href="merch/about"><img class="center" src="/img/btclogo.png" /></a>
  </div>
+ 
  <div class="info_box"><div class="info_title"><a href="/users/sendMoney">Bitcoin Manager</a></div>
  	<ul>
  		<li>Send USD or BTC for free to anyone with an email address.</li>
@@ -69,11 +71,12 @@ function onRecent(result)
  	</ul>
  	<a href="/users/sendMoney"><img class="center" src="/img/loveBTC.png" /></a>
  </div>
- 	
+--> 	
  <div class="info_box"><div class="info_title"><a href="support/advancedTrading">Advanced Trading</a></div>
  	<ul><li>Automate your trading with our <a href="support/tradeAPI">Trading API</a></li>
  	<li><a href="/support/darkPool">Dark pools</a> allow you to trade large quantities without moving the market.</li>
- 	<li>Margin trading. (coming soon)</li></ul></div>
+ 	<li>Margin trading. (coming soon)</li>
+ 	<li>Options (coming soon)</li></ul></div>
  	
  <div id="plot" class="info_graphic" ></div>
 </fieldset>
