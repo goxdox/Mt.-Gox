@@ -16,7 +16,7 @@ global $gUserID;
 
 if($gUserID)
 	Router::connect('/', array('controller' => 'trade') );
-else Router::connect('/', array('controller' => 'users', 'action' => 'welcome3') );
+else Router::connect('/', array('controller' => 'users', 'action' => 'welcome2') );
 
 /**
  * ...and connect the rest of 'Pages' controller's urls.

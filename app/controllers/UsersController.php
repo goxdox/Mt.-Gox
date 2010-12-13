@@ -37,6 +37,7 @@ public function welcome()
 	
 public function welcome2() 
 	{
+		$this->_render['layout'] = 'clean';
 	}
 	
 public function welcome3() 
