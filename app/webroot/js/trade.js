@@ -51,7 +51,7 @@ $(document).ready(function(){
 		$.post("/code/getOrders.php", {  }, onServer , "json" );
 	}else
 	{
-		$('#status').text('Note: You must be logged in to trade.');
+		$('#status').html('<div style="text-align: center">You must <a href="/users/login">log in</a> to trade.</div>');
 	}
 
 	

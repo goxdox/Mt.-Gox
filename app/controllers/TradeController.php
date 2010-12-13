@@ -15,6 +15,18 @@ class TradeController extends \lithium\action\Controller
   	return compact('title');
   }
   
+  public function buy()
+  {
+  	$title='Buy Bitcoins';
+  	return compact('title');
+  }
+  
+ public function sell()
+  {
+  	$title='Sell Bitcoins';
+  	return compact('title');
+  }
+  
  public function history() 
   {
     		
