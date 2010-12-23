@@ -93,7 +93,7 @@ In order to trade on the exchange you must add either US Dollars (USD) or Bitcoi
 <tr><td>Select a Funding Method</td><td></td></tr>
 <tr><td>
 <input type="radio" name="group1" onclick="showUSDMethod('lrForm')" checked />Liberty Reserve<br>
-<input type="radio" name="group1" onclick="showUSDMethod('ccForm')" />Credit Card<br>
+<!-- <input type="radio" name="group1" onclick="showUSDMethod('ccForm')" />Credit Card<br> -->
 <input type="radio" name="group1" onclick="showUSDMethod('cashForm')" />Cash or Check<br>
 <input type="radio" name="group1" onclick="showUSDMethod('wireForm')" />Wire or ACH<br>
 <input type="radio" name="group1" onclick="showUSDMethod('paxumForm')" />Paxum<br>
@@ -124,11 +124,11 @@ Simply send payment to <b>paxum@mtgox.com</b> and I will credit your account.
 <div id="euroForm">
 Hopefully this will be set up soon...
 </div>
-
+<!--
 <div id="ccForm">
 You can use <a href="http://bitcoingateway.com" target="_blank">BitcoinGateway.com</a> to add funds with a credit card.<p>
 </div>
-
+-->
 <div id="lrForm" >
 <a href="http://libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>" target="_blank">LibertyReserve.com</a> can be used for adding and withdrawing USD. 
 <form method="post" action="https://sci.libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>">
