@@ -63,7 +63,7 @@ if($uid)
 			$time=time();
 			if($btcHeld<$amount)
 			{
-				addOrder('Asks',$uid,$amount-$btcHeld,$price,2);
+				addOrder('Asks',$uid,$amount-$btcHeld,$price,2,$darkStatus);
 				$amount=$btcHeld;
 				$result['status'] .="<br>You don't have that much BTC. What remains is stored in your open orders.";	
 			}
