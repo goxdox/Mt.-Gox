@@ -122,7 +122,8 @@ Simply send payment to <b>paxum@mtgox.com</b> and I will credit your account.
 </div>
 
 <div id="euroForm">
-Hopefully this will be set up soon...
+If you have a European bank account you can send a direct deposit to our account.<p>
+Send us an email for details.
 </div>
 <!--
 <div id="ccForm">
