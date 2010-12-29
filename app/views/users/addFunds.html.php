@@ -123,6 +123,7 @@ Simply send payment to <b>paxum@mtgox.com</b> and I will credit your account.
 
 <div id="euroForm">
 If you have a European bank account you can send a direct deposit to our account.<p>
+We are handling this manually now so the fee is 2%<p>
 Send us an email for details.
 </div>
 <!--
