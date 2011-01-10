@@ -9,14 +9,13 @@ They need to see:
 	Add Order change order or position
  */		
 ?>
-
+<script type="text/javascript" language="javascript" src="/js/jquery.validate.js"></script>
 <script type="text/javascript" language="javascript">
 $(document).ready(function(){
 
-	$("#addForm").validate();	
-	$("#withForm").validate();
+	$("#orderForm").validate();	
 
-	$('#marginBalance').text(<?= $marginBalance ?>);
+	$('.marginBalance').text(<?= $marginBalance ?>);
 	
 	if(!<?= $gUserID ?>)
 	{
@@ -81,7 +80,7 @@ function onWithResult(data)
 All margin trading is done on one pair the BTC/USD. You can be either long or short this pair. 
 <form id="orderForm" onsubmit="return onOrder()" >
 <table class="btcx_table">
-<tr><td>Long or Short</td><td></td></tr>
+<tr><td><input type="radio" name="long" value="1" checked /> Long</td><td><input type="radio" name="long" value="0" /> Short</td></tr>
 <tr><td>Amount</td><td><input type="text" name="amount" class="number required" /></td></tr>
 <tr><td>Price</td><td><input type="text" name="price" class="number required" /></td></tr>
 <tr><td>Take Profit</td><td><input type="text" name="profit" class="number" /></td></tr>
@@ -93,22 +92,6 @@ All margin trading is done on one pair the BTC/USD. You can be either long or sh
 <div id="orderStatus" class="status"></div>
 </fieldset>
 
-<fieldset>
- <legend>Place Order</legend>
-All margin trading is done on one pair the BTC/USD. You can be either long or short this pair. 
-<form id="orderForm" onsubmit="return onOrder()" >
-<table class="btcx_table">
-<tr><td>Long or Short</td><td></td></tr>
-<tr><td>Amount</td><td><input type="text" name="amount" class="number required" /></td></tr>
-<tr><td>Price</td><td><input type="text" name="price" class="number required" /></td></tr>
-<tr><td>Take Profit</td><td><input type="text" name="profit" class="number" /></td></tr>
-<tr><td>Stop Loss</td><td><input type="text" name="loss" class="number" /></td></tr>
-<tr><td colspan=2><input type="submit" value="Place Order" /></td></tr>
-</table>
-</form>
-<div id="orderError" class="error"></div>
-<div id="orderStatus" class="status"></div>
-</fieldset>
 
 <fieldset>
  <legend>Your Positions</legend>

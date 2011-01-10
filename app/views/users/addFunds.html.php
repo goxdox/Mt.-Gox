@@ -104,7 +104,7 @@ In order to trade on the exchange you must add either US Dollars (USD) or Bitcoi
 <div id="wireForm">
 If your bank supports sending ACH payments this is the cheapest way to fund your Mt Gox account.<p> 
 My bank charges $15 for an incoming wire from the US and $50 for an international one.<p>
-Please <script>document.write('<A href="mailto:' + 'info' + '@' + 'mt' + 'gox.com' + '">' + 'email me' + '</a>')</script> if interested in his funding method.
+Please <script>document.write('<A href="mailto:' + 'info' + '@' + 'mt' + 'gox.com' + '">' + 'email me' + '</a>')</script> if interested in this funding method.
 </div>
 
 <div id="cashForm">

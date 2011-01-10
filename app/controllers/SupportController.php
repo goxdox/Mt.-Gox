@@ -15,6 +15,13 @@ class SupportController extends \lithium\action\Controller
   		return compact('title');
   }
   
+ public function margin()
+  {
+  	$title='Margin';
+		
+  		return compact('title');
+  }
+  
  public function tradeAPI()
   {
   	$title='Trade API';

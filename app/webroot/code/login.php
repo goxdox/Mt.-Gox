@@ -45,6 +45,7 @@ if(isset($_POST['name']) && isset($_POST['pass']) )
 			$ip = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
 			$sql="UPDATE Users set LastLogIP='$ip' where userID='$userID'";
 			mysql_query($sql);
+			logMsg($sql);
 		
 		}else $result=array( 'error' => "Sorry Username and Password don't match.");
 	}else
