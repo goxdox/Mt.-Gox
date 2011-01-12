@@ -79,11 +79,14 @@ function onServer(result)
 <form id="withForm" action="" >
 <fieldset>
 <legend>Withdrawal Funds</legend>
-Mt Gox uses <a href="http://libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>" target="_blank">LibertyReserve.com</a> for adding and withdrawing USD. Liberty Reserve is easy to use. 
-We suggest you use <a href="http://exchangezone.com" target="_blank">ExchangeZone.com</a> to buy and sell your Liberty Reserve dollars.
- You will be charged 1% to withdraw by Liberty Reserve.<p>
- <p>
-If you live in the US and want to withdraw more than $800 we can send it to you by ACH (direct deposit). Send us an email. 
+Mt Gox uses <a href="http://libertyreserve.com/?ref=<?= $LR_ACCOUNT_NUMBER ?>" target="_blank">LibertyReserve.com</a> for withdrawing USD. 
+You will be charged 1% to withdraw by Liberty Reserve.<p>
+<p>
+If you live in the US or EU we can send it to you by direct deposit.<br> 
+Minimum withdraw amount in the US by direct deposit is $800. There is no fee.<br>
+There is no minimum in the EU but we charge a 2% fee to withdraw.<br>
+Send us an email for details.
+<p>
 <table class="btcx_table">
 <tr><td>Currency</td><td><input type="radio" id="btcRadio" name="group1" value="BTC" checked />Bitcoins<br><input type="radio" id="usdRadio" name="group1" value="USD" />US Dollars</td></tr>
 <tr><td>Amount to Withdraw</td><td><input type="text" name="amount" id="amount" class="number required" /></td></tr>
