@@ -109,7 +109,7 @@ Please <script>document.write('<A href="mailto:' + 'info' + '@' + 'mt' + 'gox.co
 
 <div id="cashForm">
 You can mail check or cash to our official exchanger and he will send you Mt Gox credit.<p>
-<div class="center"><a href="http://bitcoinmorpheus.tumblr.com/post/2301381008/how-to-buy-bitcoin-and-mt-gox-usd-with-cash-in-the">Cash Exchanger</a></div>
+<div class="center"><a href="http://bitcoinmorpheus.tumblr.com/how_to_buy_mt_gox_usd">Cash Exchanger</a></div>
 </div>
 
 <div id="otherForm">

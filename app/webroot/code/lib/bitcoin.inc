@@ -53,7 +53,11 @@ function BC_sendFunds($uid,$amount,$addr,$usd,$btc)
 		}
 		
 		checkAskOrders($uid);
-	}else $result['error']="Withdrawal not processed: $res";
+	}else 
+	{
+		logMsg($res);
+		$result['error']="Withdrawal not processed: $res";
+	}
 }
 
 // Should be called periodically
