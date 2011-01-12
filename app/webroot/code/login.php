@@ -9,7 +9,7 @@ if(isset($_POST['name']) && isset($_POST['pass']) )
 	$name=mysql_real_escape_string($_POST['name']);
 	$pass=mysql_real_escape_string($_POST['pass']);
 	$clean_name=strtolower($name);
-	if($clean_name=='espire') die("stop it. email me");
+	if($clean_name=='john386') die("stop it. email me");
 /*	
 	if(isset($_POST['remember']))
 	{
