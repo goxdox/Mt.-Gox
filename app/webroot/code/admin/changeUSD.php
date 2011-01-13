@@ -12,6 +12,12 @@ if(isset($_SESSION['UserID']))
 	{
 		$amount=BASIS*(float)$_POST['amount'];
 		$userID=(int)$_POST['userid'];
+		if($userID==0)
+		{
+			$cleanName=strtolower(mysql_real_escape_string($_POST['userid']));
+			$sql="SELECT userid from Users where cleanname='$cleanName'"; 
+			$userID=getSingleDBValue($sql);
+		}
 		if($userID && $amount)
 		{
 			$time=time();
@@ -19,10 +25,11 @@ if(isset($_SESSION['UserID']))
 			mysql_query("begin");
 			try{
 				
-				$sql="SELECT BTC,USD from Users where userID=$userID";
+				$sql="SELECT UserName,BTC,USD from Users where userID=$userID";
 				if(!$data=mysql_query($sql))  throw new Exception("SQL Error: $sql");
 				if(!$row=mysql_fetch_array($data)) throw new Exception("Invalid UserID $userID");
 				
+				$username=$row['UserName'];
 				$userBTC=$row['BTC'];
 				$userUSD=$row['USD']+$amount;
 				
@@ -37,7 +44,8 @@ if(isset($_SESSION['UserID']))
 				
 				checkBidOrders($userID);
 				
-				$result['status'] = "Claimed!";
+				$amount=$amount/BASIS;
+				$result['status'] = "$username got $amount";
 			}catch(Exception $e)
 			{
 				mysql_query("rollback");

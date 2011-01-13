@@ -41,9 +41,10 @@ function onReverse()
 	return(false);
 }
 
-function onWith()
+function onChange()
 {
-	$('#status').text="Withdrawing...";
+	$('#changeStatus').html('<div id="status"></div>');
+	$('#status').text="Changing...";
 	$('#error').text="";
 	
 	$.post("/code/admin/changeUSD.php", $('#form1').serialize() , onServer , "json" );
@@ -83,7 +84,7 @@ function onMasspay()
 
 </script>
 
-<div id="status"></div>
+
 <div id="error"></div>
 <div id="debug"></div>
 <fieldset>
@@ -110,7 +111,7 @@ function onMasspay()
 </form>
 
 
-<form id="form1" onsubmit="return onWith()"  >
+<form id="form1" onsubmit="return onChange()"  >
 <fieldset>
  <legend>USD Add Balance</legend>
  Add or subtract balance here. It will make an entry in activity and checkorders
@@ -119,6 +120,7 @@ function onMasspay()
 <tr><td>Amount</td><td><input type="text" name="amount" id="amount" /></td></tr>
 <tr><td colspan=2><input type="submit" value="Do it!" /></td></tr>
 </table> 
+<div id='changeStatus'></div>
 </fieldset>
 </form>
 
