@@ -10,6 +10,8 @@ if(isset($_SESSION['UserID']))
 	$adminID=(int)($_SESSION['UserID']);
 	if($adminID==1)
 	{
+		db_connect();
+		
 		$amount=BASIS*(float)$_POST['amount'];
 		$userID=(int)$_POST['userid'];
 		if($userID==0)
@@ -21,7 +23,7 @@ if(isset($_SESSION['UserID']))
 		if($userID && $amount)
 		{
 			$time=time();
-			db_connect();
+			
 			mysql_query("begin");
 			try{
 				
