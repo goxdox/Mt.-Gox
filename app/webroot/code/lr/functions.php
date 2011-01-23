@@ -1,7 +1,11 @@
 <?	
 	
-function isValidAccountNumber($acct) {
-	return ereg("^(U|X)[0-9]{1,}$", $acct);
+function isValidAccountNumber($acct) 
+{
+	//if(strlen($acct)>10) return(0);
+	//if(strpos($acct, '>')) return(0);
+	//return preg_match("^(U|X)[0-9]{1,}$", $acct);
+	return preg_match('/^(U|X)[0-9]{1,}$/', $acct);
 }
 
 function generateId() 
@@ -25,6 +29,12 @@ function createAuthToken($secWord)
 
 function validateTransaction($txn_id, $accID, $storeName, $secWord)
 {
+	if(!isValidAccountNumber($accID)) 
+	{
+		logMsg("Invalid account: $accID");
+		return(false);
+	}
+	
 	$id=generateId();
 	$token=createAuthToken($secWord);
 	
@@ -95,6 +105,8 @@ function validateTransaction($txn_id, $accID, $storeName, $secWord)
 // throws GoxError
 function LRWithdraw($account,$amount)
 {
+	if(!isValidAccountNumber($account)) return(1);
+	
 	global $LR_SECURITY_WORD;
 	global $LR_ACCOUNT_NUMBER;
 	global $LR_STORE_NAME;
@@ -111,7 +123,7 @@ function LRWithdraw($account,$amount)
 	$xml .= "<Payer>$LR_ACCOUNT_NUMBER</Payer>";
 	$xml .=	"<Payee>$account</Payee>";
 	$xml .=	'<CurrencyId>LRUSD</CurrencyId>';
-	$xml .=		"<Amount>$amount</Amount>";
+	$xml .=	"<Amount>$amount</Amount>";
 	$xml .=	'<Memo>MtGox.com withdrawal</Memo>';
 	$xml .=	'<Anonymous>false</Anonymous>';
 	$xml .=	'</Transfer></TransferRequest>';
