@@ -133,10 +133,10 @@ function withdrawLR($userID)
 				if(!($data=mysql_query($sql))) throw new GoxException("SQL Error",$sql);
 				if(!($row=mysql_fetch_array($data))) throw new GoxException("User not found.");
 
-				if($btcHeld<-100) throw new GoxException("Please email support.");
 				$usdHeld=$row['USD'];
 				$minFundsHeld=$row['FundsHeld']*(1-$row['paypalTrust']);
 				$btcHeld=$row['BTC'];
+				if($btcHeld< (-100) ) throw new GoxException("Please email support.");
 				if($usdHeld<$amount)
 				{
 					throw new GoxException("You don't have this much USD.");
