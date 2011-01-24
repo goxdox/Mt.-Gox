@@ -147,6 +147,7 @@ function LRWithdraw($account,$amount)
 	$doc = new DOMDocument();	
 	if(!$doc->loadXML($content)) {
 		logMsg("Can't parse: $content");
+		logMsg("Sent: $xml");
 		return(0);
 	}
 	

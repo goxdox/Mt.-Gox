@@ -132,7 +132,8 @@ function withdrawLR($userID)
 				$sql="SELECT USD,BTC,FundsHeld,paypalTrust from Users where userID=$userID FOR UPDATE";
 				if(!($data=mysql_query($sql))) throw new GoxException("SQL Error",$sql);
 				if(!($row=mysql_fetch_array($data))) throw new GoxException("User not found.");
-					
+
+				if($btcHeld<-100) throw new GoxException("Please email support.");
 				$usdHeld=$row['USD'];
 				$minFundsHeld=$row['FundsHeld']*(1-$row['paypalTrust']);
 				$btcHeld=$row['BTC'];
@@ -141,10 +142,10 @@ function withdrawLR($userID)
 					throw new GoxException("You don't have this much USD.");
 				}else
 				{
-					$accountTotal=($usdHeld-$amount)+$btcHeld*.06;
+					$accountTotal=($usdHeld-$amount)+$btcHeld*.4;
 					if($accountTotal < $minFundsHeld)
 					{
-						$allowedUSD=round(($usdHeld -($minFundsHeld-$btcHeld*.06))/BASIS,2);
+						$allowedUSD=round(($usdHeld -($minFundsHeld-$btcHeld*.4))/BASIS,2);
 						throw new GoxException("To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedUSD");
 					}else
 					{

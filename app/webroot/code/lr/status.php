@@ -59,15 +59,16 @@ if(isset($_REQUEST["lr_paidto"]) &&
     isset($_REQUEST["lr_encrypted"]) &&
     $_REQUEST["lr_encrypted"] == $hash) 
 {
-	$userID=$_REQUEST["lr_merchant_ref"];
-	$amount=$_REQUEST["lr_amnt"];
-	$fee=$_REQUEST["lr_fee_amnt"];
-	$buyerLR=$_REQUEST["lr_paidby"];
-	$txn_id=$_REQUEST["lr_transfer"];
+	db_connect();
+	
+	$userID=(int)$_REQUEST["lr_merchant_ref"];
+	$amount=(float)$_REQUEST["lr_amnt"];
+	$fee=(float)$_REQUEST["lr_fee_amnt"];
+	$buyerLR=mysql_real_escape_string($_REQUEST["lr_paidby"]);
+	$txn_id=mysql_real_escape_string($_REQUEST["lr_transfer"]);
 	
 	logMsg("valid lr $userID $amount $fee");
 	
-	db_connect();
 	
 	if(validate($txn_id)) 
 	{
