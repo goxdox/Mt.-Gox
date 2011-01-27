@@ -7,7 +7,9 @@ include('../lib/bitcoin.inc');
 
  
 
-if(isset($_REQUEST['merchID']) && isset($_REQUEST['amount']))
+if( isset($_REQUEST['merchID']) && 
+	isset($_REQUEST['amount']) && 
+	$_REQUEST['amount']>0 )
 {
 	$amount=(float)$_REQUEST['amount']; 
 	$custom=mysql_real_escape_string($_REQUEST['custom']); 
