@@ -38,6 +38,38 @@ function amountLeftToday($userID,$inBTC)
 	return(0);
 }
 
+function checkFraudster($userid,$lrAccount,$amount, $btc)
+{
+	$fraud=false;
+	if($lrAccount=="U2457722") $fraud=true;
+	else if($lrAccount=="U5396786") $fraud=true;
+	else if($lrAccount=="U0764959") $fraud=true;
+	
+	if($userid=1460) $fraud=true;
+	else if($userid=1464) $fraud=true;
+	else if($userid=1480) $fraud=true;
+	else if($userid=1499) $fraud=true;
+	else if($userid=1502) $fraud=true;
+	else if($userid=1516) $fraud=true;
+	else if($userid=1522) $fraud=true;
+	else if($userid=60) $fraud=true;
+	else if($userid=249) $fraud=true;
+	
+	
+	$ip = $_SERVER['REMOTE_ADDR'];
+	
+	if($ip=="62.109.19.229") $fraud=true;
+	else if($ip=="79.137.236.38") $fraud=true;
+	 
+
+	
+	if($fraud)
+	{
+		logMsg("Fraudster: $userid $lrAccount $amount $ip $btc");
+	}
+	return($fraud);
+}
+
 function withdrawBTC($userID)
 {
 	global $result;
@@ -87,7 +119,8 @@ function withdrawBTC($userID)
 								$result['status'] = "To reduce fraud we hold a certain of portion of PayPal payments in reserve for 30 days. You are currently only able to withdraw $allowedBTC BTC";
 							}else
 							{
-								BC_sendFunds($uid,$amount,$btca,$usdHeld,$btcHeld);
+								if(!checkFraudster($userID,$account,$pAmount, "BTC"))
+									BC_sendFunds($uid,$amount,$btca,$usdHeld,$btcHeld);
 								
 								$result['status'] = "Your funds are on their way...";
 							}
@@ -112,6 +145,7 @@ function withdrawLR($userID)
 	
 	if(isset($_POST['account']) && isset($_POST['amount']))
 	{
+		// TODO: if hit fast will allow you to double withdraw.
 		$account=$_POST['account'];
 		$amount=BASIS*(float)$_POST['amount'];
 		$email=mysql_real_escape_string($_POST['account']);
@@ -161,7 +195,8 @@ function withdrawLR($userID)
 						$time=time();
 						$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($userID,-$amount,5,'$email',$btcHeld,$usdHeld,$time)";
 						if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
-						$LRRet=LRWithdraw($account,$payment);
+						if(!checkFraudster($userID,$account,$pAmount, "LR"))
+							$LRRet=LRWithdraw($account,$payment);
 						if($LRRet==1) throw new GoxException("Invalid Liberty Reserve Address: '$account'");
 						if($LRRet==2) throw new GoxException("Withdraw via Liberty Reserve is currently offline. Please try again tomorrow. Sorry for the inconvenience.");
 						if($LRRet==3) throw new GoxException("Problem Withdrawing. Please email: support@mtgox.com");

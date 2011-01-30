@@ -30,7 +30,7 @@ if(isset($_SESSION['UserID']))
 				if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 				
 				
-				$sql="INSERT into Activity (UserID,DeltaUSD,DeltaBTC,Type,BTC,USD,Date) values ($userID,$amount,0,9,$userBTC,$userUSD,$time)";
+				$sql="INSERT into Activity (UserID,DeltaUSD,DeltaBTC,Type,BTC,USD,Date) values ($userID,0,$amount,9,$userBTC,$userUSD,$time)";
 				if(!mysql_query($sql)) throw new Exception("SQL Error $sql");
 				
 				mysql_query('commit');
