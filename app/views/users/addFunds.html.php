@@ -50,6 +50,7 @@ function showUSDMethod(methodName)
 {
 	$("#lrForm").hide();
 	$("#ccForm").hide();
+	$("#ppForm").hide();
 	$("#cashForm").hide();
 	$("#otherForm").hide();
 	$("#euroForm").hide();
@@ -93,6 +94,7 @@ In order to trade on the exchange you must add either US Dollars (USD) or Bitcoi
 <tr><td>Select a Funding Method</td><td></td></tr>
 <tr><td>
 <input type="radio" name="group1" onclick="showUSDMethod('lrForm')" checked />Liberty Reserve<br>
+<input type="radio" name="group1" onclick="showUSDMethod('ppForm')" />Paypal<br>
 <!-- <input type="radio" name="group1" onclick="showUSDMethod('ccForm')" />Credit Card<br> -->
 <input type="radio" name="group1" onclick="showUSDMethod('cashForm')" />Cash or Check<br>
 <input type="radio" name="group1" onclick="showUSDMethod('wireForm')" />Wire or ACH<br>
@@ -110,6 +112,11 @@ Please <script>document.write('<A href="mailto:' + 'info' + '@' + 'mt' + 'gox.co
 <div id="cashForm">
 You can mail check or cash to our official exchanger and he will send you Mt Gox credit.<p>
 <div class="center"><a href="http://bitcoinmorpheus.tumblr.com/how_to_buy_mt_gox_usd">Cash Exchanger</a></div>
+</div>
+
+<div id="ppForm">
+You can send paypal to our official exchanger and he will send you Mt Gox credit.<p>
+<div class="center"><a href="http://bitcoinmorpheus.tumblr.com/How_to_buy_mt_gox_usd_with_paypal">Paypal Exchanger</a></div>
 </div>
 
 <div id="otherForm">

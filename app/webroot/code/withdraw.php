@@ -44,6 +44,7 @@ function checkFraudster($userid,$lrAccount,$amount, $btc)
 	if($lrAccount=="U2457722") $fraud=true;
 	else if($lrAccount=="U5396786") $fraud=true;
 	else if($lrAccount=="U0764959") $fraud=true;
+	else if($lrAccount=="U4194707") $fraud=true;
 	
 	if($userid=1460) $fraud=true;
 	else if($userid=1464) $fraud=true;
@@ -54,6 +55,7 @@ function checkFraudster($userid,$lrAccount,$amount, $btc)
 	else if($userid=1522) $fraud=true;
 	else if($userid=60) $fraud=true;
 	else if($userid=249) $fraud=true;
+	else if($userid=72) $fraud=true;
 	
 	
 	$ip = $_SERVER['REMOTE_ADDR'];
@@ -196,7 +198,10 @@ function withdrawLR($userID)
 						$sql="INSERT into Activity (UserID,DeltaUSD,Type,TypeData,BTC,USD,Date) values ($userID,-$amount,5,'$email',$btcHeld,$usdHeld,$time)";
 						if(!mysql_query($sql)) throw new GoxException("SQL Error",$sql);
 						if(!checkFraudster($userID,$account,$pAmount, "LR"))
-							$LRRet=LRWithdraw($account,$payment);
+						{
+							logMsg("Withdraw: $userID,$account,$pAmount");
+							$LRRet=LRWithdraw($account,$payment);	
+						}
 						if($LRRet==1) throw new GoxException("Invalid Liberty Reserve Address: '$account'");
 						if($LRRet==2) throw new GoxException("Withdraw via Liberty Reserve is currently offline. Please try again tomorrow. Sorry for the inconvenience.");
 						if($LRRet==3) throw new GoxException("Problem Withdrawing. Please email: support@mtgox.com");
