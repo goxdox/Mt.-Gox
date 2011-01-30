@@ -16,11 +16,12 @@ if(isset($_POST['name']) && isset($_POST['pass']) )
 		$rem=1;
 	}else $rem=0;
 */	
-	sleep(10);
+	sleep(8);
 	db_connect();
 
 	// check these against the db
 	$md5pass=md5($pass);
+	$ip = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
 	
 	$sql = "select userid,btc,usd,MerchOn from Users where CleanName='$clean_name' and password='$md5pass'";
 	$data=mysql_query($sql);
@@ -45,14 +46,13 @@ if(isset($_POST['name']) && isset($_POST['pass']) )
 			$serverName=$_SERVER["SERVER_NAME"];
 			$result=array( 'loc' => "https://$serverName");
 			
-			$ip = mysql_real_escape_string($_SERVER['REMOTE_ADDR']);
 			$sql="UPDATE Users set LastLogIP='$ip' where userID='$userID'";
 			mysql_query($sql);
 			logMsg($sql);
 		
 		}else 
 		{
-			logMsg("Login fail: $name $pass" );
+			logMsg("Login fail: $name $pass $ip" );
 			$result=array( 'error' => "Sorry Username and Password don't match.");
 		}
 	}else
