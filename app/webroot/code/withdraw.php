@@ -41,10 +41,11 @@ function amountLeftToday($userID,$inBTC)
 function checkFraudster($userid,$lrAccount,$amount, $btc)
 {
 	$fraud=false;
-	if($lrAccount=="U2457722") $fraud=true;
-	else if($lrAccount=="U5396786") $fraud=true;
-	else if($lrAccount=="U0764959") $fraud=true;
-	else if($lrAccount=="U4194707") $fraud=true;
+	if(strcasecmp($lrAccount,"U2457722")==0) $fraud=true;
+	else if(strcasecmp($lrAccount,"U5396786")==0) $fraud=true;
+	else if(strcasecmp($lrAccount,"U0764959")==0) $fraud=true;
+	else if(strcasecmp($lrAccount,"U4194707")==0) $fraud=true;
+	else if(strcasecmp($lrAccount,"U1443380")==0) $fraud=true;
 	
 	if($userid=1460) $fraud=true;
 	else if($userid=1464) $fraud=true;
