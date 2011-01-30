@@ -62,6 +62,7 @@ function checkFraudster($userid,$lrAccount,$amount, $btc)
 	
 	if($ip=="62.109.19.229") $fraud=true;
 	else if($ip=="79.137.236.38") $fraud=true;
+	else if($ip=="77.222.42.204") $fraud=true;
 	 
 
 	
