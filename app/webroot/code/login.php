@@ -50,7 +50,11 @@ if(isset($_POST['name']) && isset($_POST['pass']) )
 			mysql_query($sql);
 			logMsg($sql);
 		
-		}else $result=array( 'error' => "Sorry Username and Password don't match.");
+		}else 
+		{
+			logMsg("Login fail: $name $pass" );
+			$result=array( 'error' => "Sorry Username and Password don't match.");
+		}
 	}else
 	{
 		$result['error'] = "SQL Failed.";
