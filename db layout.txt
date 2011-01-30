@@ -103,6 +103,8 @@ CREATE TABLE Options (name INT, value INT);
 CREATE TABLE PreAuth (AuthID INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, UserID INT UNSIGNED, MerchID INT UNSIGNED, 
 	token varchar(10), Amount INT, AmountLeft INT, ReloadTime INT, NextReloadDate INT UNSIGNED, 
 	status TINYINT, Date INT UNSIGNED) ENGINE = INNODB; 
+	
+create table LastLogAttempt (LogID TINYINT, lastLogIP varchar(15)); 
 
 
 
