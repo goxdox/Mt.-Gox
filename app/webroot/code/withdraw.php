@@ -47,16 +47,16 @@ function checkFraudster($userid,$lrAccount,$amount, $btc)
 	else if(strcasecmp($lrAccount,"U4194707")==0) $fraud=true;
 	else if(strcasecmp($lrAccount,"U1443380")==0) $fraud=true;
 	
-	if($userid=1460) $fraud=true;
-	else if($userid=1464) $fraud=true;
-	else if($userid=1480) $fraud=true;
-	else if($userid=1499) $fraud=true;
-	else if($userid=1502) $fraud=true;
-	else if($userid=1516) $fraud=true;
-	else if($userid=1522) $fraud=true;
-	else if($userid=60) $fraud=true;
-	else if($userid=249) $fraud=true;
-	else if($userid=72) $fraud=true;
+	if($userid==1460) $fraud=true;
+	else if($userid==1464) $fraud=true;
+	else if($userid==1480) $fraud=true;
+	else if($userid==1499) $fraud=true;
+	else if($userid==1502) $fraud=true;
+	else if($userid==1516) $fraud=true;
+	else if($userid==1522) $fraud=true;
+	else if($userid==60) $fraud=true;
+	else if($userid==249) $fraud=true;
+	else if($userid==72) $fraud=true;
 	
 	
 	$ip = $_SERVER['REMOTE_ADDR'];
