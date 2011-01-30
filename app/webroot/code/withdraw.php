@@ -152,6 +152,7 @@ function withdrawLR($userID)
 		// TODO: if hit fast will allow you to double withdraw.
 		$account=$_POST['account'];
 		$amount=BASIS*(float)$_POST['amount'];
+		if($amount<.01) throw new GoxException("Invalid.");
 		$email=mysql_real_escape_string($_POST['account']);
 	
 		$left=amountLeftToday($userID,false);
