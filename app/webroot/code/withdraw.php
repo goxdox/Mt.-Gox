@@ -83,6 +83,9 @@ function withdrawBTC($userID)
 		$uid=$userID;
 		
 		$amount=BASIS*(float)$_POST['amount'];
+		if($amount<1) throw new GoxException("Invalid.");
+		if($amount>50000000) throw new GoxException("Invalid.");
+		
 		$btca=mysql_real_escape_string($_POST['btca']);
 		
 		$sql="SELECT SUM(deltaBTC) from Activity where userid=$userID and (type=3 or type=4 or type=10 or type=7)";
@@ -152,7 +155,8 @@ function withdrawLR($userID)
 		// TODO: if hit fast will allow you to double withdraw.
 		$account=$_POST['account'];
 		$amount=BASIS*(float)$_POST['amount'];
-		if($amount<.01) throw new GoxException("Invalid.");
+		if($amount<1) throw new GoxException("Invalid.");
+		if($amount>50000000) throw new GoxException("Invalid.");
 		$email=mysql_real_escape_string($_POST['account']);
 	
 		$left=amountLeftToday($userID,false);
@@ -307,43 +311,47 @@ if(!isset($_SESSION['UserID']))
 
 if($userID)
 {
-	$type=$_POST['group1'];
-	if($type=="BTC")
-	{
-		withdrawBTC($userID);		
-	}else
-	{ // paypal
-		withdrawLR($userID);
-		
-		/*
-		//$method=$_POST['method'];
-		//if($method=='paypal') withdrawPaypal();
-		//else
+	try{
+		$type=$_POST['group1'];
+		if($type=="BTC")
 		{
-			$ip=$_SERVER['REMOTE_ADDR'];
-			//$username=$_SESSION['Username'];
+			withdrawBTC($userID);		
+		}else
+		{ // paypal
+			withdrawLR($userID);
 			
-			$post=print_r($_POST,true);
-			$session=print_r($_SESSION,true);
-			//$session =implode(",", $_SESSION);
-			//$post = implode(",", $_POST);
-			$time=time();
-			
-			$msg= "Withdrawl by:\r\n";
-			$msg .= "$session\r\n";
-			$msg .= $post;
-			$msg .= "\r\nIP: $ip Time: $time";
-			
-			$headers = "From: support@mtgox.com\r\n";
-			$headers .= "Reply-To: <support@mtgox.com>\r\n";
-			$headers .= "Return-Path: <support@mtgox.com>\r\n";
-						
-			mail("jed@thefarwilds.com","Withdrawl",$msg,$headers);
-			
-			$result['status'] = "Your withdraw request will be processed shortly.";
-		} */
+			/*
+			//$method=$_POST['method'];
+			//if($method=='paypal') withdrawPaypal();
+			//else
+			{
+				$ip=$_SERVER['REMOTE_ADDR'];
+				//$username=$_SESSION['Username'];
+				
+				$post=print_r($_POST,true);
+				$session=print_r($_SESSION,true);
+				//$session =implode(",", $_SESSION);
+				//$post = implode(",", $_POST);
+				$time=time();
+				
+				$msg= "Withdrawl by:\r\n";
+				$msg .= "$session\r\n";
+				$msg .= $post;
+				$msg .= "\r\nIP: $ip Time: $time";
+				
+				$headers = "From: support@mtgox.com\r\n";
+				$headers .= "Reply-To: <support@mtgox.com>\r\n";
+				$headers .= "Return-Path: <support@mtgox.com>\r\n";
+							
+				mail("jed@thefarwilds.com","Withdrawl",$msg,$headers);
+				
+				$result['status'] = "Your withdraw request will be processed shortly.";
+			} */
+		}
+	}catch(GoxException $e)
+	{
+		$result['error'] = $e->getMessage();
 	}
-
 }else
 { // not found in db
 	$result['error'] = "Not logged in.";
