@@ -283,7 +283,7 @@ function MegaChart()
 			values: [ 0, 100 ],
 			slide: function( event, ui ) 
 			{
-				gMegaChart.setPriceRange(ui.values[ 0 ]/100, ui.values[ 1 ]/100 );
+				gMegaChart.setPriceRange(ui.values[ 0 ]/200, ui.values[ 1 ]/200 );
 				mHoldPriceRange=true;
 				vis.render();
 				//alert("hi");
