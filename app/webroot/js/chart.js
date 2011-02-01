@@ -290,7 +290,7 @@ function MegaChart()
 			}
 		});
 		$( "#priceSlider" ).slider( "values" , 0 , [0] );
-		$( "#priceSlider" ).slider( "values" , 1 , [.5] );
+		$( "#priceSlider" ).slider( "values" , 2 , [.5] );
 		
 		//window.setInterval(gMegaChart.timer, 5000);
 	}
