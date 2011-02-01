@@ -185,7 +185,7 @@ function MegaChart()
 		if(!mHoldPriceRange)
 		{
 			$( "#priceSlider" ).slider( "values" , 0 , [low*100] );
-			$( "#priceSlider" ).slider( "values" , 1 , [high*100] );
+			$( "#priceSlider" ).slider( "values" , 2 , [high*100] );
 			
 			gMegaChart.setPriceRange(low,high);
 		}

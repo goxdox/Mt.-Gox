@@ -16,7 +16,7 @@ if(isset($_POST['name']) && isset($_POST['pass']) )
 		$rem=1;
 	}else $rem=0;
 */	
-	sleep(8);
+	sleep(6);
 	db_connect();
 
 	// check these against the db

@@ -84,7 +84,7 @@ function changeOptions()
 <tr><td>.<div id="megaChart" class="megaChart">
 <script type="text/javascript" src="/js/chart.js"> </script>
 </div></td>
-<td style="text-align: center" ><span id="highPriceMC">1</span><p>
+<td style="text-align: center" ><span id="highPriceMC">2</span><p>
 	<div id="priceSlider" class="center"></div><br><span id="lowPriceMC">0</span></td></tr>
 </table>
 
