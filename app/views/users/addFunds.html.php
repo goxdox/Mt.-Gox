@@ -147,7 +147,8 @@ You can use <a href="http://bitcoingateway.com" target="_blank">BitcoinGateway.c
  <input type="hidden" name="lr_comments" value="MtGox.com Funding">
  <input type="hidden" name="lr_merchant_ref" value="<?= $gUserID ?>">      
 <table class="btcx_table" >
-<tr align="center"><td><input type="submit" value="Add Dollars with Liberty Reserve"  /></td></tr>
+<tr align="center"><td><?php if($gUserID) { ?><input type="submit" value="Add Dollars with Liberty Reserve"  />
+<?php }else{ ?> You must <a href="/users/login">log in</a> to add Funds. <?php } ?></td></tr>
 <tr><td colspan=2 ><i>Added funds should be available in a few minutes.</i></td></tr>
 </table>
 </form>
